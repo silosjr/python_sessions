@@ -26,13 +26,15 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.4.0' 
+__version__ = '1.5.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
 from typing import List, Optional 
 
 contacts: List[List[str]] = []
+
+unsaved_changes = False 
 
 def ask_name() -> str:
     """
@@ -102,12 +104,17 @@ def add_contact() -> None:
     Acrescenta um nome e um telefone à lista de contatos.
 
     Side Effects:
-        Adiciona uma nova lista [nome, telefone] à variável global
-        'contacts'.
+        - Adiciona uma nova lista [nome, telefone] à variável global
+          'contacts'.
+        - Modifica para `True` o status de `unsaved_changes` de modo a informar
+          eventuais alterações não salvas na lista.
     """
+    global unsaved_changes
     name: str = ask_name()
     phone: str = ask_phone()
     contacts.append([name, phone])
+    unsaved_changes = True 
+
 
 def delete_contact() -> None:
     """
@@ -118,8 +125,11 @@ def delete_contact() -> None:
     Side Effects:
         - Remove o elemento correspondente da lista global `contacts` (caso ele
           exista) após anuência do usuário diante de um prompt de confirmação.
+        - Modifica para `True` o status de `unsaved_changes` de modo a informar
+          eventuais alterações não salvas na lista.
         - Imprime uma mensagem de erro no console se o nome não for encontrado. 
     """
+    global unsaved_changes
     name: str = ask_name()
     index: Optional[int] = search(name)
     if index is not None:
@@ -128,6 +138,7 @@ def delete_contact() -> None:
             if delete_confirmation == 's':
                 del contacts[index]
                 print('1 Registro excluído com sucesso!')
+                unsaved_changes = True
                 break
             elif delete_confirmation == 'n':
                 print('Nenhum registro foi excluído.')
@@ -147,8 +158,11 @@ def update_contact() -> None:
         - Se encontrado, exibe os dados antigos, solicita novos dados,
           e antes de efetuar as alterações exibe mensagens de status (confirmação,
           sucesso, erro).
+        - Modifica para `True` o status de `unsaved_changes` de modo a informar
+          eventuais alterações não salvas na lista.
         - Se não encontrado exibe uma mensagem de erro no console.
     """
+    global unsaved_changes
     index: Optional[int] = search(ask_name())
     if index is not None:
         name: str = contacts[index][0]
@@ -166,6 +180,7 @@ def update_contact() -> None:
             if confirmation_prompt == 's':
                 contacts[index] = [name, phone]
                 print('Contato atualizado com sucesso!')
+                unsaved_changes = True 
                 break
             elif confirmation_prompt == 'n':
                 print('Nenhuma alteração foi realizada.')
@@ -201,11 +216,20 @@ def load_contacts() -> None:
     Side Effects:
         - A variável global `contacts`é redefinida e preenchida com o
           conteúdo do arquivo.
+        - Modifica o status da variável global `unsaved_changes`
+          para `False` sinalizando alterações salvas com sucesso.
         - Imprime mensagens de status (sucesso, erro, aviso) no console.
+        - A função será interrompida se não houver alterações a serem salvas.
     """
+    global contacts, unsaved_changes
+    if unsaved_changes:
+        print('Atenção: A agenda atual possui alterações não salvas.')
+        confirmation  = input('Deseja continuar e descartar as operações? S / N: ').lower()
+        if confirmation != 's':
+            print('Operação de carregamento cancelada.')
+            return 
     filename: str = ask_filename()
     try:
-        global contacts
         with open(filename, 'r', encoding='utf-8') as file:
             contacts = []
             for line in file:
@@ -217,10 +241,10 @@ def load_contacts() -> None:
                 except ValueError:
                     print(f'Aviso: Linha mal formatada ignorada: "{line.strip()}"')
         print(f'\nContatos do arquivo "{filename}" carregados com sucesso!')
+        unsaved_changes = False 
     except FileNotFoundError:
         print(f'\nERRO: Arquivo "{filename}" não econtrado.')
     
-
 def save_contacts() -> None:
     """
     Salva a lista de contatos atual em um arquivo.
@@ -231,9 +255,17 @@ def save_contacts() -> None:
     Side Effects:
         - Cria ou sobrescreve um arquivo no disco com os dados da
           variável global `contacts`.
+        - Modifica o status da variável global `unsaved_changes`
+          para `False` sinalizando alterações salvas com sucesso.
         - Imprime uma mensagem de status (sucesso ou erro) no console.
+        - A função será interrompida se não houver alterações a serem salvas.
     """
-    filename = ask_filename()
+    global unsaved_changes
+    if not unsaved_changes:
+        print('A agenda atual não possui alterações. Nenhuma ação foi realizada.')
+        return 
+    
+    filename: str = ask_filename()
     try:
         with open(filename, 'w', encoding='utf-8') as file:
             for entry in contacts:
@@ -241,6 +273,7 @@ def save_contacts() -> None:
                 phone = str(entry[1]).replace('\n', '')
                 file.write(f'{name} ∴ {phone}\n')
         print(f'\nContatos salvos com sucesso no arquivo "{filename}"!')
+        unsaved_changes = False 
     except IOError as e:
         print(f'\nErro ao salvar o arquivo "{filename}": {e}')
 
