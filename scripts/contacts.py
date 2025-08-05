@@ -26,7 +26,7 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.7.0' 
+__version__ = '1.8.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -132,12 +132,16 @@ def add_contact() -> None:
           'contacts'.
         - Modifica para `True` o status de `unsaved_changes` de modo a informar
           eventuais alterações não salvas na lista.
+        - Exibe uma mensagem de erro ao tentar inserir um nome que já consta na agenda.
     """
     global unsaved_changes
     name: str = ask_name()
     phone: str = ask_phone()
-    contacts.append([name, phone])
-    unsaved_changes = True 
+    if search(name=name):
+        print(f'Já existe um contato com o nome {name}')
+    else:
+        contacts.append([name, phone])
+        unsaved_changes = True 
 
 def delete_contact() -> None:
     """
@@ -184,6 +188,8 @@ def update_contact() -> None:
     - Modifica para `True` o status de `unsaved_changes` de modo a informar
       eventuais alterações não salvas na lista.
     - Se não encontrado exibe uma mensagem de erro no console.
+    - Ao tentar atualizar um contato com um nome existente é exibida uma mensagem
+      de erro interrompendo a operação.
     """
     global unsaved_changes
     index: Optional[int] = search(ask_name())
@@ -197,9 +203,13 @@ def update_contact() -> None:
         name = ask_name(default_name=old_name)
         phone = ask_phone(default_number=old_phone)
 
+        if name != old_name:
+            if search(name) is not None:
+                print(f'ERRO: Já existe um contato com o nome {name}.')
+                return 
+
         while True:
             confirmation_prompt = input('Confirma as alterações dos dados? S / N: ').lower()
-            
             if confirmation_prompt == 's':
                 contacts[index] = [name, phone]
                 print('Contato atualizado com sucesso!')
