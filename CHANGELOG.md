@@ -22,3 +22,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.1.0 (2025-08-05)
 - Adicionado: O menu principal agora exibe o número total de contatos na agenda.
+
+### 1.1.1 (2025-08-05)
+- Corrigido: O separador de contatos foi alterado para `∴` para evitar falhas ao lidar com nomes ou telefones que contenham caracteres especiais.
