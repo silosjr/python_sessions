@@ -34,3 +34,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.4.0 (2025-08-05)
 - Adicionado: As funções de alterar e apagar contatos agora solicitam uma confirmação do usuário antes de efetuar a operação.
+
+### 1.5.0 (2025-08-05)
+- Adicionado: Implementada uma variável de controle para verificar alterações não salvas antes de ler ou gravar um arquivo, prevenindo a perda de dados.
