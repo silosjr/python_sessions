@@ -37,3 +37,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.5.0 (2025-08-05)
 - Adicionado: Implementada uma variável de controle para verificar alterações não salvas antes de ler ou gravar um arquivo, prevenindo a perda de dados.
+
+### 1.6.0 (2025-08-05)
+- Adicionado: O programa agora carrega automaticamente a última agenda usada ao ser iniciado.
