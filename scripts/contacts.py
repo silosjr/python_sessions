@@ -26,7 +26,7 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.1.0' 
+__version__ = '1.1.1' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -167,7 +167,7 @@ def load_contacts() -> None:
 
     A função solicita um nome de arquivo ao usuário. Se o arquivo não
     for encontrado, exibe uma mensagem de erro. Se alguma linha no 
-    arquivo estiver mal formatada (sem o separador '#'), ela será
+    arquivo estiver mal formatada (sem o separador '∴'), ela será
     ignorada e um aviso será exibido.
 
     Side Effects:
@@ -184,7 +184,7 @@ def load_contacts() -> None:
                 if not line.strip():
                     continue
                 try:
-                    name, phone = line.strip().split('#')
+                    name, phone = line.strip().split('∴')
                     contacts.append([name, phone])
                 except ValueError:
                     print(f'Aviso: Linha mal formatada ignorada: "{line.strip()}"')
@@ -211,7 +211,7 @@ def save_contacts() -> None:
             for entry in contacts:
                 name = str(entry[0]).replace('\n', '')
                 phone = str(entry[1]).replace('\n', '')
-                file.write(f'{name} # {phone}\n')
+                file.write(f'{name} ∴ {phone}\n')
         print(f'\nContatos salvos com sucesso no arquivo "{filename}"!')
     except IOError as e:
         print(f'\nErro ao salvar o arquivo "{filename}": {e}')
