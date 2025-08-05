@@ -26,7 +26,7 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.3.0' 
+__version__ = '1.4.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -113,15 +113,27 @@ def delete_contact() -> None:
     """
     Apaga um registro [nome, telefone] da lista de contatos, caso este exista.
 
+    Atenção: Esta função remove o item da variável global `contacts` definitivamente.
+
     Side Effects:
-        - Remove o elemento correspondente da lista global `contacts`se o
-          nome for encontrado.
+        - Remove o elemento correspondente da lista global `contacts` (caso ele
+          exista) após anuência do usuário diante de um prompt de confirmação.
         - Imprime uma mensagem de erro no console se o nome não for encontrado. 
     """
     name: str = ask_name()
     index: Optional[int] = search(name)
     if index is not None:
-        del contacts[index]
+        while True:
+            delete_confirmation = input('Confirma a exclusão do registro? S / N: ').lower()
+            if delete_confirmation == 's':
+                del contacts[index]
+                print('1 Registro excluído com sucesso!')
+                break
+            elif delete_confirmation == 'n':
+                print('Nenhum registro foi excluído.')
+                break
+            else:
+                print('Digite S para confirmar ou N para nenhuma ação.')
     else:
         print('Nome não encontrado.')
 
@@ -129,9 +141,12 @@ def update_contact() -> None:
     """
     Permite a atualização de um contato existente na lista.
 
+    Atenção: Esta função modifica a lista global `contacts`.
+
     Side Effects:
-        - Se encontrado, exibe os dados antigos, solicita novos dados
-          e atualiza a entrada correspondente na lista global `contacts`.
+        - Se encontrado, exibe os dados antigos, solicita novos dados,
+          e antes de efetuar as alterações exibe mensagens de status (confirmação,
+          sucesso, erro).
         - Se não encontrado exibe uma mensagem de erro no console.
     """
     index: Optional[int] = search(ask_name())
@@ -144,8 +159,19 @@ def update_contact() -> None:
         print('\nDigite os novos dados:')
         name = ask_name()
         phone = ask_phone()
-        contacts[index] = [name, phone]
-        print('Contato atualizado com sucesso!')
+
+        while True:
+            confirmation_prompt = input('Confirma as alterações dos dados? S / N: ').lower()
+            
+            if confirmation_prompt == 's':
+                contacts[index] = [name, phone]
+                print('Contato atualizado com sucesso!')
+                break
+            elif confirmation_prompt == 'n':
+                print('Nenhuma alteração foi realizada.')
+                break 
+            else:
+                print('Digite S para confirmar ou N para negar as alterações.')
     else:
         print('Nome não encontrado.')
 
