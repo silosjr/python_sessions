@@ -26,11 +26,12 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.5.0' 
+__version__ = '1.6.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
 from typing import List, Optional 
+import os 
 
 contacts: List[List[str]] = []
 
@@ -114,7 +115,6 @@ def add_contact() -> None:
     phone: str = ask_phone()
     contacts.append([name, phone])
     unsaved_changes = True 
-
 
 def delete_contact() -> None:
     """
@@ -204,31 +204,35 @@ def list_contacts() -> None:
         show_data(index, entry[0], entry[1])
     print('------\n')
 
-def load_contacts() -> None:
+def load_contacts(filename_to_load: Optional[str] = None) -> None:
     """
-    Carrega contatos de um arquivo, substituindo a linha atual.
+    Carrega contatos de um arquivo, substituindo a lista atual.
 
-    A função solicita um nome de arquivo ao usuário. Se o arquivo não
-    for encontrado, exibe uma mensagem de erro. Se alguma linha no 
-    arquivo estiver mal formatada (sem o separador '∴'), ela será
-    ignorada e um aviso será exibido.
+    Se um `filename_to_load` for fornecido, a função o utiliza. Caso contrário,
+    solicita o nome do arquivo ao usuário.
+    A função verifica se há alterações não salvas antes de carregar um novo arquivo,
+    prevenindo a perda de dados.
 
     Side Effects:
-        - A variável global `contacts`é redefinida e preenchida com o
-          conteúdo do arquivo.
-        - Modifica o status da variável global `unsaved_changes`
-          para `False` sinalizando alterações salvas com sucesso.
+        - A variável global `contacts` é redefinida e preenchida com o conteúdo do arquivo.
+        - Se o carregamento for bem-sucedido, a variável global `unsaved_changes`
+          é definida como `False`.
         - Imprime mensagens de status (sucesso, erro, aviso) no console.
-        - A função será interrompida se não houver alterações a serem salvas.
     """
     global contacts, unsaved_changes
+    
+    if filename_to_load is not None:
+        filename = filename_to_load
+    else:
+        filename = ask_filename()
+
     if unsaved_changes:
         print('Atenção: A agenda atual possui alterações não salvas.')
         confirmation  = input('Deseja continuar e descartar as operações? S / N: ').lower()
         if confirmation != 's':
             print('Operação de carregamento cancelada.')
             return 
-    filename: str = ask_filename()
+
     try:
         with open(filename, 'r', encoding='utf-8') as file:
             contacts = []
@@ -259,7 +263,8 @@ def save_contacts() -> None:
           para `False` sinalizando alterações salvas com sucesso.
         - Imprime uma mensagem de status (sucesso ou erro) no console.
         - A função será interrompida se não houver alterações a serem salvas.
-    """
+        - Armazena o nome do arquivo da última agenda salva em `last_agenda_file.txt`.
+   """
     global unsaved_changes
     if not unsaved_changes:
         print('A agenda atual não possui alterações. Nenhuma ação foi realizada.')
@@ -273,10 +278,17 @@ def save_contacts() -> None:
                 phone = str(entry[1]).replace('\n', '')
                 file.write(f'{name} ∴ {phone}\n')
         print(f'\nContatos salvos com sucesso no arquivo "{filename}"!')
-        unsaved_changes = False 
+        unsaved_changes = False
+
+        try:
+            with open('last_agenda_file.txt', 'w', encoding='utf-8') as last_file_handle:
+                last_file_handle.write(filename)
+        except IOError as e:
+            print(f'Aviso: Não foi possível salvar o nome do último arquivo da agenda: {e}')
+
     except IOError as e:
         print(f'\nErro ao salvar o arquivo "{filename}": {e}')
-
+    
 def validate_integer_range(prompt: str,
                            start: int,
                            end: int
@@ -330,7 +342,6 @@ def order_names_by_alpha()-> None:
     contacts.sort(key=lambda x: x[0] )
     list_contacts()
    
-
 def show_menu() -> int:
     """
     Exibe o menu principal e retorna a opção escolhida pelo usuário.
@@ -359,6 +370,14 @@ def show_menu() -> int:
 ''')
     return validate_integer_range('Escolha uma opção: ', 0, 8)
 
+if os.path.isfile('last_agenda_file.txt'):
+    try:
+        with open('last_agenda_file.txt', 'r') as last_file_handle:
+            last_file_name = last_file_handle.read().strip()
+            load_contacts(filename_to_load=last_file_name)
+    except IOError as e:
+        print(f'Aviso: Não foi possível carregar a última agenda salva: {e}')
+    
 while option := show_menu():
     if option == 0:
         break
