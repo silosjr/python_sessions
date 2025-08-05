@@ -19,3 +19,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 -   Inconsistência na nomenclatura de variáveis no bloco de execução para aderir aos padrões em inglês e snake_case.
 -   Erro de digitação no nome da variável `final_salary`.
+
+### 1.1.0 (2025-08-05)
+- Adicionado: O menu principal agora exibe o número total de contatos na agenda.
