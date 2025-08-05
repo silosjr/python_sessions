@@ -26,7 +26,7 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.0.0' 
+__version__ = '1.1.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -211,7 +211,7 @@ def save_contacts() -> None:
             for entry in contacts:
                 name = str(entry[0]).replace('\n', '')
                 phone = str(entry[1]).replace('\n', '')
-                file.write(f'{name}#{phone}\n')
+                file.write(f'{name} # {phone}\n')
         print(f'\nContatos salvos com sucesso no arquivo "{filename}"!')
     except IOError as e:
         print(f'\nErro ao salvar o arquivo "{filename}": {e}')
@@ -248,6 +248,16 @@ def validate_integer_range(prompt: str,
         except ValueError:
             print('ERRO: Favor digitar um número inteiro válido')
 
+def show_length() -> None:
+    """
+    Exibe o total de contatos armazenados na variável global `contacts`.
+
+    Side Effects:
+        Exibe uma mensagem no console informando o número de contatos atual
+        no arquivo. 
+    """
+    print(f'{len(contacts)} contatos armazenados.')
+
 def show_menu() -> int:
     """
     Exibe o menu principal e retorna a opção escolhida pelo usuário.
@@ -269,10 +279,11 @@ def show_menu() -> int:
     4 - Lista
     5 - Grava
     6 - Lê
+    7 - Tamanho da agenda
 
     0 - Sai
 ''')
-    return validate_integer_range('Escolha uma opção: ', 0, 6)
+    return validate_integer_range('Escolha uma opção: ', 0, 7)
 
 while option := show_menu():
     if option == 0:
@@ -289,5 +300,7 @@ while option := show_menu():
         save_contacts()
     elif option == 6:
         load_contacts()
+    elif option == 7:
+        show_length()
 
 print('\nPrograma Finalizado.')
