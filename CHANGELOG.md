@@ -25,3 +25,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.1.1 (2025-08-05)
 - Corrigido: O separador de contatos foi alterado para `∴` para evitar falhas ao lidar com nomes ou telefones que contenham caracteres especiais.
+
+### 1.2.0 (2025-08-05)
+- Adicionado: A função de listagem de contatos agora exibe a posição de cada contato na agenda.

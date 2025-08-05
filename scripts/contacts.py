@@ -26,7 +26,7 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.1.1' 
+__version__ = '1.2.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -52,19 +52,20 @@ def ask_phone() -> str:
     """
     return input('Telefone: ')
 
-def show_data(name: str, phone: str) -> None:
+def show_data(index: int, name: str, phone: str) -> None:
     """
     Exibe o nome e o telefone do usuário no Console.
 
     Args:
+        index (int): A posição que o registro ocupa na lista de contatos
         name (str): O nome do usuário cadastrado na lista de contatos.
         phone (str): O telefone do usuário cadastrado na lista de contatos.
 
     Side Effects:
-        Imprime uma string formatada no console contendo o nome do usuário
-        seguido do seu telefone cadastrado.
+        Imprime uma string formatada no console contendo a posição do registro e
+        o nome do usuário seguido do seu telefone cadastrado.
     """
-    print(f'Nome: {name} Telefone: {phone}')
+    print(f'Posição: {index} Nome: {name} Telefone: {phone}')
 
 def ask_filename() -> str:
     """
@@ -153,12 +154,13 @@ def list_contacts() -> None:
     Exibe todos os contatos da agenda de forma formatada.
 
     Side Effects:
-        Imprime no console um cabeçalho, a lista de todos os contatos
-        (usando a função show_data) e um rodapé.
+        Imprime no console um cabeçalho, a lista de todos os contatos 
+        (usando a função show_data) indicando sua posição exata no 
+        registro e um rodapé.
     """
     print('\nAgenda\n\n------')
-    for entry in contacts:
-        show_data(entry[0], entry[1])
+    for index, entry in enumerate(contacts):
+        show_data(index, entry[0], entry[1])
     print('------\n')
 
 def load_contacts() -> None:
