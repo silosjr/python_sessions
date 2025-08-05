@@ -31,3 +31,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.3.0 (2025-08-05)
 - Adicionado: O menu principal agora inclui a opção de ordenar a lista de contatos por nome em ordem alfabética.
+
+### 1.4.0 (2025-08-05)
+- Adicionado: As funções de alterar e apagar contatos agora solicitam uma confirmação do usuário antes de efetuar a operação.
