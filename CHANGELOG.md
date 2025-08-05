@@ -40,3 +40,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.6.0 (2025-08-05)
 - Adicionado: O programa agora carrega automaticamente a última agenda usada ao ser iniciado.
+
+### 1.7.0 (2025-08-05)
+- Adicionado: As funções `ask_name` e `ask_phone` agora aceitam um parâmetro opcional para exibir um valor padrão, melhorando a experiência do usuário na edição de contatos.

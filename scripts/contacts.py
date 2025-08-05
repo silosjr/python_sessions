@@ -26,7 +26,7 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.6.0' 
+__version__ = '1.7.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -37,23 +37,46 @@ contacts: List[List[str]] = []
 
 unsaved_changes = False 
 
-def ask_name() -> str:
+def ask_name(default_name: Optional[str] = None) -> str:
     """
-    Solicita a entrada do nome do usuário.
+    Solicita a entrada do nome do usuário, exibindo um valor padrão se fornecido.
+
+    Args:
+        default_name (Optional[str]): Um valor de nome padrão a ser exibido.
+            Se o usuário não fornecer uma entrada, este valor será usado.
+    Returns:
+        str: O nome que o usuário digitar ou o valor padrão se a entrada for vazia.
+    """
+    if default_name is not None:
+        prompt = f'Nome (padrão: {default_name}):'
+    else:
+        prompt = 'Nome: '
+    
+    name_input = input(prompt)
+    if name_input:
+        return name_input
+    return default_name
+
+def ask_phone(default_number: Optional[str] = None) -> str:
+    """
+    Solicita a entrada do telefone do usuário, exibindo um valor padrão se fornecido.
+
+    Args:
+        default_number (Optional[str]): Um valor de número de telefone padrão a ser exibido.
+            Se o usuário não fornecer uma entrada, este valor será usado.
 
     Returns:
-        str: O nome que o usuário digitar.
+        str: O telefone informado pelo usuário, ou o valor padrão se a entrada for vazia.
     """
-    return input('Nome: ')
+    if default_number is not None:
+        prompt = f'Telefone (padrão: {default_number})'
+    else:
+        prompt = 'Telefone :'
 
-def ask_phone() -> str:
-    """
-    Solicita a entrada do telefone do usuário.
-
-    Returns:
-        str: O telefone informado pelo usuário.
-    """
-    return input('Telefone: ')
+    phone_input = input(prompt)
+    if phone_input:
+        return phone_input
+    return default_number
 
 def show_data(index: int, name: str, phone: str) -> None:
     """
@@ -155,24 +178,24 @@ def update_contact() -> None:
     Atenção: Esta função modifica a lista global `contacts`.
 
     Side Effects:
-        - Se encontrado, exibe os dados antigos, solicita novos dados,
-          e antes de efetuar as alterações exibe mensagens de status (confirmação,
-          sucesso, erro).
-        - Modifica para `True` o status de `unsaved_changes` de modo a informar
-          eventuais alterações não salvas na lista.
-        - Se não encontrado exibe uma mensagem de erro no console.
+    - Se encontrado, exibe os dados antigos como padrão, solicita novos dados,
+      e antes de efetuar as alterações exibe mensagens de status (confirmação,
+      sucesso, erro).
+    - Modifica para `True` o status de `unsaved_changes` de modo a informar
+      eventuais alterações não salvas na lista.
+    - Se não encontrado exibe uma mensagem de erro no console.
     """
     global unsaved_changes
     index: Optional[int] = search(ask_name())
     if index is not None:
-        name: str = contacts[index][0]
-        phone: str = contacts[index][1]
+        old_name: str = contacts[index][0]
+        old_phone: str = contacts[index][1]
         print('Encontrado: ')
-        show_data(name, phone)
+        show_data(name=old_name, phone=old_phone, index=index)
 
         print('\nDigite os novos dados:')
-        name = ask_name()
-        phone = ask_phone()
+        name = ask_name(default_name=old_name)
+        phone = ask_phone(default_number=old_phone)
 
         while True:
             confirmation_prompt = input('Confirma as alterações dos dados? S / N: ').lower()
