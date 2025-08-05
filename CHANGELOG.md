@@ -28,3 +28,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.2.0 (2025-08-05)
 - Adicionado: A função de listagem de contatos agora exibe a posição de cada contato na agenda.
+
+### 1.3.0 (2025-08-05)
+- Adicionado: O menu principal agora inclui a opção de ordenar a lista de contatos por nome em ordem alfabética.

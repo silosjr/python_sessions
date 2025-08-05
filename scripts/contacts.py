@@ -26,7 +26,7 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.2.0' 
+__version__ = '1.3.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -260,12 +260,24 @@ def show_length() -> None:
     """
     print(f'{len(contacts)} contatos armazenados.')
 
+def order_names_by_alpha()-> None:
+    """
+    Ordena e exibe os registros da lista `contacts` em ordem alfabética 
+    usando o nome registrado como parâmetro.
+
+    Side Effects:
+        Exibe no console uma lista ordenadas pelos nomes em ordem ascendente.
+    """
+    contacts.sort(key=lambda x: x[0] )
+    list_contacts()
+   
+
 def show_menu() -> int:
     """
     Exibe o menu principal e retorna a opção escolhida pelo usuário.
 
     A função utiliza `validate_integer_range`para garantir que a opção
-    esteja dentro do intervalo válido de [0, 6].
+    esteja dentro do intervalo válido de [0, 8].
 
     Returns:
         int: A opção numérica validada, inserida pelo usuário.
@@ -282,10 +294,11 @@ def show_menu() -> int:
     5 - Grava
     6 - Lê
     7 - Tamanho da agenda
+    8 - Ordenar por Nome
 
     0 - Sai
 ''')
-    return validate_integer_range('Escolha uma opção: ', 0, 7)
+    return validate_integer_range('Escolha uma opção: ', 0, 8)
 
 while option := show_menu():
     if option == 0:
@@ -304,5 +317,7 @@ while option := show_menu():
         load_contacts()
     elif option == 7:
         show_length()
+    elif option == 8:
+        order_names_by_alpha()
 
 print('\nPrograma Finalizado.')
