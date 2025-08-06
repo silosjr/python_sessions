@@ -26,12 +26,12 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.9.0' 
+__version__ = '1.10.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
 from typing import List, Optional 
-import os 
+import os.path
 
 contacts: List[List[str]] = []
 
@@ -56,6 +56,47 @@ def ask_name(default_name: Optional[str] = None) -> str:
     if name_input:
         return name_input
     return default_name
+
+def ask_phones() -> dict:
+    """
+    Solicita ao usuário que cadastre um ou mais telefones e seus tipos.
+
+    Returns:
+        dict: Um dicionário onde a chave é o tipo do telefone (ex: 'Celular')
+              e o valor é o número de telefone correspondente.
+    """
+    phones = {}
+    while True:
+        phone_type = input('''\nInforme o tipo de telefone que deseja cadastrar:
+                      A - Residencial
+                      B - Celular
+                      C - Contato
+                      D - Comercial
+                      E - Outro
+                      0 (zero) SAI
+''').lower().strip()
+        
+        if phone_type == '0':
+            break
+        elif phone_type in ['a', 'b', 'c', 'd', 'e']:
+            phone_number = ask_phone()
+            
+            type_map = {
+                'a': 'Residencial',
+                'b': 'Celular',
+                'c': 'Contato',
+                'd': 'Comercial',
+                'e': 'Outro'
+            }
+            phones[type_map[phone_type]] = phone_number
+
+            another = input('Deseja adicionar outro número? (S/N): ').lower().strip()
+            if another != 's':
+                break
+        else:
+            print('Opção inválida. Por favor, digite uma opção do menu.')
+
+    return phones
 
 def ask_phone(default_number: Optional[str] = None) -> str:
     """

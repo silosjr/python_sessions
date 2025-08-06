@@ -49,3 +49,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.9.0 (2025-08-05)
 - Adicionado: O programa agora controla a data de aniversário e o e-mail de cada contato, com validação de entrada opcional em edições.
+
+### 1.10.0 (2025-08-05)
+- Adicionado: O programa agora permite registrar múltiplos telefones para cada contato, associando um tipo (ex: 'celular', 'residencial') a cada número.
