@@ -26,7 +26,7 @@ Uso:
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.8.0' 
+__version__ = '1.9.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -78,7 +78,58 @@ def ask_phone(default_number: Optional[str] = None) -> str:
         return phone_input
     return default_number
 
-def show_data(index: int, name: str, phone: str) -> None:
+def ask_birthdate(default_birthdate: Optional[str] = None) -> str:
+    """
+    Solicita a entrada da data de aniversário do usuário, exibindo um
+    valor padrão.
+
+    Args:
+        default_birthdate (Optional[str]): Um valor padrão a ser exibido.
+            Se o usuário não fornecer uma entrada, este valor será usado.
+
+    Returns:
+        str: A data de aniversário informada pelo usuário ou o valor padrão se
+             a entrada for vazia.
+    """
+    if default_birthdate is not None:
+        prompt = f'Data de aniversário (padrão: {default_birthdate})'
+    else:
+        prompt = 'Data de Aniversário: '
+
+    birthdate = input(prompt)
+    if birthdate:
+        return birthdate
+    return default_birthdate
+
+def ask_email(default_email: Optional[str] = None) -> str:
+    """
+    Solicita a entrada de email para o usuário, exibindo um valor padrão.
+
+    Args:
+        default_email (Optional[str]): Um valor padrão a ser exibido. Se 
+        o usuário não fornecer uma entrada, este valor será usado.
+
+    Returns:
+        str: O email informado pelo usuário ou o valor padrão se a entrada
+        for vazia.
+    """
+    if default_email is not None:
+        prompt = f'Email (padrão: {default_email})'
+    else:
+        prompt = 'Email: '
+
+    email = input(prompt)
+    if email:
+        return email 
+    return default_email
+
+def show_data(
+    index: int,
+    name: str, 
+    phone: str,
+    birthdate:str,
+    email: str
+) -> None:
     """
     Exibe o nome e o telefone do usuário no Console.
 
@@ -86,12 +137,16 @@ def show_data(index: int, name: str, phone: str) -> None:
         index (int): A posição que o registro ocupa na lista de contatos
         name (str): O nome do usuário cadastrado na lista de contatos.
         phone (str): O telefone do usuário cadastrado na lista de contatos.
+        birthdate (str): A data de aniversário cadastrada na lista de contatos.
+        email (str): O email cadastrado pelo usuário na lista de contatos.
 
     Side Effects:
-        Imprime uma string formatada no console contendo a posição do registro e
-        o nome do usuário seguido do seu telefone cadastrado.
+        Imprime uma string formatada no console contendo a posição do registro,
+        o nome do usuário, seu telefone cadastrado, data de aniversário e email
+        cadastrados.
     """
-    print(f'Posição: {index} Nome: {name} Telefone: {phone}')
+    print(f'Posição: {index} Nome: {name} Telefone: {phone}\
+          Data de Aniversário: {birthdate} Email: {email}')
 
 def ask_filename() -> str:
     """
@@ -125,11 +180,12 @@ def search(name:str) -> Optional[int]:
 
 def add_contact() -> None:
     """
-    Acrescenta um nome e um telefone à lista de contatos.
+    Adiciona um registro composto pelo nome, telefone, data de aniversário e email 
+    do usuário à lista `contacts`.
 
     Side Effects:
-        - Adiciona uma nova lista [nome, telefone] à variável global
-          'contacts'.
+        - Adiciona uma nova lista [nome, telefone, data de aniversário, email] à 
+          variável global `contacts`.
         - Modifica para `True` o status de `unsaved_changes` de modo a informar
           eventuais alterações não salvas na lista.
         - Exibe uma mensagem de erro ao tentar inserir um nome que já consta na agenda.
@@ -137,10 +193,12 @@ def add_contact() -> None:
     global unsaved_changes
     name: str = ask_name()
     phone: str = ask_phone()
+    birthdate: str = ask_birthdate()
+    email: str = ask_email()
     if search(name=name):
         print(f'Já existe um contato com o nome {name}')
     else:
-        contacts.append([name, phone])
+        contacts.append([name, phone, birthdate, email])
         unsaved_changes = True 
 
 def delete_contact() -> None:
@@ -150,6 +208,8 @@ def delete_contact() -> None:
     Atenção: Esta função remove o item da variável global `contacts` definitivamente.
 
     Side Effects:
+        - Se o registro a ser apagado for encontrado, todos os seus dados são exibidos
+          antes da mensagem de confirmação de exclusão.
         - Remove o elemento correspondente da lista global `contacts` (caso ele
           exista) após anuência do usuário diante de um prompt de confirmação.
         - Modifica para `True` o status de `unsaved_changes` de modo a informar
@@ -160,6 +220,8 @@ def delete_contact() -> None:
     name: str = ask_name()
     index: Optional[int] = search(name)
     if index is not None:
+        contact_data = contacts[index]
+        show_data(index, contact_data[0], contact_data[1], contact_data[2], contact_data[3])
         while True:
             delete_confirmation = input('Confirma a exclusão do registro? S / N: ').lower()
             if delete_confirmation == 's':
@@ -177,7 +239,11 @@ def delete_contact() -> None:
 
 def update_contact() -> None:
     """
-    Permite a atualização de um contato existente na lista.
+    Permite a atualização dos seguintes dados de um contato existente na lista:
+    1 - Nome.
+    2 - Telefone.
+    3 - Data de aniversário.
+    4 - Email.
 
     Atenção: Esta função modifica a lista global `contacts`.
 
@@ -196,12 +262,16 @@ def update_contact() -> None:
     if index is not None:
         old_name: str = contacts[index][0]
         old_phone: str = contacts[index][1]
+        old_birthdate: str = contacts[index][2]
+        old_email: str = contacts[index][3]
         print('Encontrado: ')
-        show_data(name=old_name, phone=old_phone, index=index)
+        show_data(name=old_name, phone=old_phone, old_birthdate=old_birthdate, old_email=old_email, index=index)
 
         print('\nDigite os novos dados:')
         name = ask_name(default_name=old_name)
         phone = ask_phone(default_number=old_phone)
+        birthdate = ask_birthdate(default_birthdate=old_birthdate)
+        email = ask_email(default_email=old_email)
 
         if name != old_name:
             if search(name) is not None:
@@ -211,7 +281,7 @@ def update_contact() -> None:
         while True:
             confirmation_prompt = input('Confirma as alterações dos dados? S / N: ').lower()
             if confirmation_prompt == 's':
-                contacts[index] = [name, phone]
+                contacts[index] = [name, phone, birthdate, email]
                 print('Contato atualizado com sucesso!')
                 unsaved_changes = True 
                 break
@@ -225,7 +295,8 @@ def update_contact() -> None:
 
 def list_contacts() -> None:
     """
-    Exibe todos os contatos da agenda de forma formatada.
+    Exibe todos os contatos da agenda de forma formatada e no seguinte formato:
+        <Posição> <Nome> <Telefone> <Data de Aniversário> <Email>
 
     Side Effects:
         Imprime no console um cabeçalho, a lista de todos os contatos 
@@ -234,7 +305,7 @@ def list_contacts() -> None:
     """
     print('\nAgenda\n\n------')
     for index, entry in enumerate(contacts):
-        show_data(index, entry[0], entry[1])
+        show_data(index, entry[0], entry[1], entry[2], entry[3])
     print('------\n')
 
 def load_contacts(filename_to_load: Optional[str] = None) -> None:
