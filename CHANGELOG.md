@@ -63,3 +63,15 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 - Refatorada a estrutura de dados de contato para armazenar telefones em um dicionário (`Dict[str, str]`) em vez de uma string única.
 - Atualizadas as funções `add_contact`, `update_contact` e `show_data` para serem compatíveis com a nova estrutura de dados de telefones.
 - Aprimorada a função `ask_phones` para permitir a edição de um dicionário de telefones existente, tornando a atualização de contatos mais intuitiva.
+
+## [1.0.1] - 2025-08-06
+
+### Changed
+- Melhorada a experiência do jogador com a adição de um cronômetro para medir a duração de cada partida.
+
+## [1.0.0] - (Data da versão anterior)
+
+### Added
+- Versão inicial do jogo da forca.
+- Lógica para carregar palavras de `words.txt`.
+- Desenho do enforcado em ASCII art.
