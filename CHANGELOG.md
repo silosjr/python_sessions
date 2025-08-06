@@ -52,3 +52,14 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.10.0 (2025-08-05)
 - Adicionado: O programa agora permite registrar múltiplos telefones para cada contato, associando um tipo (ex: 'celular', 'residencial') a cada número.
+
+## [1.10.0] - 2025-08-06
+
+### Adicionado
+- Implementada a capacidade de adicionar múltiplos telefones a um único contato.
+- Adicionada a classificação de telefones por tipo (Residencial, Celular, etc.).
+
+### Modificado
+- Refatorada a estrutura de dados de contato para armazenar telefones em um dicionário (`Dict[str, str]`) em vez de uma string única.
+- Atualizadas as funções `add_contact`, `update_contact` e `show_data` para serem compatíveis com a nova estrutura de dados de telefones.
+- Aprimorada a função `ask_phones` para permitir a edição de um dicionário de telefones existente, tornando a atualização de contatos mais intuitiva.

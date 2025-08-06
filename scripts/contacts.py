@@ -30,7 +30,7 @@ __version__ = '1.10.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
-from typing import List, Optional 
+from typing import Dict, List, Optional 
 import os.path
 
 contacts: List[List[str]] = []
@@ -57,15 +57,22 @@ def ask_name(default_name: Optional[str] = None) -> str:
         return name_input
     return default_name
 
-def ask_phones() -> dict:
+def ask_phones(default_phonesdict: Optional[Dict[str, str]] = None) -> Dict[str, str] :
     """
-    Solicita ao usuário que cadastre um ou mais telefones e seus tipos.
+    Solicita e gerencia uma coleção de telefones e seus tipos.
+
+    Se um dicionário de telefones for fornecido, ele será usado como
+    o ponto de partida, para a edição. Caso contrário, um novo dicionário
+    será criado.
+
+    Args:
+        default_phonesdict (Optional[Dict[str, str]]): Um dicionário de telefones
+            existentes para ser editado. Padrão é None.
 
     Returns:
-        dict: Um dicionário onde a chave é o tipo do telefone (ex: 'Celular')
-              e o valor é o número de telefone correspondente.
+        dict: Um dicionário final de telefones após a interação com o usuário.
     """
-    phones = {}
+    phones = default_phonesdict.copy() if default_phonesdict is not None else {}
     while True:
         phone_type = input('''\nInforme o tipo de telefone que deseja cadastrar:
                       A - Residencial
@@ -167,27 +174,35 @@ def ask_email(default_email: Optional[str] = None) -> str:
 def show_data(
     index: int,
     name: str, 
-    phone: str,
+    phones: Dict[str, str],
     birthdate:str,
     email: str
 ) -> None:
     """
-    Exibe o nome e o telefone do usuário no Console.
+    Exibe o nome, tipos de telefone e seus respectivos números, data de aniversário
+    e email do usuário no Console.
 
     Args:
-        index (int): A posição que o registro ocupa na lista de contatos
-        name (str): O nome do usuário cadastrado na lista de contatos.
-        phone (str): O telefone do usuário cadastrado na lista de contatos.
-        birthdate (str): A data de aniversário cadastrada na lista de contatos.
-        email (str): O email cadastrado pelo usuário na lista de contatos.
+        index (int): A posição (ID) do contato na agenda.
+        name (str): O nome do contato.
+        phones (Dict[str, str]): Um dicionário com os telefones do contato.
+        birthdate (str): A data de aniversário do contato.
+        email (str): O email do contato.
 
     Side Effects:
         Imprime uma string formatada no console contendo a posição do registro,
-        o nome do usuário, seu telefone cadastrado, data de aniversário e email
+        o nome do usuário, seus telefones e tipos cadastrados, data de aniversário e email
         cadastrados.
     """
-    print(f'Posição: {index} Nome: {name} Telefone: {phone}\
-          Data de Aniversário: {birthdate} Email: {email}')
+    print(f'Posição: {index} | Nome: {name}')
+
+    print('\tTelefones:')
+    for phone_type, phone_number in phones.items():
+        print(f'\t\t- {phone_type}: {phone_number}')
+
+    print(f'\tData de Aniversário: {birthdate}')
+    print(f'\tEmail: {email}')
+    print('-' * 25)
 
 def ask_filename() -> str:
     """
@@ -221,11 +236,11 @@ def search(name:str) -> Optional[int]:
 
 def add_contact() -> None:
     """
-    Adiciona um registro composto pelo nome, telefone, data de aniversário e email 
+    Adiciona um registro composto pelo nome, números de telefone, data de aniversário e email 
     do usuário à lista `contacts`.
 
     Side Effects:
-        - Adiciona uma nova lista [nome, telefone, data de aniversário, email] à 
+        - Adiciona uma nova lista [nome, lista de telefones, data de aniversário, email] à 
           variável global `contacts`.
         - Modifica para `True` o status de `unsaved_changes` de modo a informar
           eventuais alterações não salvas na lista.
@@ -233,14 +248,18 @@ def add_contact() -> None:
     """
     global unsaved_changes
     name: str = ask_name()
-    phone: str = ask_phone()
-    birthdate: str = ask_birthdate()
-    email: str = ask_email()
+
     if search(name=name):
         print(f'Já existe um contato com o nome {name}')
-    else:
-        contacts.append([name, phone, birthdate, email])
-        unsaved_changes = True 
+        return 
+    
+    phone_list: List[str] = ask_phones()
+    birthdate: str = ask_birthdate()
+    email: str = ask_email()
+
+    contacts.append([name, phone_list, birthdate, email])
+    unsaved_changes = True 
+    print(f'Contato {name} adicionado com sucesso!')
 
 def delete_contact() -> None:
     """
@@ -300,17 +319,20 @@ def update_contact() -> None:
     """
     global unsaved_changes
     index: Optional[int] = search(ask_name())
+
     if index is not None:
         old_name: str = contacts[index][0]
-        old_phone: str = contacts[index][1]
-        old_birthdate: str = contacts[index][2]
+        old_phones_dict: Dict[str, str] = contacts[index][1] 
+        old_birthdate: str = contacts[index][2] 
         old_email: str = contacts[index][3]
-        print('Encontrado: ')
-        show_data(name=old_name, phone=old_phone, old_birthdate=old_birthdate, old_email=old_email, index=index)
 
-        print('\nDigite os novos dados:')
+        print('Encontrado: ')
+
+        show_data(index, old_name, old_phones_dict, old_birthdate, old_email)
+
+        print('\nDigite os novos dados (pressione Enter para manter o atual):')
         name = ask_name(default_name=old_name)
-        phone = ask_phone(default_number=old_phone)
+        new_phones_dict = ask_phones(default_phonesdict=old_phones_dict) 
         birthdate = ask_birthdate(default_birthdate=old_birthdate)
         email = ask_email(default_email=old_email)
 
@@ -322,7 +344,7 @@ def update_contact() -> None:
         while True:
             confirmation_prompt = input('Confirma as alterações dos dados? S / N: ').lower()
             if confirmation_prompt == 's':
-                contacts[index] = [name, phone, birthdate, email]
+                contacts[index] = [name, new_phones_dict, birthdate, email] 
                 print('Contato atualizado com sucesso!')
                 unsaved_changes = True 
                 break
@@ -330,7 +352,7 @@ def update_contact() -> None:
                 print('Nenhuma alteração foi realizada.')
                 break 
             else:
-                print('Digite S para confirmar ou N para negar as alterações.')
+                print('Digite S para confirmar ou N para descartar as alterações.')
     else:
         print('Nome não encontrado.')
 
