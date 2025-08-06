@@ -46,3 +46,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ### 1.8.0 (2025-08-05)
 - Adicionado: O programa agora verifica a repetição de nomes ao adicionar ou alterar contatos, garantindo a unicidade dos registros.
+
+### 1.9.0 (2025-08-05)
+- Adicionado: O programa agora controla a data de aniversário e o e-mail de cada contato, com validação de entrada opcional em edições.
