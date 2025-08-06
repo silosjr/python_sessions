@@ -9,3 +9,6 @@ __pycache__/
 # Ambientes virtuais
 venv/
 .venv/
+
+# Arquivo Gerado por `contacts`
+meus_contatos
