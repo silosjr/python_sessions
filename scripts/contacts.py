@@ -1,208 +1,160 @@
-"""Agenda de Contatos Simples em Linha de Comando.
+"""
+Agenda de Contatos Simples em Linha de Comando com persistência em JSON.
 
-Este script implementa um sistema de gerenciamento de contatos (uma agenda)
-que é executado no terminal. Ele permite ao usuário realizar operações
-básicas de CRUD (Criar, Ler, Atualizar e Apagar) sobre uma lista de
-contatos que é mantida em memória.
+Este script implementa um sistema de gerenciamento de contatos que permite
+ao usuário realizar operações de CRUD (Criar, Ler, Atualizar e Apagar).
 
-Funcionalidades Principais:
-- Adicionar, alterar, apagar e listar contatos.
-- Salvar a lista de contatos em um arquivo de texto.
-- Carregar contatos de um arquivo de texto para a memória.
-- Interface de menu interativa e robusta com validação de entrada.
+Os dados são mantidos em memória como uma lista de dicionários e podem ser
+salvos e carregados de um arquivo no formato JSON, garantindo a
+integridade de estruturas de dados complexas como os múltiplos telefones.
 
-O estado da agenda é armazenado em uma lista global `contacts`, onde cada
-contato é uma sub-lista no formato `[nome, telefone]`. A persistência dos
-dados é feita através de arquivos de texto simples, com cada linha
-representando um contato no formato 'nome#telefone'.
-
-Este código foi desenvolvido com foco em clareza, robustez e boas práticas
-de programação em Python, incluindo anotações de tipo (type hints) e
-documentação (docstrings) completas para todas as funções.
-
-Uso:
-    Execute o script diretamente em um terminal para iniciar o menu:
-        python nome_do_arquivo.py
+Funcionalidades:
+- Adicionar, alterar, apagar, listar e ordenar contatos.
+- Salvar e carregar a agenda em formato JSON.
+- Carregamento automático da última agenda utilizada.
+- Interface de menu interativa com validação de entrada.
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.10.0' 
+__version__ = '1.11.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
-from typing import Dict, List, Optional 
-import os.path
+from typing import Dict, List, Optional, Any
+import json 
+from pathlib import Path 
 
-contacts: List[List[str]] = []
-
-unsaved_changes = False 
+contacts: List[Dict[str, Any]] = []
+unsaved_changes: bool = False 
+LAST_AGENDA_FILE_CONFIG = Path('last_agenda_file.txt')
 
 def ask_name(default_name: Optional[str] = None) -> str:
     """
-    Solicita a entrada do nome do usuário, exibindo um valor padrão se fornecido.
-
+    Solicita o nome do contato ao usuário.
     Args:
-        default_name (Optional[str]): Um valor de nome padrão a ser exibido.
-            Se o usuário não fornecer uma entrada, este valor será usado.
+        default_name (Optional[str], optional): Um valor padrão a ser exibido
+            e retornado se o usuário não digitar nada. Padrão é None.
     Returns:
         str: O nome que o usuário digitar ou o valor padrão se a entrada for vazia.
     """
-    if default_name is not None:
-        prompt = f'Nome (padrão: {default_name}):'
-    else:
-        prompt = 'Nome: '
-    
+    prompt = f'Nome (padrão: {default_name}): ' if default_name else 'Nome: '
     name_input = input(prompt)
-    if name_input:
-        return name_input
-    return default_name
-
-def ask_phones(default_phonesdict: Optional[Dict[str, str]] = None) -> Dict[str, str] :
+    return name_input or default_name
+  
+def ask_phones(default_phones: Optional[Dict[str, str]] = None) -> Dict[str, str] :
     """
-    Solicita e gerencia uma coleção de telefones e seus tipos.
+    Gerencia a coleta interativa de múltiplos telefones para um contato.
 
-    Se um dicionário de telefones for fornecido, ele será usado como
-    o ponto de partida, para a edição. Caso contrário, um novo dicionário
-    será criado.
+    Inicia um laço que permite ao usuário adicionar ou editar telefones
+    classificados por tipo (Residencial, Celular, etc.)
 
     Args:
-        default_phonesdict (Optional[Dict[str, str]]): Um dicionário de telefones
-            existentes para ser editado. Padrão é None.
+        default_phones(Optional[Dict[str, str], optional]): Um dicionário de
+            telefones existentes para edição. Se None, um novo dicionário é criado.
+            Padrão é None.
 
     Returns:
-        dict: Um dicionário final de telefones após a interação com o usuário.
+        Dict[str, str]: Um dicionário final de telefones após a interação com o usuário.
+
+    Side Effects:
+        Imprime o menu de tipos de telefone e solicita entradas do usuário no console.
     """
-    phones = default_phonesdict.copy() if default_phonesdict is not None else {}
+    phones = default_phones.copy() if default_phones else {}
+
     while True:
-        phone_type = input('''\nInforme o tipo de telefone que deseja cadastrar:
-                      A - Residencial
-                      B - Celular
-                      C - Contato
-                      D - Comercial
-                      E - Outro
-                      0 (zero) SAI
-''').lower().strip()
-        
-        if phone_type == '0':
+        print('\nTelefones Atuais:', phones or 'Nenhum')
+        phone_type_input = input('' \
+        '\nTipo de Telefone (R-Residencial, C-Celular, T-Trabalho, O-Outro, S-Sair):').lower()
+
+        type_map = {'r': 'Residencial', 'c': 'Celular', 't': 'Trabalho', 'o': 'Outro'}
+
+        if phone_type_input == 's':
             break
-        elif phone_type in ['a', 'b', 'c', 'd', 'e']:
-            phone_number = ask_phone()
-            
-            type_map = {
-                'a': 'Residencial',
-                'b': 'Celular',
-                'c': 'Contato',
-                'd': 'Comercial',
-                'e': 'Outro'
-            }
-            phones[type_map[phone_type]] = phone_number
-
-            another = input('Deseja adicionar outro número? (S/N): ').lower().strip()
-            if another != 's':
-                break
+        elif phone_type_input in type_map:
+            phone_type = type_map[phone_type_input]
+            phone_number = ask_phone_number(phones.get(phone_type))
+            if phone_number:
+                phones[phone_type] = phone_number
+            else:
+                phones.pop(phone_type, None)
         else:
-            print('Opção inválida. Por favor, digite uma opção do menu.')
+            print('Opção Inválida')
 
-    return phones
+    return phones 
 
-def ask_phone(default_number: Optional[str] = None) -> str:
+def ask_phone_number(default_number: Optional[str] = None) -> str:
     """
-    Solicita a entrada do telefone do usuário, exibindo um valor padrão se fornecido.
+    Solicita apenas um número de telefone.
 
     Args:
-        default_number (Optional[str]): Um valor de número de telefone padrão a ser exibido.
-            Se o usuário não fornecer uma entrada, este valor será usado.
+        default_number (Optional[str], optional): Um valor padrão a ser exibido. Padrão é None.
 
     Returns:
         str: O telefone informado pelo usuário, ou o valor padrão se a entrada for vazia.
     """
-    if default_number is not None:
-        prompt = f'Telefone (padrão: {default_number})'
-    else:
-        prompt = 'Telefone :'
-
+    prompt = f'Telefone (padrão: {default_number}): ' if default_number else 'Telefone: '
     phone_input = input(prompt)
-    if phone_input:
-        return phone_input
-    return default_number
+    return phone_input or default_number
 
 def ask_birthdate(default_birthdate: Optional[str] = None) -> str:
     """
-    Solicita a entrada da data de aniversário do usuário, exibindo um
-    valor padrão.
+    Solicita a data de aniversário ao usuário.
 
     Args:
-        default_birthdate (Optional[str]): Um valor padrão a ser exibido.
-            Se o usuário não fornecer uma entrada, este valor será usado.
+        default_birthdate (Optional[str], optional): Um valor padrão a ser exibido.
+            Padrão é None.
 
     Returns:
         str: A data de aniversário informada pelo usuário ou o valor padrão se
              a entrada for vazia.
     """
-    if default_birthdate is not None:
-        prompt = f'Data de aniversário (padrão: {default_birthdate})'
-    else:
-        prompt = 'Data de Aniversário: '
+    prompt = f'Data de aniversário (padrão: {default_birthdate}): ' if default_birthdate else 'Data de Aniversário: '
 
-    birthdate = input(prompt)
-    if birthdate:
-        return birthdate
-    return default_birthdate
+    birthdate_input = input(prompt)
+
+    return birthdate_input or default_birthdate
 
 def ask_email(default_email: Optional[str] = None) -> str:
     """
-    Solicita a entrada de email para o usuário, exibindo um valor padrão.
+    Solicita o email ao usuário.
 
     Args:
-        default_email (Optional[str]): Um valor padrão a ser exibido. Se 
-        o usuário não fornecer uma entrada, este valor será usado.
+        default_email (Optional[str], optional): Um valor padrão a ser exibido. Padrão
+            é None.
 
     Returns:
-        str: O email informado pelo usuário ou o valor padrão se a entrada
-        for vazia.
+        str: O email informado ou o valor padrão.
     """
-    if default_email is not None:
-        prompt = f'Email (padrão: {default_email})'
-    else:
-        prompt = 'Email: '
+    prompt = f'Email (padrão: {default_email}): ' if default_email else 'Email: '
+        
+    email_input = input(prompt)
 
-    email = input(prompt)
-    if email:
-        return email 
-    return default_email
+    return email_input or default_email 
 
-def show_data(
+def show_contact_details(
     index: int,
-    name: str, 
-    phones: Dict[str, str],
-    birthdate:str,
-    email: str
+    contact: Dict[str, Any],
 ) -> None:
     """
-    Exibe o nome, tipos de telefone e seus respectivos números, data de aniversário
-    e email do usuário no Console.
+    Exibe os detalhes de um único contato de forma formatada.
 
     Args:
         index (int): A posição (ID) do contato na agenda.
-        name (str): O nome do contato.
-        phones (Dict[str, str]): Um dicionário com os telefones do contato.
-        birthdate (str): A data de aniversário do contato.
-        email (str): O email do contato.
+        contact (Dict[str, Any]): O dicionário contendo os dados do contato.
 
     Side Effects:
-        Imprime uma string formatada no console contendo a posição do registro,
-        o nome do usuário, seus telefones e tipos cadastrados, data de aniversário e email
-        cadastrados.
+        Imprime os detalhes formatados do contato no console.
     """
-    print(f'Posição: {index} | Nome: {name}')
-
-    print('\tTelefones:')
-    for phone_type, phone_number in phones.items():
-        print(f'\t\t- {phone_type}: {phone_number}')
-
-    print(f'\tData de Aniversário: {birthdate}')
-    print(f'\tEmail: {email}')
-    print('-' * 25)
+    print(f'\nID {index} | Nome {contact.get('name', 'N/A')}')
+    print(f'    - Aniversário: {contact.get('birthdate', 'N/A')}')
+    print(f'    - Email: {contact.get('email', 'N/A')}')
+    print(' - Telefones:')
+    phones = contact.get('phones', {})
+    if phones:
+        for p_type, p_number in phones.items():
+            print(f'        - {p_type}: {p_number}')
+    else:
+        print('     - Nenhum telefone cadastrado')
 
 def ask_filename() -> str:
     """
@@ -213,13 +165,11 @@ def ask_filename() -> str:
     """
     return input('Nome do arquivo: ')
 
-def search(name:str) -> Optional[int]:
+def search_contact(name:str) -> Optional[int]:
     """
-    Procura por um contato na lista pelo nome.
-    
-    A busca é feita comparando o nome com o primeiro elemento ([0]) de
-    cada contato na lista. A comparação não diferencia maiúsculas de
-    minúsculas.
+    Procura por um contato na lista pelo nome e retorna seu índice na lista.
+
+    A busca não diferencia maiúsculas de minúsculas.
 
     Args:
         name (str): O nome digitado pelo usuário para a busca.
@@ -228,157 +178,145 @@ def search(name:str) -> Optional[int]:
         Optional[int]: O índice do contato na lista, se encontrado.
                        Caso contrário, retorna None.
     """
-    search_name = name.lower()
     for index, entry in enumerate(contacts):
-        if entry[0].lower() == search_name:
+        if entry['name'].lower() == name.lower():
             return index
     return None
 
 def add_contact() -> None:
     """
-    Adiciona um registro composto pelo nome, números de telefone, data de aniversário e email 
-    do usuário à lista `contacts`.
+    Adiciona um novo contato à agenda.
+    
+    Solicita todos os dados do novo contato e o adiciona à lista global
+    `contacts`. Impede a adição de contatos com nomes duplicados.
 
     Side Effects:
-        - Adiciona uma nova lista [nome, lista de telefones, data de aniversário, email] à 
-          variável global `contacts`.
-        - Modifica para `True` o status de `unsaved_changes` de modo a informar
-          eventuais alterações não salvas na lista.
-        - Exibe uma mensagem de erro ao tentar inserir um nome que já consta na agenda.
+        - Modifica a variável global `contacts` adicionando um novo dicionário.
+        - Modifica a variável global `unsaved_changes` para True.
+        - Imprime mensagens de status ou erro no console.
     """
     global unsaved_changes
     name: str = ask_name()
 
-    if search(name=name):
-        print(f'Já existe um contato com o nome {name}')
+    if not name:
+        print('Nome não pode ser vazio')
         return 
     
-    phone_list: List[str] = ask_phones()
-    birthdate: str = ask_birthdate()
-    email: str = ask_email()
-
-    contacts.append([name, phone_list, birthdate, email])
+    if search_contact(name) is not None:
+        print(f'ERRO: Já existe um contato com o nome "{name}".')
+        return 
+    
+    new_contact = {
+        'name': name,
+        'phones': ask_phones(),
+        'birthdate': ask_birthdate(),
+        'email': ask_email()
+    }
+    contacts.append(new_contact)
     unsaved_changes = True 
-    print(f'Contato {name} adicionado com sucesso!')
+    print(f'\nContato "{name}" adicionado com sucesso!')
 
 def delete_contact() -> None:
     """
-    Apaga um registro [nome, telefone] da lista de contatos, caso este exista.
-
-    Atenção: Esta função remove o item da variável global `contacts` definitivamente.
+    Apaga um contato da agenda após confirmação.
 
     Side Effects:
-        - Se o registro a ser apagado for encontrado, todos os seus dados são exibidos
-          antes da mensagem de confirmação de exclusão.
-        - Remove o elemento correspondente da lista global `contacts` (caso ele
-          exista) após anuência do usuário diante de um prompt de confirmação.
-        - Modifica para `True` o status de `unsaved_changes` de modo a informar
-          eventuais alterações não salvas na lista.
-        - Imprime uma mensagem de erro no console se o nome não for encontrado. 
+        - Remove um item da lista global `contacts`.
+        - Modifica a variável global `unsaved_changes` para True se a exclusão for bem sucedida.
+        - Imprime mensagens de status ou erro no console. 
     """
     global unsaved_changes
-    name: str = ask_name()
-    index: Optional[int] = search(name)
-    if index is not None:
-        contact_data = contacts[index]
-        show_data(index, contact_data[0], contact_data[1], contact_data[2], contact_data[3])
-        while True:
-            delete_confirmation = input('Confirma a exclusão do registro? S / N: ').lower()
-            if delete_confirmation == 's':
-                del contacts[index]
-                print('1 Registro excluído com sucesso!')
-                unsaved_changes = True
-                break
-            elif delete_confirmation == 'n':
-                print('Nenhum registro foi excluído.')
-                break
-            else:
-                print('Digite S para confirmar ou N para nenhuma ação.')
-    else:
+    name_to_search: str = ask_name()
+    if not name_to_search:
+        return 
+    
+    index: Optional[int] = search_contact(name_to_search)
+    if index is None:
         print('Nome não encontrado.')
+        return
+    
+    print('\n--- Excluindo Contato ---')
+    show_contact_details(index, contacts[index])
+    confirmation = input('Tem certeza que deseja excluir este contato? (S/N): ').lower()
+    if confirmation == 's':
+        del contacts[index]
+        unsaved_changes = True
+        print('Contato excluído com sucesso.')
+    else:
+        print('Nenhum registro foi excluído.')
 
 def update_contact() -> None:
     """
-    Permite a atualização dos seguintes dados de um contato existente na lista:
-    1 - Nome.
-    2 - Telefone.
-    3 - Data de aniversário.
-    4 - Email.
+    Atualiza os dados de um contato existente.
 
-    Atenção: Esta função modifica a lista global `contacts`.
+    Primeiro, busca por um contato. Se encontrado, solicita novos dados para
+    cada campo, permitindo que o usuário mantenha os dados antigos ao 
+    pressionar Enter.
 
     Side Effects:
-    - Se encontrado, exibe os dados antigos como padrão, solicita novos dados,
-      e antes de efetuar as alterações exibe mensagens de status (confirmação,
-      sucesso, erro).
-    - Modifica para `True` o status de `unsaved_changes` de modo a informar
-      eventuais alterações não salvas na lista.
-    - Se não encontrado exibe uma mensagem de erro no console.
-    - Ao tentar atualizar um contato com um nome existente é exibida uma mensagem
-      de erro interrompendo a operação.
+    - Modifica um item na lista global `contacts`.
+    - Modifica a variável global `unsaved_changes` para True se houver alteração.
+    - Imprime mensagens de status ou erro no console.
     """
     global unsaved_changes
-    index: Optional[int] = search(ask_name())
+    name_to_search = ask_name()
+    if not name_to_search:
+        return 
 
-    if index is not None:
-        old_name: str = contacts[index][0]
-        old_phones_dict: Dict[str, str] = contacts[index][1] 
-        old_birthdate: str = contacts[index][2] 
-        old_email: str = contacts[index][3]
-
-        print('Encontrado: ')
-
-        show_data(index, old_name, old_phones_dict, old_birthdate, old_email)
-
-        print('\nDigite os novos dados (pressione Enter para manter o atual):')
-        name = ask_name(default_name=old_name)
-        new_phones_dict = ask_phones(default_phonesdict=old_phones_dict) 
-        birthdate = ask_birthdate(default_birthdate=old_birthdate)
-        email = ask_email(default_email=old_email)
-
-        if name != old_name:
-            if search(name) is not None:
-                print(f'ERRO: Já existe um contato com o nome {name}.')
-                return 
-
-        while True:
-            confirmation_prompt = input('Confirma as alterações dos dados? S / N: ').lower()
-            if confirmation_prompt == 's':
-                contacts[index] = [name, new_phones_dict, birthdate, email] 
-                print('Contato atualizado com sucesso!')
-                unsaved_changes = True 
-                break
-            elif confirmation_prompt == 'n':
-                print('Nenhuma alteração foi realizada.')
-                break 
-            else:
-                print('Digite S para confirmar ou N para descartar as alterações.')
-    else:
+    index = search_contact(name_to_search)
+    if index is None:
         print('Nome não encontrado.')
+        return 
+    
+    old_name: str = contacts[index]
+    print('\n--- Editando Contato ---')
+    show_contact_details(index, old_name)
+    print('Digite os novos dados (pressione Enter para manter o atual):')
+
+    new_name = ask_name(default_name=old_name['name'])
+    if not new_name:
+        print('Nome não pode ser vazio.')
+        return 
+    
+    existing_index = search_contact(new_name)
+    if existing_index is not None and existing_index != index:
+        print(f'ERRO: Já existe um contato com o nome "{new_name}".')
+        return 
+    
+    updated_contact = {
+        'name': new_name,
+        'phones': ask_phones(default_phones=old_name['phones']),
+        'birthdate': ask_birthdate(default_birthdate=old_name['birthdate']),
+        'email': ask_email(default_email=old_name['email'])
+    }
+    
+    contacts[index] = updated_contact
+    unsaved_changes = True 
+    print('\nContato atualizado com sucesso')
 
 def list_contacts() -> None:
     """
-    Exibe todos os contatos da agenda de forma formatada e no seguinte formato:
-        <Posição> <Nome> <Telefone> <Data de Aniversário> <Email>
+    Exibe todos os contatos da agenda de forma formatada.
 
     Side Effects:
-        Imprime no console um cabeçalho, a lista de todos os contatos 
-        (usando a função show_data) indicando sua posição exata no 
-        registro e um rodapé.
+        Imprime a lista completa de contatos no console, utilizando a 
+            função `show_contact_details` para cada um.
     """
-    print('\nAgenda\n\n------')
-    for index, entry in enumerate(contacts):
-        show_data(index, entry[0], entry[1], entry[2], entry[3])
-    print('------\n')
+    print('\n--- Agenda de Contatos ---')
+    if not contacts:
+        print('Nenhum contato na agenda.')
+    else:
+        for index, entry in enumerate(contacts):
+            show_contact_details(index, entry)
+    print('-----------------------------------\n')
 
-def load_contacts(filename_to_load: Optional[str] = None) -> None:
+def load_contacts_from_json(filename: Optional[str] = None) -> None:
     """
-    Carrega contatos de um arquivo, substituindo a lista atual.
+    Carrega contatos de um arquivo JSON, substituindo a lista atual.
 
-    Se um `filename_to_load` for fornecido, a função o utiliza. Caso contrário,
-    solicita o nome do arquivo ao usuário.
-    A função verifica se há alterações não salvas antes de carregar um novo arquivo,
-    prevenindo a perda de dados.
+    Args:
+        filename (Optional[str], optional): O nome do arquivo a ser carregado.
+            Se None, solicita ao usuário. Padrão é None.
 
     Side Effects:
         - A variável global `contacts` é redefinida e preenchida com o conteúdo do arquivo.
@@ -388,10 +326,10 @@ def load_contacts(filename_to_load: Optional[str] = None) -> None:
     """
     global contacts, unsaved_changes
     
-    if filename_to_load is not None:
-        filename = filename_to_load
-    else:
-        filename = ask_filename()
+    if filename is None:
+        filename = input('Nome do arquivo para carregar: ')
+
+    if not filename: return 
 
     if unsaved_changes:
         print('Atenção: A agenda atual possui alterações não salvas.')
@@ -401,168 +339,123 @@ def load_contacts(filename_to_load: Optional[str] = None) -> None:
             return 
 
     try:
-        with open(filename, 'r', encoding='utf-8') as file:
-            contacts = []
-            for line in file:
-                if not line.strip():
-                    continue
-                try:
-                    name, phone = line.strip().split('∴')
-                    contacts.append([name, phone])
-                except ValueError:
-                    print(f'Aviso: Linha mal formatada ignorada: "{line.strip()}"')
+        with Path(filename).open(filename, 'r', encoding='utf-8') as file:
+            contacts = json.load(file)
         print(f'\nContatos do arquivo "{filename}" carregados com sucesso!')
         unsaved_changes = False 
     except FileNotFoundError:
         print(f'\nERRO: Arquivo "{filename}" não econtrado.')
+    except json.JSONDecodeError:
+        print(f'\nERRO: O arquivo "{filename}" está corrompido ou não é um JSON válido. ')
     
-def save_contacts() -> None:
+def save_contacts_to_json() -> None:
     """
-    Salva a lista de contatos atual em um arquivo.
-
-    Atenção: Esta função cria um novo arquivo ou SOBRESCREVE
-    completamente um arquivo existente que tenha o mesmo nome.
+    Salva a lista de contatos atual em um arquivo JSON.
 
     Side Effects:
-        - Cria ou sobrescreve um arquivo no disco com os dados da
-          variável global `contacts`.
-        - Modifica o status da variável global `unsaved_changes`
-          para `False` sinalizando alterações salvas com sucesso.
+        - Cria ou sobrescreve um arquivo no disco.
+        - Atualiza o arquivo de configuração `last_agenda_file.txt`.
+        - Modifica a variável global `unsaved_changes` para False.
         - Imprime uma mensagem de status (sucesso ou erro) no console.
-        - A função será interrompida se não houver alterações a serem salvas.
-        - Armazena o nome do arquivo da última agenda salva em `last_agenda_file.txt`.
    """
     global unsaved_changes
     if not unsaved_changes:
         print('A agenda atual não possui alterações. Nenhuma ação foi realizada.')
         return 
     
-    filename: str = ask_filename()
+    filename = input('Nome do arquivo para salvar.')
+    if not filename: return 
+
     try:
-        with open(filename, 'w', encoding='utf-8') as file:
-            for entry in contacts:
-                name = str(entry[0]).replace('\n', '')
-                phone = str(entry[1]).replace('\n', '')
-                file.write(f'{name} ∴ {phone}\n')
-        print(f'\nContatos salvos com sucesso no arquivo "{filename}"!')
+        with Path(filename).open('w', encoding='utf-8') as last_file:
+            json.dump(contacts, file, indent=4, ensure_ascii=False)
+
+        with LAST_AGENDA_FILE_CONFIG.open('w', encoding='utf-8') as file:
+            last_file.write(filename)
+
         unsaved_changes = False
-
-        try:
-            with open('last_agenda_file.txt', 'w', encoding='utf-8') as last_file_handle:
-                last_file_handle.write(filename)
-        except IOError as e:
-            print(f'Aviso: Não foi possível salvar o nome do último arquivo da agenda: {e}')
-
+        print(f'\nContatos salvos com sucesso no arquivo "{filename}"!')
     except IOError as e:
-        print(f'\nErro ao salvar o arquivo "{filename}": {e}')
-    
-def validate_integer_range(prompt: str,
-                           start: int,
-                           end: int
-) -> int:
+        print(f'ERRO ao salvar o arquivo "{filename}": {e}')
+
+def sort_contacts_by_name()-> None:
     """
-    Solicita uma entrada e valida se é um inteiro em um intervalo.
-
-    A função insiste em um loop até que o usuário forneça um número 
-    inteiro válido dentro de um intervalo especificado [start, end].
-
-    Args:
-        prompt (str): A mensagem a ser exibida para o usuário.
-        start (int): O valor mínimo do intervalo (inclusivo).
-        end (int): O valor máximo do intervalo (inclusivo).
-
-    Returns:
-        int: O número inteiro validado inserido pelo usuário.
+    Ordena a lista de contatos em ordem alfabética pelo nome.
 
     Side Effects:
-        Imprime mensagens de erro no console se a entrada for inválida
-        ou estiver fora do intervalo.
+        - Modifica a ordem da lista global `contacts`.
+        - Modifica a variável global `unsaved_changes` para True.
+        - Imprime uma mensagem de status e a lista ordenada no console.
     """
-    while True:
-        try:
-            value = int(input(prompt))
-            if start <= value <= end:
-                return value
-            else:
-                print(f'ERRO: O valor deve estar entre {start} e {end}.')
-        except ValueError:
-            print('ERRO: Favor digitar um número inteiro válido')
-
-def show_length() -> None:
-    """
-    Exibe o total de contatos armazenados na variável global `contacts`.
-
-    Side Effects:
-        Exibe uma mensagem no console informando o número de contatos atual
-        no arquivo. 
-    """
-    print(f'{len(contacts)} contatos armazenados.')
-
-def order_names_by_alpha()-> None:
-    """
-    Ordena e exibe os registros da lista `contacts` em ordem alfabética 
-    usando o nome registrado como parâmetro.
-
-    Side Effects:
-        Exibe no console uma lista ordenadas pelos nomes em ordem ascendente.
-    """
-    contacts.sort(key=lambda x: x[0] )
+    contacts.sort(key=lambda contact: contact['name'].lower())
+    unsaved_changes = True 
+    print('\nAgenda ordenada por nome.')
     list_contacts()
    
 def show_menu() -> int:
     """
-    Exibe o menu principal e retorna a opção escolhida pelo usuário.
-
-    A função utiliza `validate_integer_range`para garantir que a opção
-    esteja dentro do intervalo válido de [0, 8].
+    Exibe o menu principal e valida a escolha pelo usuário.
 
     Returns:
-        int: A opção numérica validada, inserida pelo usuário.
-
+        int: A opção numérica (entre 0 e 7) escolhida pelo usuário.
+    
     Side Effects:
-        Imprime o menu de opçõe no console.
+        Imprime o menu de opçõe no console e solicita a entrada do usuário.
     """
     print('''
+    --- MENU ---
+    1 - Adicionar Contato
+    2 - Alterar Contato
+    3 - Apagar Contato
+    4 - Listar Contatos
+    5 - Salvar Agenda
+    6 - Carregar Agenda
+    7 - Ordenar por Nome
+    8 - # 
 
-    1 - Novo
-    2 - Altera
-    3 - Apaga
-    4 - Lista
-    5 - Grava
-    6 - Lê
-    7 - Tamanho da agenda
-    8 - Ordenar por Nome
-
-    0 - Sai
+    0 - Sair
 ''')
-    return validate_integer_range('Escolha uma opção: ', 0, 8)
-
-if os.path.isfile('last_agenda_file.txt'):
-    try:
-        with open('last_agenda_file.txt', 'r') as last_file_handle:
-            last_file_name = last_file_handle.read().strip()
-            load_contacts(filename_to_load=last_file_name)
-    except IOError as e:
-        print(f'Aviso: Não foi possível carregar a última agenda salva: {e}')
     
-while option := show_menu():
-    if option == 0:
-        break
-    elif option == 1:
-        add_contact()
-    elif option == 2:
-        update_contact()
-    elif option == 3:
-        delete_contact()
-    elif option == 4:
-        list_contacts()
-    elif option == 5:
-        save_contacts()
-    elif option == 6:
-        load_contacts()
-    elif option == 7:
-        show_length()
-    elif option == 8:
-        order_names_by_alpha()
+    while True:
+        try:
+            option = int(input('Escolha uma opção: '))
+            if 0 <= option <= 7:
+                return option
+            else:
+                print('ERRO: Opção inválida. Tente novamente.')
+        except ValueError:
+            print('ERRO: Por favor, digite um número.')
 
-print('\nPrograma Finalizado.')
+def main() -> None:
+    """
+    Ponto de entrada principal do programa.
+
+    Orquestra o carregamento inicial, o laço do menu principal e a
+    saída segura do programa.
+    """
+    if LAST_AGENDA_FILE_CONFIG.is_file():
+        last_file_name = LAST_AGENDA_FILE_CONFIG.read_text(enconding='utf-8').strip()
+        if last_file_name:
+            print(f'Carregando última agenda: {last_file_name}')
+            load_contacts_from_json(last_file_name)
+
+    while True:
+        option = show_menu()
+        if option == 1: add_contact()
+        elif option == 2: update_contact()
+        elif option == 3: delete_contact()
+        elif option == 4: list_contacts()
+        elif option == 5: save_contacts_to_json()
+        elif option == 6: load_contacts_from_json()
+        elif option == 7: sort_contacts_by_name()
+        elif option == 0:
+            if unsaved_changes:
+                confirm_exit = input('Existem alterações não salvas. Deseja realmente sair? (S/N): ').lower()
+                if confirm_exit != 's':
+                    continue
+            break 
+
+    print('\nPrograma Finalizado')
+
+if __name__ == '__main__':
+    main()
