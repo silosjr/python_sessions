@@ -75,3 +75,14 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 - Versão inicial do jogo da forca.
 - Lógica para carregar palavras de `words.txt`.
 - Desenho do enforcado em ASCII art.
+
+# Changelog
+
+## [1.11.0] - 2025-08-08
+
+### Changed
+- **Refatoração do Sistema de Persistência:** O sistema de salvamento de arquivos foi completamente alterado do formato de texto simples (`.txt`) para o formato JSON (`.json`).
+- **Estrutura de Dados Interna:** A estrutura de dados para cada contato foi alterada de uma lista para um dicionário, tornando o código mais legível e robusto.
+
+### Added
+- **Validação de Erros Aprimorada:** O carregamento de arquivos agora trata casos de arquivo corrompido ou com formato JSON inválido.
