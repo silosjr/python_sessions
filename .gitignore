@@ -1,0 +1,20 @@
+# Arquivos de sistema do Windows
+desktop.ini
+Thumbs.db
+
+# Pastas e arquivos de cache do Python
+__pycache__/
+*.pyc
+
+# Ambientes virtuais
+venv/
+.venv/
+
+# Arquivo Gerado por `contacts`
+meus_contatos
+
+# Arquivo JSON gerado por `contacts`
+contatos.json 
+
+# Arquivo de configuração de `contacts` 
+last_agenda_file
