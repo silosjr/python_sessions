@@ -76,8 +76,6 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 - Lógica para carregar palavras de `words.txt`.
 - Desenho do enforcado em ASCII art.
 
-# Changelog
-
 ## [1.11.0] - 2025-08-08
 
 ### Changed
