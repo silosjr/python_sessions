@@ -1,14 +1,15 @@
-"""Utilitário para Cálculo de Distância Euclidiana.
+from __future__ import annotations
 
-Este script contém uma função para calcular a distância em linha reta
-entre dois pontos em um plano 2D.
+"""
+Utilitário para Análise Geométrica com Classes.
 
-Quando executado diretamente, o script demonstra o uso da função
-com dois pontos de exemplo e imprime o resultado formatado no console.
+Este script define classes como `Point`, `Rectangle` e `Circle` para representar
+formas geométricas e fornece funções e métodos para realizar operações e análises
+sobre elas, como cálculo de distÂncia e verificação de interseções.
 """
 
 __author__ = 'Enock Silos'
-__version__ = '1.0.0' 
+__version__ = '1.1.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -41,22 +42,29 @@ class Point:
          """
          return f'({self.x}, {self.y})'
      
-     def __add__(self, other: 'Point') -> 'Point':
+     def __add__(self, other: 'Point' | tuple) -> 'Point':
          """
-          Retorna a soma vetorial de dois objetos `Point` usando o operador `+`.
+          Soma este ponto com outro `Point` ou com uma tupla.
 
-          Este método sobrecarrega o operador `+`, permitindo a soma direta de duas 
-          instâncias de `Point`. Ele cria e retorna um novo objeto `Point` sem modificar
-          as instâncias originais.
+          Este método sobrecarrega o operador `+` e utiliza despacho por tipo
+          para se comportar de forma diferente dependendo do tipo de `other`.
+          Retorna um novo objeto `Point` sem modificar as instâncias originais.
 
           Args:
-               other (Point): O outro objeto `Point` a ser somado a este.
+               other (Point | tuple): O operando a ser somado, que pode ser outro
+                                      `Point` ou uma tupla de dois números.
 
           Returns:
-               Point: Um novo objeto `Point` cujas coordenadas (x, y) são a 
-                      soma das coordenadas dos dois pontos originais.
+               Point: Um novo objeto `Point` representando o resultado da soma.
+          Raises: 
+               TypeError: Se `other` não for do tipo `Point` ou `tuple`.
          """
-         return Point(self.x + other.x, self.y + other.y)
+         if isinstance(other, Point):
+             return Point(self.x + other.x, self.y + other.y)
+         elif isinstance(other, tuple):
+             return Point(other[0] + self.x, other[1] + self.y)
+         else:
+             raise TypeError(f"Operação '+' não suportada entre 'Point' e '{type(other).__name__}'.")
 
 class Rectangle:
     """
@@ -217,6 +225,21 @@ if __name__ == '__main__':
     # Testando o método __add__ com o operador `+`
     ponto_soma = ponto_a + ponto_b
     print(f'A soma de A + B: {ponto_soma}\n')
+
+    ponto_c = Point(3.0, 4.0)
+    ponto_d = Point(1.0, 2.0)
+    tupla_deslocamento = (10.0, 20.0)
+
+    print('--- Demonstração do Despacho por Tipo em __add__ ---\n')
+    print(f'Ponto 1: {ponto_c}')
+    print(f'Ponto 2: {ponto_d}')
+    print(f'Tupla de deslocamento: {tupla_deslocamento}')
+    # Testando Point + Point
+    soma_pontos = ponto_c + ponto_d
+    print(f'Soma de C + D: {soma_pontos}')
+    # Testando Point + tuple
+    soma_tupla = ponto_c + tupla_deslocamento
+    print(f'Soma de C + Tupla: {soma_tupla}')
 
     # Criação e configuração do retângulo inicial
     box = Rectangle()
