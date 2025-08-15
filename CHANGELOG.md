@@ -8,6 +8,20 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 [2.2.0] - 2025-08-15
+Added
+
+Funções auxiliares find_defining_class e print_attributes para introspecção e depuração.
+
+Arquivo CHANGELOG.md para documentar as alterações.
+
+Código de teste no bloco if __name__ == '__main__' para provar a herança do método sort na classe Hand.
+
+Changed
+O script find_defining_class foi movido para o módulo utils/debug_tools.py para melhor organização e reutilização do código.
+
+A versão do script debug_tools.py foi sincronizada para 2.2.0 para refletir a versão do projeto principal.
+
+[2.2.0] - 2025-08-15
 Adicionado
 (concepts/object_oriented_programming): Adicionado o script card_game_inheritance.py, um estudo de caso sobre Herança em POO, com as classes Card, Deck e Hand.
 
