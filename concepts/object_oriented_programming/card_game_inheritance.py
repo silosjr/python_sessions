@@ -185,7 +185,7 @@ if __name__ == '__main__':
 
     # A função find_defining_class nos permite provar isso programaticamente.
     defining_class = find_defining_class(hand, 'shuffle')
-    print(f"O método 'shuffle' da mão é definido na classe: {defining_class.__name__}")
+    print(f"O método 'shuffle' da Hand é definido na classe: {defining_class.__name__}")
 
     # Interação entre Objetos e Uso de Métodos Herdados
     # O método move_cards é chamado no baralho para passar 5 cartas para a mão.
@@ -193,6 +193,10 @@ if __name__ == '__main__':
 
     # O método sort(), também herdado de Deck, é chamado na mão para ordená-la
     hand.sort()
+
+    # Provando a Herança do método `sort()` pela classe `Hand`
+    method_origin = find_defining_class(deck, 'sort')
+    print(f"\nO método 'sort()' de Hand é definido na classe: {method_origin.__name__}")
 
     # O método __str__, também herdado, é chamado para imprimir a mão.
     print(f'\n--- {hand.label} ---')
