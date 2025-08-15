@@ -65,6 +65,21 @@ class Time:
         seconds = minutes * 60 + self.second
         return seconds
     
+    def __lt__(self, other: Time) -> bool:
+        """
+        Compara este tempo (self) com outro (other).
+
+        Este método especial sobrecarrega o operador `<`, permitindo identificar
+        se este objeto `Time` é menor que `other`.
+
+        Args:
+            other (Time): O outro objeto `Time`a ser comparado com este.
+
+        Returns:
+            bool: True se `self` for menor que `other`, False, caso contrário.
+        """
+        return self.to_seconds() < other.to_seconds()
+    
     @classmethod
     def from_seconds(cls, total_seconds: int) -> 'Time':
         """

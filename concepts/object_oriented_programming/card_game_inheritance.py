@@ -55,7 +55,7 @@ class Card:
             other (Card): O outro objeto Card a ser comparado com este.
 
         Returns:
-            bool: True se `self` for menor que `other`, False caso contrário.
+            bool: True se `self` for menor que `other`, False, caso contrário.
         """
         t1 = (self.suit, self.rank)
         t2 = (other.suit, other.rank)
