@@ -13,7 +13,7 @@ import random
 from typing import List, Optional
 
 __author__ = 'Enock Silos'
-__version__ = '1.2.0' 
+__version__ = '2.2.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Production'
 
