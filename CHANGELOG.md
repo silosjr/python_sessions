@@ -8,6 +8,12 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[2.1.0] - 2025-08-15
+Alterado
+(concepts): Aprimorada a organização da biblioteca de conceitos com a criação da subpasta /object_oriented_programming para agrupar todos os scripts relacionados à POO.
+
+(concepts): Movidos os scripts custom_time.py, geometric_analysis.py, time_encapsulation.py e kangaroo_puzzle.py para a nova subpasta de POO.
+
 [2.0.0] - 2025-08-14
 Alterado
 Estrutura do Repositório: O projeto foi completamente reestruturado em uma arquitetura de pastas (/projects, /concepts, /utils) para separar aplicações, exemplos de conceitos e ferramentas reutilizáveis. Esta é uma mudança fundamental na organização do projeto.
