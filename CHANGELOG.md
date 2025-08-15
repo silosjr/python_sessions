@@ -7,6 +7,9 @@ e este projeto adere ao Versionamento Semântico.
 [Não lançado]
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
+[2.2.0] - 2025-08-15
+Adicionado
+(concepts/object_oriented_programming): Adicionado o script card_game_inheritance.py, um estudo de caso sobre Herança em POO, com as classes Card, Deck e Hand.
 
 [2.1.0] - 2025-08-15
 Alterado
