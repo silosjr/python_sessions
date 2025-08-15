@@ -14,8 +14,6 @@ Funções auxiliares find_defining_class e print_attributes para introspecção 
 
 Arquivo CHANGELOG.md para documentar as alterações.
 
-Código de teste no bloco if __name__ == '__main__' para provar a herança do método sort na classe Hand.
-
 Changed
 O script find_defining_class foi movido para o módulo utils/debug_tools.py para melhor organização e reutilização do código.
 
