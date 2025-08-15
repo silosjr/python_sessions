@@ -4,13 +4,13 @@ Módulo de Ferramentas de Depuração.
 Este módulo contém funções de utilidade genéricas para ajudar na depuração
 e introspecção de objetos durante o desenvolvimento de software em Python.
 """
+from __future__ import annotations
+from typing import Any, Optional
 
 __author__ = 'Enock Silos'
-__version__ = '1.0.0' 
+__version__ = '2.2.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Production'
-
-from typing import Any
 
 def print_attributes(obj: Any) -> None:
     """
@@ -31,6 +31,25 @@ def print_attributes(obj: Any) -> None:
         attr_value = getattr(obj, attr_name)
         print(f'    - {attr_name}: {attr_value}')
     print('-' * 20)
+
+def find_defining_class(obj: object, method_name: str) -> Optional[type]:
+    """
+    Encontra e retorna a classe que define um método específico.
+
+    Esta função de instrospecção percorre a Ordem de Resolução de Métodos (MRO)
+    de um objeto para encontrar onde um método foi originalmente definido.
+
+    Args:
+        obj (object): Qualquer objeto Python a ser inspecionado.
+        method_name (str): O nome do método a ser procurado na hierarquia.
+
+    Returns:
+        Optional[type]: A classe que define o método, ou None se não for encontrada.
+    """
+    for cls in type(obj).mro():
+        if method_name in cls.__dict__:
+            return cls 
+    return None 
 
 if __name__ == '__main__':
     # Para demonstrar, precisamos de uma classe de exemplo.
@@ -54,3 +73,21 @@ if __name__ == '__main__':
         print_attributes(lista_exemplo)
     except TypeError as e:
         print(f'Não foi possível inspecionar a lista: {e}\n')  
+
+    # Demonstração de `find_defining_class` com um exemplo de tecnologia.
+    class Server:
+        def start(self):
+            return "Server is starting..."
+    
+    class WebServer(Server):
+        def start(self):
+            return "Web server is starting..."
+    
+    web_server = WebServer()
+
+    defining_class = find_defining_class(web_server, 'start')
+    
+    if defining_class:
+        print(f"O método 'start' do objeto '{web_server.__class__.__name__}' é definido na classe: {defining_class.__name__}")
+    else:
+        print("Não foi possível encontrar a classe que define o método 'start'.")

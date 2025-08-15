@@ -155,24 +155,7 @@ class Hand(Deck):
         self.cards: List[Card] = []
         self.label = label
 
-def find_defining_class(obj: object, method_name: str) -> Optional[type]:
-    """
-    Encontra e retorna a classe que define um método específico.
 
-    Esta função de instrospecção percorre a Ordem de Resolução de Métodos (MRO)
-    de um objeto para encontrar onde um método foi originalmente definido.
-
-    Args:
-        obj (object): Qualquer objeto Python a ser inspecionado.
-        method_name (str): O nome do método a ser procurado na hierarquia.
-
-    Returns:
-        Optional[type]: A classe que define o método, ou None se não for encontrada.
-    """
-    for cls in type(obj).mro():
-        if method_name in cls.__dict__:
-            return cls 
-    return None 
 
 if __name__ == '__main__':
 
@@ -183,20 +166,12 @@ if __name__ == '__main__':
     # 2. Criação da Mão e Prova da Herança
     hand = Hand(label='Mão do Jogador 1')
 
-    # A função find_defining_class nos permite provar isso programaticamente.
-    defining_class = find_defining_class(hand, 'shuffle')
-    print(f"O método 'shuffle' da Hand é definido na classe: {defining_class.__name__}")
-
     # Interação entre Objetos e Uso de Métodos Herdados
     # O método move_cards é chamado no baralho para passar 5 cartas para a mão.
     deck.move_cards(hand, 5)
 
     # O método sort(), também herdado de Deck, é chamado na mão para ordená-la
     hand.sort()
-
-    # Provando a Herança do método `sort()` pela classe `Hand`
-    method_origin = find_defining_class(deck, 'sort')
-    print(f"\nO método 'sort()' de Hand é definido na classe: {method_origin.__name__}")
 
     # O método __str__, também herdado, é chamado para imprimir a mão.
     print(f'\n--- {hand.label} ---')
