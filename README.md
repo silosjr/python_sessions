@@ -38,6 +38,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |       |-- time_encapsulation.py
 |
 |-- 📂 diagrams/
+|    |-- class_relations_diagram.puml
 |
 |-- 📂 projects/
 |   |-- bmi.py
