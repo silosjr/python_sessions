@@ -8,6 +8,25 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+## [1.0.0] - 2025-08-16
+### Adicionado
+- **Script Python (`uml_model.py`)**:
+  - Implementada a estrutura básica para modelagem de objetos orientados a classes em Python.
+  - Adicionadas as classes:
+    - `PythonObject`: Superclasse abstrata para elementos representáveis em UML.
+    - `ClassDef`: Representa uma definição de classe Python com métodos associados.
+    - `Method`: Representa um método vinculado a uma instância de `ClassDef`.
+  - Uso de docstrings exaustivas e type hints para fins educacionais.
+  - Definido propósito didático para uso em análise ou geração de diagramas UML.
+  - Metadados do módulo incluídos: autor, versão, e status de desenvolvimento.
+
+- **Diagrama UML PlantUML (`class_relation_diagram.puml`)**:
+  - Criado o diagrama UML que representa as relações de herança e composição entre as classes:
+    - `ClassDef` e `Method` herdam de `PythonObject`.
+    - `ClassDef` contém múltiplos `Method` (composição).
+  - Comentários explicativos sobre os elementos UML utilizados.
+  - Alinhamento com o modelo Python implementado no módulo `uml_model.py`.
+
 [2.2.1] - 2025-08-16
 Corrigido
 (concepts/natural_language_processing): A lógica de caminho de arquivo em markov_analyzer.py foi refatorada para usar pathlib, tornando a localização do arquivo de texto padrão (emma.txt) robusta e independente do diretório de execução do script.
