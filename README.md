@@ -23,7 +23,7 @@ Afinal, sem o `__init__`, o que seriam de nossos programas?
 Este repositório é organizado como uma biblioteca curada de conceitos e projetos em Python. A estrutura de pastas foi projetada para ser intuitiva e escalável, guiando o visitante através dos diferentes tópicos abordados.
 
 ```text
-python_sessions/
+|🐍python_sessions/
 |
 |-- 📂 concepts/
 |   |-- 📂 natural_language_processing/
@@ -45,9 +45,11 @@ python_sessions/
 |-- 📂 utils/
 |   |-- debug_tools.py
 |
-|-- 📄 README.md
-|-- 📄 CHANGELOG.md
 |-- 📄 .gitignore
+|-- 📄 CHANGELOG.md
+|-- 📄 CHANGELOG_archive.md
+|-- 📄 LICENSE
+|-- 📄 README.md
 ``` 
 
 ### Navegação
