@@ -22,35 +22,31 @@ Afinal, sem o `__init__`, o que seriam de nossos programas?
 
 Este repositório é organizado como uma biblioteca curada de conceitos e projetos em Python. A estrutura de pastas foi projetada para ser intuitiva e escalável, guiando o visitante através dos diferentes tópicos abordados.
 
-` ``text`
-`python_sessions/`
-`|`
-`|-- 📂 concepts/`
-`|   |-- 📂 natural_language_processing/`
-`|   |   |-- markov_analyzer.py`
-`|   |   |-- text_utils.py`
-`|   |`
-`|   |-- 📂 object_oriented_programming/`
-`|       |-- card_game_inheritance.py`
-`|       |-- card_game_inheritance.py`
-`|       |-- card_game_inheritance.py`
-`|       |-- custom_time.py`
-`|       |-- geometric_analysis.py`
-`|       |-- kangaroo_puzzle.py`
-`|       |-- time_encapsulation.py`
-`|`
-`|-- 📂 projects/`
-`|   |-- bmi.py`
-`|   |-- contacts.py`
-`|   `-- hangman_game.py`
-`|`
-`|-- 📂 utils/`
-`|   `-- debug_tools.py`
-`|`
-`|-- 📄 README.md`
-`|-- 📄 CHANGELOG.md`
-`-- 📄 .gitignore`
-` `` `
+python_sessions/
+|
+|-- 📂 concepts/
+|   |-- 📂 natural_language_processing/
+|   |   |-- markov_analyzer.py
+|   |   `-- text_utils.py
+|   |
+|   `-- 📂 object_oriented_programming/
+|       |-- card_game_inheritance.py
+|       |-- custom_time.py
+|       |-- geometric_analysis.py
+|       |-- kangaroo_puzzle.py
+|       `-- time_encapsulation.py
+|
+|-- 📂 projects/
+|   |-- bmi.py
+|   |-- contacts.py
+|   `-- hangman_game.py
+|
+|-- 📂 utils/
+|   `-- debug_tools.py
+|
+|-- 📄 README.md
+|-- 📄 CHANGELOG.md
+`-- 📄 .gitignore
 
 ### Navegação
 
