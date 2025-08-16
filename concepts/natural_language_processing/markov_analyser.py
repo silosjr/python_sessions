@@ -13,6 +13,11 @@ from typing import Dict, List, Tuple
 from text_utils import skip_gutenberg_header, shift
 from pathlib import Path
 
+__author__ = 'Enock Silos'
+__version__ = '1.0.0' 
+__email__ = 'init.caucasian722@passfwd.com'
+__status__ = 'Development'
+
 class Markov:
     """
     Encapsula a análise estatística de um texto para geração de texto.
