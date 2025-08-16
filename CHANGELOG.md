@@ -7,6 +7,11 @@ e este projeto adere ao Versionamento Semântico.
 [Não lançado]
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
+
+[2.2.1] - 2025-08-16
+Corrigido
+(concepts/natural_language_processing): A lógica de caminho de arquivo em markov_analyzer.py foi refatorada para usar pathlib, tornando a localização do arquivo de texto padrão (emma.txt) robusta e independente do diretório de execução do script.
+
 [2.2.0] - 2025-08-15
 Added
 
