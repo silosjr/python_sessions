@@ -60,3 +60,4 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 * **/projects**: Contém aplicações completas e autocontidas. Cada projeto nesta pasta é um exemplo de um programa funcional do início ao fim.
 * **/concepts**: O coração da biblioteca. Os scripts aqui são estudos de caso focados em conceitos específicos do Python, como Programação Orientada a Objetos ou Processamento de Linguagem Natural.
 * **/utils**: Abriga ferramentas e utilitários genéricos e reutilizáveis que podem ser usados em qualquer parte do projeto.
+* **/diagrams**: Contém diagramas UML para representar visualmente a estrutura de classes de projeto.
