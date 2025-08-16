@@ -14,7 +14,7 @@ A [**Nilo Ney Coutinho Menezes**](https://github.com/lskbr), por último, mas n�
 
 Inicie, leia, veja, contribua, colabore. python_sessions é para 'todos', é para 'pensar', é para 'iniciar'.
 
-Afinal, sem o __init__, o que seriam de nossos programas?
+Afinal, sem o `__init__`, o que seriam de nossos programas?
 
 ---
 
