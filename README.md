@@ -2,19 +2,20 @@
 
 ## Scripts de um mundo real
 
+Bem-vindo ao python_sessions
 Entre, procure um lugar confortável para sentar-se e inicie uma experiência de conhecimento rico, estruturado e explícito. Clareza na escrita dos códigos, nomes apropriados para variáveis e tipos, e sequência didática, aliados a uma assinatura profissional, são a "receita" de cada script, de cada sessão.
 
-A iniciativa de criar `python_sessions` nasceu da minha descoberta de que é possível estar entre os "everybody" a quem o Dr. Severance promete e destina o aprendizado da linguagem Python em sua obra [**"Python for Everybody"**](https://www.py4e.com/). Você (se já não faz parte) é mais um desses privilegiados a partir de agora.
+A iniciativa de criar python_sessions nasceu da minha descoberta de que é possível estar entre os "everybody" a quem o Dr. Severance promete e destina o aprendizado da linguagem Python em sua obra "Python for Everybody". Você (se já não faz parte) é mais um desses privilegiados a partir de agora.
 
-Acredite, você irá aprender, evoluir e não somente manipular a linguagem, mas, graças ao ilustríssimo Allen B. Downey, a quem também devo crédito na construção deste projeto, a [**"pensar" em Python**](http://thinkpython2.com/). Esta é a habilidade que todos nós já desenvolvemos a cada milissegundo, pois ela se dá contínua e progressivamente até o esperado último milissegundo de contribuição que cada um de nós, cientistas da computação, deve cultivar como filosofia de programador — filosofia esta que está inserida na plataforma por meio da qual você está lendo esta saudação.
+Acredite, você irá aprender, evoluir e não somente manipular a linguagem, mas, graças ao ilustríssimo Allen B. Downey, a quem também devo crédito na construção deste projeto, a "pensar" em Python. Esta é a habilidade que todos nós já desenvolvemos a cada milissegundo, pois ela se dá contínua e progressivamente até o esperado último milissegundo de contribuição que cada um de nós, cientistas da computação, deve cultivar como filosofia de programador — filosofia esta que está inserida na plataforma por meio da qual você está lendo esta saudação.
 
-Despretensiosamente, seria uma honra receber visitas de doutores, mestres e grandes nomes da ciência da computação aqui. Reúno árduo esforço para tornar `python_sessions` acessível à comunidade de desenvolvedores como um todo. Portanto, além da didática que atrai iniciantes, este é um espaço de consulta de algoritmos, códigos e utilitários para todos, sem desmerecer o nível de quem quer que seja o honrado visitante deste repositório.
+Despretensiosamente, seria uma honra receber visitas de doutores, mestres e grandes nomes da ciência da computação aqui. Reúno árduo esforço para tornar python_sessions acessível à comunidade de desenvolvedores como um todo. Portanto, além da didática que atrai iniciantes, este é um espaço de consulta de algoritmos, códigos e utilitários para todos, sem desmerecer o nível de quem quer que seja o honrado visitante deste repositório.
 
-A Nilo Ney Coutinho Menezes, por último, mas não menos importante: a mais pura gratidão por estar inserido no meu processo de aprendizagem e descoberta. Tento encontrar uma descrição para sua metodologia de ensino, implícita em [**"Introdução à Programação com Python"**](https://python.nilo.pro.br/). De verdade, iniciar com o Doutor Menezes é um marco que expõe o Brasil em um local de privilégio em termos de conhecimento na área de Programação.
+A Nilo Ney Coutinho Menezes, por último, mas não menos importante: a mais pura gratidão por estar inserido no meu processo de aprendizagem e descoberta. Tento encontrar uma descrição para sua metodologia de ensino, implícita em "Introdução à Programação com Python". De verdade, iniciar com o Doutor Menezes é um marco que expõe o Brasil em um local de privilégio em termos de conhecimento na área de Programação.
 
-Inicie, leia, veja, contribua, colabore. `python_sessions` é para 'todos', é para 'pensar', é para 'iniciar'.
+Inicie, leia, veja, contribua, colabore. python_sessions é para 'todos', é para 'pensar', é para 'iniciar'.
 
-Afinal, sem o `__init__`, o que seriam de nossos programas?
+Afinal, sem o __init__, o que seriam de nossos programas?
 
 ---
 
