@@ -8,6 +8,27 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+
+## [1.1.0] - 2025-08-16
+### Alterado
+- Estrutura do projeto reorganizada:
+  - Alterações registradas na estrutura hierárquica do README.md.
+  - Criada a subpasta `algorithms` dentro da pasta `concepts`.
+  - Adicionado o script `binary_search.py` dentro de `concepts/algorithms`.
+- Objetivo:
+  - Melhorar a organização dos módulos didáticos, separando algoritmos individuais por tema.
+
+## [1.0.0] - 2025-08-16
+### Adicionado
+- Módulo de **Busca Binária Genérica** com tipagem segura (`TypeVar` + `Protocol`).
+- Função `binary_search(sequence: List[T], item: T) -> int | None`:
+  - Localiza o índice de um elemento em sequências ordenadas.
+  - Retorna `None` se o elemento não estiver presente.
+- Protocolo `Comparable` para garantir que os elementos suportem `<`, `>`, `==`.
+- Exemplo de execução interativa no bloco `__main__`.
+- Compatível com qualquer tipo comparável (`int`, `float`, `str`, etc.) em Python 3.10+.
+
+
 ## [1.0.0] - 2025-08-16
 ### Adicionado
 - **Script Python (`uml_model.py`)**:
