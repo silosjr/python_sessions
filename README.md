@@ -26,6 +26,13 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |🐍python_sessions/
 |
 |-- 📂 concepts/
+|   |
+|   |-- 📂 algorithms
+|   |   |-- binary_search.py
+|   |   
+|   |
+|   |
+|   |
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py
 |   |   |-- text_utils.py
