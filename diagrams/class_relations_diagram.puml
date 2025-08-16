@@ -1,0 +1,29 @@
+@startuml  
+
+' Arquivo: class_relation_diagram.puml
+' Autor: Enock Silos
+' Versão 1.0.0
+' Descrição: Diagrama de Classe UML para o exemplo de relações entre classes.
+
+' --- Declaração das Classes ---
+' Primeiro, declaramos todas as "caixas" que farão parte do nosso diagrama.
+class PythonObject
+class ClassDef
+class Method 
+
+' --- Relações de Herança (Generalização) ---
+' Usamos a seta "--|>" ou a palavra-chave "extends" para mostrar que uma
+' subclasse herda de uma superclasse.
+class ClassDef --|> PythonObject
+class Method --|> PythonObject
+
+' --- Relações de Associação/Composição ---
+' Esta linha descreve a relação de "contém".
+' ClassDef "1": Existe 1 objeto ClassDef.
+' *--: A linha com um diamante preechido representa "Composição", uma forma
+'      forte de associação onde os "Methods" não existem sem a "ClassDef".
+' "0..*": O objeto ClassDef pode conter de 0 a muitos (*) objetos Method.
+' Method: O nome da classe que é contida.
+ClassDef "1" *-- "0.." Method
+
+@enduml 

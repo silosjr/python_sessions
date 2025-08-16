@@ -37,6 +37,8 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |       |-- kangaroo_puzzle.py
 |       |-- time_encapsulation.py
 |
+|-- 📂 diagrams/
+|
 |-- 📂 projects/
 |   |-- bmi.py
 |   |-- contacts.py
