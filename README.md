@@ -28,26 +28,26 @@ python_sessions/
 |-- 📂 concepts/
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py
-|   |   `-- text_utils.py
+|   |   |-- text_utils.py
 |   |
-|   `-- 📂 object_oriented_programming/
+|   |-- 📂 object_oriented_programming/
 |       |-- card_game_inheritance.py
 |       |-- custom_time.py
 |       |-- geometric_analysis.py
 |       |-- kangaroo_puzzle.py
-|       `-- time_encapsulation.py
+|       |-- time_encapsulation.py
 |
 |-- 📂 projects/
 |   |-- bmi.py
 |   |-- contacts.py
-|   `-- hangman_game.py
+|   |-- hangman_game.py
 |
 |-- 📂 utils/
-|   `-- debug_tools.py
+|   |-- debug_tools.py
 |
 |-- 📄 README.md
 |-- 📄 CHANGELOG.md
-`-- 📄 .gitignore
+|-- 📄 .gitignore
 ``` 
 
 ### Navegação
