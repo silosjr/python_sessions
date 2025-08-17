@@ -13,7 +13,7 @@ import random
 from typing import List, Optional
 
 __author__ = 'Enock Silos'
-__version__ = '2.2.0' 
+__version__ = '2.3.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Production'
 
@@ -135,6 +135,33 @@ class Deck:
         for _ in range(num):
             hand.add_card(self.pop_card())
 
+    def deal_hands(self, num_hands: int, cards_per_hand: int ) -> List['Hand']:
+        """
+        Distribui cartas do baralho para um número de mãos.
+
+        Este método simula a distribuição de cartas em um jogo, criando
+        objetos `Hand` e distribuindo as cartas uma a uma para cada mão.
+
+        Args:
+            num_hands (int): O número de mãos a serem criadas.
+            cards_per_hand (int): O número de cartas a serem distribuídas para cada mão.
+
+        Returns:
+            List[Hand]: Uma lista contendo os objetos `Hand` criados e populados.
+        """
+        hands = []
+
+        for i in range(num_hands):
+            hands.append(Hand(f'Mão do jogador {i+1}'))
+        # Distribui as cartas uma por vez para cada mão
+        for i in range(cards_per_hand):
+            for hand in hands:
+                card = self.pop_card()
+                hand.add_card(card)
+
+        return hands
+
+
 class Hand(Deck):
     """
     Representa uma mão de cartas de um jogador.
@@ -176,3 +203,14 @@ if __name__ == '__main__':
     # O método __str__, também herdado, é chamado para imprimir a mão.
     print(f'\n--- {hand.label} ---')
     print(hand)
+
+    # Teste do método `deal_hands`
+    print('\n--- Testando o método `deal_hands` ---')
+    hands_list = deck.deal_hands(num_hands=4, cards_per_hand=5)
+    # Exibição das mãos criadas
+    for hands in hands_list:
+        print(f'\n--- {hand.label} ---')
+        print(hand)
+    # Verificação do estado final do baralho
+    print('\n--- Cartas Restantes do Baralho ---')
+    print(f'O baralho agora tem {len(deck.cards)} cartas.')

@@ -8,6 +8,10 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+## [2.3.0] - 2025-08-17
+
+### Adicionado
+- **(concepts/object_oriented_programming)**: A classe `Deck` no script `card_game_inheritance.py` foi aprimorada com o novo método `deal_hands`, que simula a distribuição de cartas para múltiplas mãos.
 
 ## [1.1.0] - 2025-08-16
 ### Alterado
