@@ -10,7 +10,7 @@ herdar e especializar o comportamento de uma superclasse (`Deck`).
 
 from __future__ import annotations
 import random
-from typing import List, Optional
+from typing import List, Optional, Type
 
 __author__ = 'Enock Silos'
 __version__ = '2.3.0' 
@@ -135,24 +135,30 @@ class Deck:
         for _ in range(num):
             hand.add_card(self.pop_card())
 
-    def deal_hands(self, num_hands: int, cards_per_hand: int ) -> List['Hand']:
+    def deal_hands(self, num_hands: int, cards_per_hand: int, hand_class: Optional[Type[Hand]] = None) -> List['Hand']:
         """
         Distribui cartas do baralho para um número de mãos.
 
-        Este método simula a distribuição de cartas em um jogo, criando
-        objetos `Hand` e distribuindo as cartas uma a uma para cada mão.
+        Este método atua como uma "fábrica" flexível, criando e distribuindo
+        mãos do tipo especificado em `hand_class`. Se nenhuma classe for
+        fornecida, ele usa a classe `Hand` como padrão.
 
         Args:
             num_hands (int): O número de mãos a serem criadas.
             cards_per_hand (int): O número de cartas a serem distribuídas para cada mão.
+            hand_class (Optional[Type[Hand]], optional): A classe a ser usada
+                para instanciar as mãos (ex: Hand, PokerHand). O padrão é Hand.
 
         Returns:
-            List[Hand]: Uma lista contendo os objetos `Hand` criados e populados.
+            List[Hand]: Uma lista contendo as instâncias de mão criadas e populadas.
         """
+        if hand_class is None:
+            hand_class = Hand
+
         hands = []
 
         for i in range(num_hands):
-            hands.append(Hand(f'Mão do jogador {i+1}'))
+            hands.append(hand_class(f'Mão do jogador {i+1}'))
         # Distribui as cartas uma por vez para cada mão
         for i in range(cards_per_hand):
             for hand in hands:
@@ -160,7 +166,6 @@ class Deck:
                 hand.add_card(card)
 
         return hands
-
 
 class Hand(Deck):
     """
@@ -181,8 +186,6 @@ class Hand(Deck):
         """
         self.cards: List[Card] = []
         self.label = label
-
-
 
 if __name__ == '__main__':
 

@@ -48,19 +48,25 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |    |-- class_relations_diagram.puml
 |
 |-- 📂 projects/
+|   | 
+|   |-- 📂 poker_hand_analyzeer
+|   |    | 
+|   |    |-- poker_analyser.py
+|   |    
 |   |-- bmi.py
 |   |-- contacts.py
 |   |-- hangman_game.py
 |
 |-- 📂 utils/
 |   |-- debug_tools.py
+|   |-- project_setup.py
 |
 |-- 📄 .gitignore
 |-- 📄 CHANGELOG.md
 |-- 📄 CHANGELOG_archive.md
 |-- 📄 LICENSE
 |-- 📄 README.md
-``` 
+``` `
 
 ### Navegação
 

@@ -1,4 +1,5 @@
-Changelog
+# Changelog
+
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
 O formato é baseado em Keep a Changelog,
@@ -8,13 +9,33 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[3.0.0] - 2025-08-17
+Adicionado
+(projects/poker_hand_analyzer): Adicionado um novo projeto completo para análise e simulação de mãos de Pôquer, incluindo a classe PokerHand com lógica de classificação detalhada.
+
+(utils/project_setup.py): Criado um novo módulo de utilidade para configurar o sys.path de forma robusta, garantindo que as importações relativas funcionem em diferentes ambientes de execução.
+
+Alterado
+(concepts/card_game_inheritance.py): O método deal_hands na classe Deck foi refatorado para ser uma "fábrica" flexível, aceitando um parâmetro hand_class para instanciar diferentes tipos de mãos (ex: Hand, PokerHand).
+
+[2.3.0] - 2025-08-17
+Adicionado
+(concepts/object_oriented_programming): A classe Deck no script card_game_inheritance.py foi aprimorada com o novo método deal_hands.
+
+[2.2.1] - 2025-08-16
+Corrigido
+(concepts/natural_language_processing): A lógica de caminho de arquivo em markov_analyzer.py foi refatorada para usar pathlib.
+
 ## [2.3.0] - 2025-08-17
 
-### Adicionado
+### Novidades Adicionadas
+
 - **(concepts/object_oriented_programming)**: A classe `Deck` no script `card_game_inheritance.py` foi aprimorada com o novo método `deal_hands`, que simula a distribuição de cartas para múltiplas mãos.
 
 ## [1.1.0] - 2025-08-16
+
 ### Alterado
+
 - Estrutura do projeto reorganizada:
   - Alterações registradas na estrutura hierárquica do README.md.
   - Criada a subpasta `algorithms` dentro da pasta `concepts`.
@@ -23,7 +44,9 @@ Adicionado
   - Melhorar a organização dos módulos didáticos, separando algoritmos individuais por tema.
 
 ## [1.0.0] - 2025-08-16
+
 ### Adicionado
+
 - Módulo de **Busca Binária Genérica** com tipagem segura (`TypeVar` + `Protocol`).
 - Função `binary_search(sequence: List[T], item: T) -> int | None`:
   - Localiza o índice de um elemento em sequências ordenadas.
@@ -32,9 +55,10 @@ Adicionado
 - Exemplo de execução interativa no bloco `__main__`.
 - Compatível com qualquer tipo comparável (`int`, `float`, `str`, etc.) em Python 3.10+.
 
+## [1.0.1] - 2025-08-16
 
-## [1.0.0] - 2025-08-16
-### Adicionado
+## Adicionado (versão 1.0.1)
+
 - **Script Python (`uml_model.py`)**:
   - Implementada a estrutura básica para modelagem de objetos orientados a classes em Python.
   - Adicionadas as classes:
@@ -82,9 +106,9 @@ Alterado
 Alterado
 Estrutura do Repositório: O projeto foi completamente reestruturado em uma arquitetura de pastas (/projects, /concepts, /utils) para separar aplicações, exemplos de conceitos e ferramentas reutilizáveis. Esta é uma mudança fundamental na organização do projeto.
 
-(concepts/custom_time.py): A classe Time foi extensivamente refatorada para um modelo orientado a objetos, com a lógica de funções externas movida para métodos de instância (__init__, __str__, __add__, __radd__, to_seconds, etc.).
+(concepts/custom_time.py): A classe Time foi extensivamente refatorada para um modelo orientado a objetos, com a lógica de funções externas movida para métodos de instância (**init**, **str**, **add**, **radd**, to_seconds, etc.).
 
-(concepts/geometric_analysis.py): A classe Point foi aprimorada com o método __add__, que agora suporta despacho por tipo para somar com outros objetos Point ou com tuplas.
+(concepts/geometric_analysis.py): A classe Point foi aprimorada com o método **add**, que agora suporta despacho por tipo para somar com outros objetos Point ou com tuplas.
 
 Adicionado
 (utils/debug_tools.py): Criado o primeiro módulo de utilidades, contendo a função print_attributes para inspeção genérica de objetos.
