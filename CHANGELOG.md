@@ -9,6 +9,10 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.0.0] - 2025-08-18
+Alterado
+(concepts/algorithms): Descarte do script original binary_search.py e criação de um novo sob mesma nomenclatura com abordagem voltada para experiência de tentativa de acertos por parte da máquina, deixando o controle de dicas em mãos do usuário.
+
 [3.0.0] - 2025-08-17
 Adicionado
 (projects/poker_hand_analyzer): Adicionado um novo projeto completo para análise e simulação de mãos de Pôquer, incluindo a classe PokerHand com lógica de classificação detalhada.

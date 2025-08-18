@@ -1,116 +1,107 @@
 """
-Módulo didático que implementa o algoritmo de busca binária com tipagem genérica,
-garantindo segurança em tempo de verificação por meio da linguagem de tipos do Python.
+Módulo de Demonstração do Algoritmo de Busca Binária
 
-Este script tem como principal objetivo demonstrar, de forma segura e moderna,
-como aplicar a busca binária sobre sequências ordenadas de qualquer tipo de dado
-que suporte comparação relacional (isto é, que possa ser comparado com os operadores
-<, > e ==).
+Este módulo fornece uma implementação didática e interativa do algoritmo de
+busca binária. O sistema, atuando como um agente de busca, tenta determinar
+um valor numérico secreto dentro de um intervalo pré-definido. A convergência
+para o valor correto é guiada por um oráculo externo (o operador humano), que
+fornece feedback a cada iteração.
 
--------------------------------------------------------------------------------
- Sobre a busca binária:
+Metodologia:
+O algoritmo opera sob o princípio de divisão e conquista. A cada passo, o
+espaço de busca, definido por um limite inferior (low) e superior (high), é
+dividido ao meio. O valor central é proposto como um palpite. Com base no
+feedback do oráculo ('maior', 'menor' ou 'correto'), metade do espaço de busca
+é descartada, reduzindo exponencialmente o número de candidatos.
 
-A busca binária é um algoritmo eficiente para localizar elementos em listas ordenadas.
-Seu funcionamento baseia-se na divisão sucessiva do intervalo de busca pela metade,
-comparando o elemento central com o alvo desejado. Caso o elemento central seja igual
-ao alvo, a busca é encerrada com sucesso. Caso contrário, descarta-se metade da sequência
-e repete-se o processo. Sua complexidade é O(log n), sendo amplamente utilizada em
-estruturas de dados e algoritmos clássicos.
+Complexidade e Pior Cenário:
+A complexidade de tempo do algoritmo é logarítmica, O(log N), onde N é o
+número de elementos no intervalo. Para um intervalo de N=128 elementos,
+o número máximo de iterações (palpites) requerido por esta implementação é
+dado pela fórmula floor(log2(N)) + 1, resultando em 8 iterações no pior caso
+(e.g., quando o valor secreto é o último elemento do intervalo).
 
--------------------------------------------------------------------------------
- Tipagem genérica com segurança: TypeVar + Protocol
-
-Para garantir que os elementos da lista possam ser corretamente comparados ao item buscado,
-sem depender de verificações em tempo de execução, o script faz uso de dois recursos poderosos
-da biblioteca de tipagem do Python:
-
-1. `Protocol` (do módulo `typing`): 
-   Utilizado aqui para definir uma interface estrutural chamada `Comparable`, a qual descreve 
-   o comportamento esperado de um tipo "comparável". A classe `Comparable` define três métodos:
-   
-   - `__lt__(self, other)`: operador de menor (<)
-   - `__gt__(self, other)`: operador de maior (>)
-   - `__eq__(self, other)`: operador de igualdade (==)
-
-   Ao utilizar esse protocolo, estamos dizendo que qualquer tipo que implemente esses três métodos
-   é considerado "comparável" — mesmo que ele não herde explicitamente de `Comparable`. Isso é 
-   conhecido como tipagem estrutural ou duck typing estático.
-
-2. `TypeVar` com `bound=Comparable`:
-   O uso de `T = TypeVar('T', bound=Comparable)` define um tipo genérico `T`, que pode representar
-   qualquer tipo, desde que obedeça à estrutura definida em `Comparable`. Essa ligação entre
-   o tipo genérico e o protocolo garante que o algoritmo funcione corretamente com inteiros,
-   strings, floats, ou quaisquer outros objetos que possam ser comparados por `<`, `>`, `==`.
-
-3. `@runtime_checkable`:
-   Decorador aplicado à classe `Comparable` que permite, opcionalmente, realizar verificações
-   de conformidade com o protocolo em tempo de execução usando `isinstance()` ou `issubclass()`.
-   Embora essa verificação não seja obrigatória neste script, ela torna o protocolo mais flexível
-   e auditável, especialmente em testes ou frameworks.
-
--------------------------------------------------------------------------------
- Conclusão:
-
-Este módulo é apropriado para fins educacionais e práticos, destacando a importância de:
-- Algoritmos eficientes como a busca binária
-- Tipagem segura em linguagens dinâmicas
-- Princípios modernos de design com Python 3.10+
+Uso:
+Para executar a demonstração, o script pode ser invocado diretamente através
+de um interpretador Python.
 """
 
 from __future__ import annotations
-from typing import TypeVar, Protocol, List, Any, runtime_checkable 
+import time 
 
 __author__ = 'Enock Silos'
-__version__ = '1.1.0' 
+__version__ = '1.0.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
-@runtime_checkable
-class Comparable(Protocol):
-    def __lt__(self, other: Any) -> bool: ...
-    def __gt__(self, other: Any) -> bool: ...
-    def __eq__(self, other: Any) -> bool: ...
-
-T = TypeVar('T', bound=Comparable)
-
-def binary_search(sequence: List[T], item: T) -> int | None:
+def binary_search() -> None:
     """
-    Executa o algoritmo de busca binária sobre uma sequência ordenada, a fim de localizar a posição
-    (índice) de um determinado elemento alvo.
+    Executa uma sessão interativa para demonstrar a busca binária.
 
-    A busca binária pressupõe que a sequência esteja ordenada em ordem crescente, e que os elementos 
-    sejam comparáveis entre si por operadores relacionais.
+    Esta função encapsula a lógica completa do algoritmo. Ela inicializa o
+    estado da busca (limites, contador de tentativas) e entra em um laço
+    iterativo. Em cada iteração, calcula-se um novo palpite, que é apresentado
+    ao operador. A resposta do operador é então utilizada para ajustar os
+    limites do próximo espaço de busca.
 
-    Args:
-        sequence (List[T]): Lista ordenada de elementos comparáveis.
-        item (T): Elemento a ser localizado na sequência.
+    O processo termina quando o valor é encontrado ou quando o espaço de
+    busca se esgota (indicando `feedback` inconsistente do operador).
 
-    Returns:
-        int | None: Índice do elemento se encontrado; caso contrário, None.
+    Side Effects:
+        - Imprime informações de estado e prompts no console (`stdout`).
+        - Lê dados da entrada padrão do usuário (`stdin`).
     """
-    low = 0
-    high = len(sequence) - 1
+    MINIMUM = 1
+    MAXIMUM = 128 
+
+    print('\n\t      --- BENVINDO(A)! ---\n')
+    time.sleep(1.5)
+    print(' Hoje você irá entender como funciona o algoritmo da Busca Binária.\n')
+    time.sleep(1.5)
+    print(f'\tPense em um número entre {MINIMUM} e {MAXIMUM}. Memorize-o.\n')
+    time.sleep(2.0)
+
+    low = MINIMUM
+    high = MAXIMUM
+    tries = 0
+    got_it = False
 
     while low <= high:
-        middle = (low + high) // 2
-        guess = sequence[middle]
+        tries += 1
+        guess = (low + high) // 2
+
+        print(f'\tMeu {tries}º palpite é {guess}')
+        time.sleep(1.5)
+
+        answer = input('''
+                    Acertei o número que você pensou? (S)
+                    É maior? (+)
+                    É menor? (-)\n
+                    ou `Q` para SAIR:
+                    ''')
         
-        if guess == item:
-            return middle
-        if guess > item:
-            high = middle - 1
+        if answer.lower() == 'q':
+            return
+        elif answer.lower() == 's':
+            print(f'''\tÓtimo! O computador acertou o número em {tries} tentativa(s).
+                    \tO número era {guess}''')
+            got_it = True
+            break 
+        elif answer == '+':
+            low = guess + 1
+        elif answer == '-':
+            high = guess - 1
         else:
-            low = middle + 1
+            print('Por favor, digite APENAS `S` `+` ou `-`\n')
+            tries -= 1
 
-    return None
-
+    if not got_it:
+        print('''
+            ATENÇÃO: Suas dicas foram inconsistentes. O número não pôde ser encontrado\n
+            \tO programa será encerrado.\n''')
+        
 if __name__ == '__main__':
+    binary_search()
+    
+    
 
-    my_array = [1, 3, 5, 7, 8, 9, 23, 67, 788]
-
-    for value in [40, 8]:
-        result = binary_search(my_array, value)
-        if result is not None:
-            print(f"Elemento {value} encontrado no índice {result}.")
-        else:
-            print(f"Elemento {value} não encontrado.")
