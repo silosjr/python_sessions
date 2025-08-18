@@ -12,7 +12,7 @@ from typing import Any
 __author__ = 'Enock Silos'
 __version__ = '1.0.0' 
 __email__ = 'init.caucasian722@passfwd.com'
-__status__ = ''
+__status__ = 'Development'
 
 def test_code_snippet(description: str, code_snippet: str) -> None:
     """
