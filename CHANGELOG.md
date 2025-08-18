@@ -11,6 +11,10 @@ Adicionado
 
 [1.0.0]
 Adicionado
+(concepts/foundations): Inserção de script `unit_conversion_calculator.py`, indicação de status de versão em `syntax_and_operators` e atualização da estrutura hierárquica no README.md após inclusão de novo script.
+
+[1.0.0]
+Adicionado
 (concepts/foundations): Criação de subpasta e inserção do script `syntax_and_operators.py`.
 Alterado
 (README.md): inclusão no `README.md` de nova estrutura de pastas.
