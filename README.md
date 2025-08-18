@@ -27,10 +27,10 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |
 |-- 📂 concepts/
 |   |
-|   |-- 📂 algorithms
+|   |-- 📂 algorithms/
 |   |   |-- binary_search.py
 |   |   
-|   |-- 📂 foundations
+|   |-- 📂 foundations/
 |   |    |-- syntax_and_operators.py
 |   |
 |   |-- 📂 natural_language_processing/
