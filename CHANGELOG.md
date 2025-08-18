@@ -9,6 +9,12 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.0.0]
+Adicionado
+(concepts/foundations): Criação de subpasta e inserção do script `syntax_and_operators.py`.
+Alterado
+(README.md): inclusão no `README.md` de nova estrutura de pastas.
+
 [1.0.0] - 2025-08-18
 Alterado
 (concepts/algorithms): Descarte do script original binary_search.py e criação de um novo sob mesma nomenclatura com abordagem voltada para experiência de tentativa de acertos por parte da máquina, deixando o controle de dicas em mãos do usuário.

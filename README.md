@@ -30,8 +30,8 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |-- 📂 algorithms
 |   |   |-- binary_search.py
 |   |   
-|   |
-|   |
+|   |-- 📂 foundations
+|   |    |-- syntax_and_operators.py
 |   |
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py
@@ -66,11 +66,11 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |-- 📄 CHANGELOG_archive.md
 |-- 📄 LICENSE
 |-- 📄 README.md
-``` `
+ ```
 
 ### Navegação
 
 * **/projects**: Contém aplicações completas e autocontidas. Cada projeto nesta pasta é um exemplo de um programa funcional do início ao fim.
-* **/concepts**: O coração da biblioteca. Os scripts aqui são estudos de caso focados em conceitos específicos do Python, como Programação Orientada a Objetos ou Processamento de Linguagem Natural.
+* **/concepts**: O coração da biblioteca. Os scripts aqui são estudos de caso focados em conceitos específicos do Python, como Fundamentos, Programação Orientada a Objetos ou Processamento de Linguagem Natural.
 * **/utils**: Abriga ferramentas e utilitários genéricos e reutilizáveis que podem ser usados em qualquer parte do projeto.
 * **/diagrams**: Contém diagramas UML para representar visualmente a estrutura de classes de projeto.
