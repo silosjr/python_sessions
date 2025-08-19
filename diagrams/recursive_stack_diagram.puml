@@ -1,0 +1,49 @@
+@startuml  
+' Arquivo: recursive_stack_diagram.puml 
+' Autor: Enock Silos 
+' Versão 1.0.0
+' Descrição: Diagrama de Sequência UML que visualiza a pilha de chamadas
+'            (call stack) para a função recursiva `countdown(3)`
+
+' --- Declaração de Participantes ---
+' Declaramos o ponto de partida da nossa execução
+participant "__main__"
+
+' --- Início da Pilha de Chamadas --- 
+
+' 1. A execução começa no __main__, que faz a primeira chamada.
+' A seta -> representa a chamada, e `activate` inicia a "barra de vida"
+' da função, mostrando que ela está no topo da pilha.
+"__main__" -> countdown : countdown(3)
+activate countdown
+
+' 2. A primeira chamada recursiva. `countdown(3)` chama a si mesma.
+' Uma nova "barra de vida" é ativada, mostrando a nova camada na pilha.
+countdown -> countdown : countdown(2)
+activate countdown
+
+' 3. Aprofundando a recursão
+countdown -> countdown : countdown(1)
+activate countdown
+
+' 4. A última chamada recursiva, que atinge o caso base.
+countdown -> countdown : countdown(0)
+activate countdown
+
+' --- Fim da Pilha de Chamadas (Desempilhando) ---
+
+' 5. O caso base (n=0) é atingido. A função imprime "Fogo!" e termina.
+' A palavra-chave `deactivate` remove a "barra de vida" do topo da pilha.
+deactivate countdown
+
+' 6. A execução volta para `countdown(1)`, que não tem mais nada a fazer e termina 
+deactivate countdown
+
+' 7. A execução volta para `countdown(2)`, que também termina.
+deactivate countdown
+
+' 8. A execução volta para countdown(3), que também termina
+' A pilha agora está vazia, e a execução volta para o __main__.
+deactivate countdown
+
+@enduml
