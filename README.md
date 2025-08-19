@@ -33,6 +33,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |-- 📂 foundations/
 |   |    |-- syntax_and_operators.py
 |   |    |-- unit_conversion_calculator.py
+|   |    |-- expressions_and_statements.py
 |   |     
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py

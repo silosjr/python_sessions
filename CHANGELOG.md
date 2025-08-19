@@ -11,6 +11,10 @@ Adicionado
 
 [1.0.0]
 Adicionado
+(concepts/foudantions): Inserção de script `expressions_and_statements.py` e atualização da estrutura hierárquica no README.md após inclusão de novo script.
+
+[1.0.0]
+Adicionado
 (concepts/foundations): Inserção de script `unit_conversion_calculator.py`, indicação de status de versão em `syntax_and_operators` e atualização da estrutura hierárquica no README.md após inclusão de novo script.
 
 [1.0.0]
