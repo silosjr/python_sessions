@@ -9,15 +9,24 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
-[1.0.0]
+[1.0.0] - 2025-08-19
+Adicionado
+(concepts/foundations): Inserção de script `control_flow_and_recursion.
+
+[1.0.0] - 2025-08-19
+Adicionado
+(diagrams/recursive_stack_diagram.puml): Inserção de diagrama de pilha para função `countdown()` de `control_flow_and_recursion`.
+(README.md): Alteração da estrutura hierárquica de modo a corresponder às novas inserções.
+
+[1.0.0] - 2025-08-18
 Adicionado
 (concepts/foudantions): Inserção de script `expressions_and_statements.py` e atualização da estrutura hierárquica no README.md após inclusão de novo script.
 
-[1.0.0]
+[1.0.0] - 2025-08-18
 Adicionado
 (concepts/foundations): Inserção de script `unit_conversion_calculator.py`, indicação de status de versão em `syntax_and_operators` e atualização da estrutura hierárquica no README.md após inclusão de novo script.
 
-[1.0.0]
+[1.0.0] - 2025-08-18
 Adicionado
 (concepts/foundations): Criação de subpasta e inserção do script `syntax_and_operators.py`.
 Alterado

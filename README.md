@@ -34,6 +34,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |    |-- syntax_and_operators.py
 |   |    |-- unit_conversion_calculator.py
 |   |    |-- expressions_and_statements.py
+|   |    |-- control_flow_and_recursion.py
 |   |     
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py
@@ -48,6 +49,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |
 |-- 📂 diagrams/
 |    |-- class_relations_diagram.puml
+|    |-- recursive_stack_diagram.puml
 |
 |-- 📂 projects/
 |   | 
