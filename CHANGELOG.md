@@ -9,6 +9,10 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.0.0] - 2025-08-20
+Adicionado
+(concepts/foundations): Inserção de script `functions_composition_and_flow.py` e alteração do README.md para corresponder às mudanças.
+
 [1.0.0] - 2025-08-19
 Adicionado
 (concepts/foundations): Inserção de script `control_flow_and_recursion.
