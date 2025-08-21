@@ -36,7 +36,9 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |    |-- expressions_and_statements.py
 |   |    |-- control_flow_and_recursion.py
 |   |    |-- function_composition_and_flow.py
-|   |     
+|   |    |-- function_design_and_composition.py
+|   |    
+|   |   
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py
 |   |   |-- text_utils.py
