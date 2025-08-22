@@ -37,7 +37,9 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |    |-- control_flow_and_recursion.py
 |   |    |-- function_composition_and_flow.py
 |   |    |-- function_design_and_composition.py
-|   |    
+|   |    |-- epoch_time_converter.py
+|   |    |-- conditional_logic.py    
+|   |    |-- recursion_and_stack.py
 |   |   
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py

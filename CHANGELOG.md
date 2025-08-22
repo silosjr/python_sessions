@@ -9,6 +9,10 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.0.0] - 2025-08-22
+Adicionado
+(concepts/foundations): Inserções dos scripts `epoch_time_converter.py`, `conditional_logic.py` e `recursion_and_stack`, adaptação da estrutura hierárquica do README.md que corresponda às atualizações e adição de `run_sessions` à seção `.gitignore`.
+
 [1.0.0] - 2025-08-21
 Adicionado
 (concepts/foundations): Inserção de script `functions_design_and_composition.py` e alteração do README.md para
