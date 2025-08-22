@@ -21,3 +21,6 @@ last_agenda_file.txt
 
 # Arquivo .txt de palavras em inglês
 words.txt
+
+# Menu de python_sessions (em fase de implementação)
+run_sessions.py
