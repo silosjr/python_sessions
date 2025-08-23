@@ -9,10 +9,25 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
-Editado  - 2025-08-22
-(README.md): Alterações que se representam a atual estrutura hierárquica do repositório.
+Editado - 2025-08-23
+(README.md): Alterações que representam a estrutura hierárquica atual do repositório.
 
-[1.3.0] -2025-08-22
+[1.0.0] - 2025-08-23
+Adicionado
+(diagrams): Inserção de script `stack_trace_analysis.md`.
+
+[1.0.0] - 2025-08-23
+Adicionado
+(concepts/foundations): Inserção de script `function_return_values_and_design.py`.
+
+[1.0.0] - 2025-08-23
+Adicionado
+(concepts/algorithms): Inserção de script `practical_recursive_examples.py`.
+
+Editado  - 2025-08-22
+(README.md): Alterações que representam a atual estrutura hierárquica do repositório.
+
+[1.3.0] - 2025-08-22
 Adicionado
 (concepts/foundations): Inserção de script `practical_calculators` com refatoração em funções que oferecem respaldo para uso de constante ao invés de variáveis.
 
