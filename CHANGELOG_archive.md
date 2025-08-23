@@ -4,21 +4,21 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ## [1.0.0] - 2025-08-03
 
-### Added
+### Novidades Iniciais
 
--   Primeiro script didático: `percentage_and_formatting.py`.
--   Documentação do projeto no `README.md` com estrutura e detalhes da Sessão 1.
--   Arquivo `.gitignore` para ignorar arquivos de sistema e de cache.
--   Informações de autoria (`__author__`, `__version__`, etc.) no script.
+- Primeiro script didático: `percentage_and_formatting.py`.
+- Documentação do projeto no `README.md` com estrutura e detalhes da Sessão 1.
+- Arquivo `.gitignore` para ignorar arquivos de sistema e de cache.
+- Informações de autoria (`__author__`, `__version__`, etc.) no script.
 
 ### Changed
 
--   Refatoração da função `calculate_new_salary` para uma lógica matemática mais concisa.
+- Refatoração da função `calculate_new_salary` para uma lógica matemática mais concisa.
 
 ### Fixed
 
--   Inconsistência na nomenclatura de variáveis no bloco de execução para aderir aos padrões em inglês e snake_case.
--   Erro de digitação no nome da variável `final_salary`.
+- Inconsistência na nomenclatura de variáveis no bloco de execução para aderir aos padrões em inglês e snake_case.
+- Erro de digitação no nome da variável `final_salary`.
 
 ### 1.1.0 (2025-08-05)
 
@@ -79,7 +79,7 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ## [1.0.1] - 2025-08-06
 
-### Changed
+### Melhorias
 
 - Melhorada a experiência do jogador com a adição de um cronômetro para medir a duração de cada partida.
 
@@ -93,11 +93,11 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
 ## [1.11.0] - 2025-08-08
 
-### Changed
+### Alterado
 
 - **Refatoração do Sistema de Persistência:** O sistema de salvamento de arquivos foi completamente alterado do formato de texto simples (`.txt`) para o formato JSON (`.json`).
 - **Estrutura de Dados Interna:** A estrutura de dados para cada contato foi alterada de uma lista para um dicionário, tornando o código mais legível e robusto.
 
-### Added
+### Novidades
 
 - **Validação de Erros Aprimorada:** O carregamento de arquivos agora trata casos de arquivo corrompido ou com formato JSON inválido.
