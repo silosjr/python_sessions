@@ -40,6 +40,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |    |-- epoch_time_converter.py
 |   |    |-- conditional_logic.py    
 |   |    |-- recursion_and_stack.py
+|   |    |-- practical_calculators.py
 |   |   
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py
