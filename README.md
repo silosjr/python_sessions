@@ -29,6 +29,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |
 |   |-- 📂 algorithms/
 |   |   |-- binary_search.py
+|   |   |-- practical_recursion_examples.py
 |   |   
 |   |-- 📂 foundations/
 |   |    |-- syntax_and_operators.py
@@ -41,6 +42,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |    |-- conditional_logic.py    
 |   |    |-- recursion_and_stack.py
 |   |    |-- practical_calculators.py
+|   |    |-- function_return_values_and_design.py
 |   |   
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py
@@ -56,6 +58,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |-- 📂 diagrams/
 |    |-- class_relations_diagram.puml
 |    |-- recursive_stack_diagram.puml
+|    |-- stack_trace_analysis.md
 |
 |-- 📂 projects/
 |   | 
