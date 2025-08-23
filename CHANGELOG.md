@@ -9,6 +9,17 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+Editado  - 2025-08-22
+(README.md): Alterações que se representam a atual estrutura hierárquica do repositório.
+
+[1.3.0] -2025-08-22
+Adicionado
+(concepts/foundations): Inserção de script `practical_calculators` com refatoração em funções que oferecem respaldo para uso de constante ao invés de variáveis.
+
+[1.1.0] - 2025-08-22
+Editado
+(concepts/foundations): Inserção das funções `demonstrate_operator_precedence()`, `demonstrate_assignment_and_types()` e `demonstrate_boolean_logic()` ao script `expressions_and_statements`.
+
 [1.0.0] - 2025-08-22
 Adicionado
 (concepts/foundations): Inserções dos scripts `epoch_time_converter.py`, `conditional_logic.py` e `recursion_and_stack`, adaptação da estrutura hierárquica do README.md que corresponda às atualizações e adição de `run_sessions` à seção `.gitignore`.
