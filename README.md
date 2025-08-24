@@ -30,6 +30,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |-- 📂 algorithms/
 |   |   |-- binary_search.py
 |   |   |-- practical_recursion_examples.py
+|   |   |-- comparison_algotrithms.py
 |   |   
 |   |-- 📂 foundations/
 |   |    |-- syntax_and_operators.py
@@ -43,6 +44,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |    |-- recursion_and_stack.py
 |   |    |-- practical_calculators.py
 |   |    |-- function_return_values_and_design.py
+|   |    |-- practical_conditional_logic.py
 |   |   
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py
