@@ -13,9 +13,10 @@ o código mais legível e fácil de manter.
 """
 from __future__ import annotations
 import locale 
+from typing import List, Dict, Tuple 
 
 __author__ = 'Enock Silos'
-__version__ = '1.3.0' 
+__version__ = '1.5.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -23,6 +24,19 @@ PERCENTAGE_INCREASE: float = 15
 CAR_RENTAL_PER_KM: float = 0.15
 CAR_RENTAL_PER_DAY: float = 60.0
 MINUTES_LOST_PER_CIGARRETE: int = 10
+INCOME_TAX_BRACKETS: List[Dict[str, float]] = [
+    {'limit': 4664.68, 'rate': 0.275, 'deduction': 908.73},
+    {'limit': 3751.05, 'rate': 0.225, 'deduction': 675.49},
+    {'limit': 2826.65, 'rate': 0.15, 'deduction': 394.16},
+    {'limit': 2259.20, 'rate': 0.075, 'deduction': 182.16},
+    {'limit': 0, 'rate': 0.0, 'deduction': 0.0}
+]
+SALARY_INCREASE_THRESHOLD: float = 6666
+SALARY_TIER_1_INCREASE_PERCENTAGE: float = 0.10
+SALARY_TIER_2_INCREASE_PERCENTAGE: float = 0.15
+LONG_TRIP_THRESHOLD_KM: float = 2000
+SHORT_TRIP_PRICE_PER_KM: float = 2.1
+LONG_TRIP_PRICE_PER_KM: float = 1.9
 
 def calculate_sum_from_user_input() -> None:
     """
@@ -36,7 +50,7 @@ def calculate_sum_from_user_input() -> None:
         - Lê dados da entrada padrão (`input`).
         - Imprime dados na saída padrão (`print`).
     """
-    print('--- 1.   Calculadora de Soma ---')
+    print('--- Calculadora de Soma ---')
     while True:
         try:
             num1 = int(input('Digite o primeiro número a ser somado: '))
@@ -59,7 +73,7 @@ def convert_meters_to_millimeters() -> None:
         - Lê dados de entrada padrão (`input`).
         - Imprime dados na saída padrão (`print`).
     """
-    print('---- 2.  Conversor: Metros para Milímetros ---')
+    print('---- Conversor: Metros para Milímetros ---')
     MILLIMETERS_PER_METER = 1000
     while True:
         try:
@@ -90,50 +104,75 @@ def calculate_salary_increase(salary: float) -> float :
     '''
     return salary * (1 + PERCENTAGE_INCREASE / 100)
 
+def calculate_tiered_salary_increase(salary: float) -> float:
+    if salary > SALARY_INCREASE_THRESHOLD:
+        increase_rate = SALARY_TIER_1_INCREASE_PERCENTAGE
+    else:
+        increase_rate = SALARY_TIER_2_INCREASE_PERCENTAGE
+    
+    return salary * (1 + increase_rate)
+
 def prompt_salary_increase() -> None:
     """
-    Orquestra a interação com o usuário para o cálculo de reajuste salarial
-    com base em uma taxa pré-definida e exibe os resultados em uma tabela.
+    Orquestra uma simulação de reajuste salarial, comparando dois cenários:
+    um com taxa de aumento fixa e outro com taxas progressivas.
+    
+    A função interage com o usuário para obter o salário inicial e apresenta
+    os resultados em uma tabela comparativa, facilitando a visualização das
+    diferentes regras de negócio.
 
     Side Effects:
         - Lê dados de entrada padrão (`input`).
         - Imprime dados na saída padrão (`print`).
     """
-    try:
-        locale.setlocale(locale.LC_MONETARY, 'pt_BR.UTF-8')
-    except locale.Error:
-        print("Aviso: Locale 'pt_BR.UTF-8' não foi encontrado. Usando formatação padrão.")
-
     print('\n--- 3.  Calculadora de Reajuste Salarial ---')
     while True:
         try:
-            initial_salary = float(input('Informe seu salário atual: R$ '))
+            user_input = input('Informe seu salário atual (ou "S" para sair): R$ ')
+            if user_input.lower() == 's':
+                print('Operação Finalizada.')
+                break 
+            
+            cleaned_input = user_input.replace('.', '').replace(',', '.')
+            initial_salary = float(cleaned_input)
 
-            increase_value = initial_salary * (PERCENTAGE_INCREASE / 100)
-            final_salary = calculate_salary_increase(initial_salary)
+            if initial_salary < 0:
+                print('\nERRO: O salário deve ser um valor positivo.')
+                continue 
 
-            format_initial = locale.currency(initial_salary, grouping=True)
-            format_increase = locale.currency(increase_value, grouping=True)
-            format_final = locale.currency(final_salary, grouping=True)
+            fixed_final_salary = calculate_salary_increase(initial_salary)
+            fixed_increase_value = fixed_final_salary - initial_salary
+
+            tiered_final_salary = calculate_tiered_salary_increase(initial_salary)
+            tiered_increase_value = tiered_final_salary - initial_salary
+
+            tiered_effective_rate = (tiered_increase_value / initial_salary) * 100 if initial_salary > 0 else 0
 
             header = (
-                f"{'SALÁRIO INICIAL':<20} | "
-                f"{'AUMENTO (%)':^12} | "
+                f"|{'CENÁRIO DE AUMENTO':<30} | "
                 f"{'ACRÉSCIMO':^20} | "
-                f"{'NOVO SALÁRIO':>20}"
+                f"{'NOVO SALÁRIO':>20} | "
             )
+
             separator = '-' * len(header)
-            data_row = (
-                f"{format_initial:<20} | "
-                f"{f'{PERCENTAGE_INCREASE:.1f}%':^12} | "
-                f"{format_increase:^20} | "
-                f"{format_final:>20}"
+
+            row_fixed = (
+                f"{f'| Taxa Fixa ({PERCENTAGE_INCREASE:.1f}%)':<30}  | "
+                f'{locale.currency(fixed_increase_value, grouping=True):^20} | '
+                f'{locale.currency(fixed_final_salary, grouping=True):>20} | '
+            )
+
+            row_tiered = (
+                f"{f'| Taxa Progressiva ({tiered_effective_rate:.1f}%)':<30}  | "
+                f'{locale.currency(tiered_increase_value, grouping=True):^20} | '
+                f'{locale.currency(tiered_final_salary, grouping=True):>20} | '
             )
 
             print('\n' + separator)
             print(header)
             print(separator)
-            print(data_row)
+            print(row_fixed)
+            print(row_tiered)
             print(separator + '\n')
             break
 
@@ -146,6 +185,143 @@ def prompt_salary_increase() -> None:
             print(f'Ocorreu um erro inesperado: {e}')
             break
 
+def calculate_progressive_tax(salary: float) -> Dict[str, float]:
+    if salary <= 0:
+        return 0.0
+    
+    for salary_range in INCOME_TAX_BRACKETS:
+        if salary > salary_range['limit']:
+            return {
+                'tax_due': (salary * salary_range['rate']) - salary_range['deduction'],
+                'rate': salary_range['rate'],
+                'deduction': salary_range['deduction']
+            }
+        
+def prompt_income_tax_calculator() -> None:
+    print('\n --- Calculadora de Imposto de Renda Progressivo ---\n')
+    while True:
+        try:
+            user_input = input('Por favor, informe o valor do seu salário ("S" para SAIR) R$')
+
+            if user_input.lower() == 's':
+                print('\tOperação Finalizada.\n')
+                break 
+            
+
+            gross_salary = float(user_input)
+
+            if gross_salary <= 0:
+                print('\tERRO: O salário não pode ser um número negativo.\n')
+                continue
+
+            tax_data = calculate_progressive_tax(gross_salary)
+
+            tax_due = tax_data['tax_due']
+            rate = tax_data['rate']
+
+            print(f'''
+            Salário Bruto:  {locale.currency(gross_salary, grouping=True):>16}
+            Alíquota Efetiva:   {rate:.1%}
+            Imposto de Renda:   {locale.currency(tax_due, grouping=True):>10}
+            {'-' * 40}
+''')
+            break
+        except ValueError:
+            print('\tERRO: Por favor, digite um valor numérico válido\n')
+        except KeyboardInterrupt:
+            print('\nOperação cancelada pelo usuário.\n')
+            break 
+     
+def calculate_trip_price(distance_in_km: float) -> Tuple[float, float]:
+    """
+    Calcula o preço total de uma viagem e a tarifa por km aplicada.
+
+    Aplica uma tarifa para viagens curtas e outra para viagens longas,
+    com base em um limite de distância pré-definido.
+
+    Args:
+        distance_in_km (float): A distância da viagem em quilômetros.
+
+    Returns:
+        Tuple[float, float]: Uma tupla contendo o preço total da viagem
+                             e a tarifa por km que foi utilizada no cálculo.
+    """
+    if distance_in_km < 0:
+        return 0.0, 0.0
+    
+    if distance_in_km <= LONG_TRIP_THRESHOLD_KM:
+        price_per_km = SHORT_TRIP_PRICE_PER_KM
+    else:
+        price_per_km = LONG_TRIP_PRICE_PER_KM
+    
+    total_price = distance_in_km * price_per_km
+    return total_price, price_per_km
+
+def prompt_trip_price_calculator() -> None:
+    """
+    Orquestra a interação com o usuário para o cálculo do preço de uma viagem.
+
+    Exibe uma tabela de tarifas, solicita a distância e apresenta um resumo
+    claro do custo final e da tarifa aplicada.
+    """
+    print('\n--- Calculadora de Preço de Viagem ---')
+
+    col_1_width = 35
+    col_2_width = 20
+
+    title_1 = 'DESCRIÇÃO DA TARIFA'
+    title_2 = 'PREÇO POR KM'
+
+    short_trip_text = f'Viagens até {LONG_TRIP_THRESHOLD_KM:.0f} KM'
+    long_trip_text = f'Viagens acima de {LONG_TRIP_THRESHOLD_KM:.0f} KM'
+
+    short_trip_price = locale.currency(SHORT_TRIP_PRICE_PER_KM, grouping=True)
+    long_trip_price = locale.currency(LONG_TRIP_PRICE_PER_KM, grouping=True)
+
+    top_border = f"┌{'─' * (col_1_width + 2)}┬{'─' * (col_2_width + 2)}┐"
+    header_line = f"│ {title_1:^{col_1_width}} │ {title_2:^{col_2_width}} │"
+    middle_border = f"├{'─' * (col_1_width + 2)}┼{'─' * (col_2_width + 2)}┤"
+    short_trip_line = f"│ {short_trip_text:<{col_1_width}} │ {short_trip_price:^{col_2_width}} │"
+    long_trip_line = f"│ {long_trip_text:<{col_1_width}} │ {long_trip_price:^{col_2_width}} │"
+    bottom_border = f"└{'─' * (col_1_width + 2)}┴{'─' * (col_2_width + 2)}┘"
+
+    print(top_border)
+    print(header_line)
+    print(middle_border)
+    print(short_trip_line)
+    print(long_trip_line)
+    print(bottom_border)
+
+    while True:
+        try:
+            user_input = input('Informe a distância em KM do destino da sua viagem (ou "S" para sair): ')
+        
+            if user_input.lower() == 's':
+                print('\nOperação finalizada.')
+                break
+
+            cleaned_input = user_input.replace('.', '').replace(',', '.')
+            distance_in_km = float(user_input)
+
+            if distance_in_km < 0:
+                print('ERRO: A distância não pode ser um valor negativo.\n')
+                continue 
+
+            total_price, used_rate = calculate_trip_price(distance_in_km)
+
+            print('\n--- CÁLCULO DO SEU BILHETE ---')
+            print(f"{'Distância Informada:':<22} {distance_in_km:,.2f} KM")
+            print(f"{'Tarifa Aplicada:':<22} {locale.currency(used_rate, grouping=True)} / KM")
+            print(f"{'Valor Total:':<22} {locale.currency(total_price, grouping=True)}")
+            print('-' * 40 + '\n')
+            break
+
+        except ValueError:
+            print('\nERRO: Digite um valor numérico válido para a distância.\n')
+        except KeyboardInterrupt:
+            print('\nOperação cancelada pelo usuário.')
+            break
+
 def prompt_product_discount() -> None:
     """
     Calcula e exibe o valor de um desconto e o preço final de um produto.
@@ -154,7 +330,7 @@ def prompt_product_discount() -> None:
         - Lê dados de entrada padrão (`input`).
         - Imprime dados na saída padrão (`print`).
     """
-    print('--- 4.   Calculadora de Descontos ---')
+    print('--- Calculadora de Descontos ---')
     while True:
         try:
             product_price = float(input('Informe o preço do produto: R$'))
@@ -183,7 +359,7 @@ def prompt_temperature_converter() -> None:
         - Lê dados da entrada padrão (`input`).
         - Imprime dados na saída padrão (`print`).
     """
-    print('--- 5.   Conversor: Celsius para Fahrenheit ---')
+    print('--- Conversor: Celsius para Fahrenheit ---')
     FAHRENHEIT_FACTOR: float = 9 / 5
     FAHRENHEIT_OFFSET: int = 32
     while True:
@@ -207,7 +383,7 @@ def prompt_car_rental_calculator() -> None:
         - Lê dados da entrada padrão (`input`).
         - Imprime dados na saída padrão (`print`).
     """
-    print('--- 6.   Calculadora de Aluguel de Veículos ---')
+    print('--- Calculadora de Aluguel de Veículos ---')
     while True:
         try:
             kms_driven = float(input('Informe a distância percorrida (Km): '))
@@ -234,9 +410,11 @@ def prompt_smoking_impact_calculator() -> None:
         - Lê dados da entrada padrão (`input`).
         - Imprime dados na saída padrão (`print`).
     """
-    print('--- 7.   Calculadora de Impacto do Tabagismo ---')
+    print('--- Calculadora de Impacto do Tabagismo ---')
+    
     DAYS_IN_A_YEAR: int = 365
     MINUTES_IN_A_DAY: int = 1440
+    
     while True:
         try:
             cigarettes_per_day = int(input('Quantos cigarros você fuma por dia? '))
@@ -272,6 +450,8 @@ def main() -> None:
     calculate_sum_from_user_input()
     convert_meters_to_millimeters()
     prompt_salary_increase()
+    prompt_income_tax_calculator()
+    prompt_trip_price_calculator()
     prompt_product_discount()
     prompt_temperature_converter()
     prompt_car_rental_calculator()

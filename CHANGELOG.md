@@ -9,8 +9,23 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+Editado - 2025-08-24
+(README.md): Alterações que representam a estrutura hierárquica atual do repositório.
+
 Editado - 2025-08-23
 (README.md): Alterações que representam a estrutura hierárquica atual do repositório.
+
+[1.0.0] - 2025-08-24
+Adicionado
+(concepts/foundations): Inserção de `practical_conditional_logic.py`.
+
+[1.0.0]
+Adicionado
+(concepts/algorithms): Inserção de `comparison_algorithms.py`
+
+[1.5.0]
+Refatorado
+(concepts/foundations): Refatoração e inclusão de novas funções à `practical_calculators.py`.
 
 [1.0.0] - 2025-08-23
 Adicionado
