@@ -262,7 +262,7 @@ def prompt_salary_increase() -> None:
         - Lê dados de entrada padrão (`input`).
         - Imprime dados na saída padrão (`print`).
     """
-    print('\n--- 3.  Calculadora de Reajuste Salarial ---')
+    print('\n--- Calculadora de Reajuste Salarial ---')
     while True:
         try:
             user_input = input('Informe seu salário atual (ou "S" para sair): R$ ')
