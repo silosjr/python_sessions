@@ -17,14 +17,17 @@ import locale
 from typing import List, Dict, Tuple, Any
 import random 
 import operator
+import time 
+
 __author__ = 'Enock Silos'
-__version__ = '1.7.0' 
+__version__ = '1.8.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
 PERCENTAGE_INCREASE: float = 15
 CAR_RENTAL_PER_KM: float = 0.15
 CAR_RENTAL_PER_DAY: float = 60.0
+MAX_INCOME_COMMITMENT_RATE: float = 0.30
 MINUTES_LOST_PER_CIGARRETE: int = 10
 INCOME_TAX_BRACKETS: List[Dict[str, float]] = [
     {'limit': 4664.68, 'rate': 0.275, 'deduction': 908.73},
@@ -321,6 +324,142 @@ def prompt_salary_increase() -> None:
         except Exception as e:
             print(f'Ocorreu um erro inesperado: {e}')
             break
+
+def analyze_loan_viability(
+                            monthly_income: float,
+                            property_value: float,
+                            loan_term_years: int
+                            )-> Dict[str, Any]:
+    """
+    Analisa a viabilidade de um financiamento imobiliário com base em parâmetros financeiros.
+
+    Esta função pura encapsula a lógica de negócio central para a avaliação de
+    um pedido de financiamento. Ela calcula a prestação mensal (amortização
+    simples, sem juros) e compara-a com o limite máximo de endividamento do
+    proponente, que é determinado pela constante `MAX_INCOME_COMMITMENT_RATE`.
+
+    A função retorna um dicionário estruturado (um "dossiê de análise"),
+    contendo não apenas a decisão booleana de aprovação, mas também todos os
+    valores intermediários calculados. Esta abordagem de retorno de dados
+    ricos permite que a camada de apresentação (a função `prompt_...`) tenha
+    toda a informação necessária para construir uma resposta detalhada para
+    o utilizador, mantendo esta função livre de efeitos colaterais (side effects)
+    como operações de I/O.
+
+    Args:
+        property_value (float): O valor total do imóvel a ser financiado.
+        monthly_income (float): A renda mensal bruta do proponente.
+        loan_term_years (int): O prazo total do financiamento, em anos.
+
+    Returns:
+        Dict[str, Any]: Um dicionário contendo o dossiê completo da análise,
+                        com chaves para 'is_approved', 'monthly_payment',
+                        'max_affordable_payment', e 'total_installments'.
+    """
+    if loan_term_years <= 0 or property_value < 0 or monthly_income < 0:
+        return {
+            'is_approved': False,
+            'monthly_payment': 0.0,
+            'max_affordable_payment': 0.0,
+            'total_installments': 0.0
+        }
+    
+    total_installments = loan_term_years * 12
+    monthly_payment = property_value / total_installments if total_installments > 0 else float('inf')
+    max_affordable_payment = monthly_income * MAX_INCOME_COMMITMENT_RATE
+    is_approved = monthly_payment <= max_affordable_payment
+
+    return {
+        'is_approved': is_approved,
+        'monthly_payment': monthly_payment,
+        'max_affordable_payment': max_affordable_payment,
+        'total_installments': total_installments
+    }
+
+def prompt_loan_viability_analyzer() -> None:
+    """
+    Orquestra a interface de utilizador para o simulador de financiamento imobiliário.
+
+    Este procedimento atua como a camada de apresentação (View Layer), gerindo
+    o ciclo de vida da interação com o utilizador. Utiliza um laço `while` para
+    criar uma sessão que solicita as três entradas de dados necessárias: valor
+    do imóvel, renda mensal e prazo.
+
+    A função é projetada para ser robusta, empregando um bloco `try...except`
+    para capturar `ValueError` de entradas inválidas e `KeyboardInterrupt`
+    para um encerramento gracioso. A lógica de negócio é delegada à função
+    pura `analyze_loan_viability`. O dicionário retornado é então
+    desempacotado e formatado num "dossiê" final bem alinhado e claro,
+    proporcionando uma experiência de utilizador profissional.
+
+    Side Effects:
+        - Lê dados da entrada padrão (`input`).
+        - Imprime dados formatados na saída padrão (`print`).
+        - Utiliza `time.sleep` para simular um tempo de processamento.
+    """
+    print('\n--- SIMULAÇÃO DE FINANCIAMENTO IMOBILIÁRIO ---\n')
+    while True:
+        try:
+            property_value_user_input = input('VALOR DO IMÓVEL ("S" SAIR): R$')
+
+            if property_value_user_input.lower() == 's':
+                print('Operação cancelada.\n')
+                break
+
+            property_value = float(property_value_user_input)
+
+            monthly_income_user_input = input('RENDA MENSAL ("S" SAIR): R$')
+
+            if monthly_income_user_input.lower() == 's':
+                print('Operação cancelada.\n')
+                break
+
+            monthly_income = float(monthly_income_user_input)
+
+            loan_term_years_input_user = input('PRAZO PARA PAGAMENTO EM ANOS ("S" SAIR): ')
+
+            if loan_term_years_input_user.lower() == 's':
+                print('Operação cancelada.\n')
+
+            separator = '-' * 65
+            
+            print(separator)
+            print('AGUARDE ALGUNS INSTANTES ENQUANTO SUA SIMULAÇÃO É ANALISADA...')
+            time.sleep(3)
+
+            loan_term_years = int(loan_term_years_input_user)
+
+            analysis_data = analyze_loan_viability(monthly_income, property_value, loan_term_years)
+            
+            loan_principal = property_value
+            loan_term_months = analysis_data['total_installments']
+            monthly_loan_payment = analysis_data['monthly_payment']
+            max_monthly_payment_amount = analysis_data['max_monthly_payment']
+            eligibility_result = analysis_data['is_approved']
+
+            label_width = 50
+            value_width = 15
+
+            print(separator)
+            print(f"{'VALOR DO IMÓVEL:':<{label_width}}{locale.currency(loan_principal, grouping=True):>{value_width}}")
+            print(f"{'RENDA MENSAL INFORMADA:':<{label_width}}{locale.currency(monthly_income, grouping=True):>{value_width}}")
+            print(f"{'PRAZO EM MESES PARA PAGAMENTO:':<{label_width}}{loan_term_months:>{value_width}}")
+            print(f"{'PARCELA MENSAL COM SIMULAÇÃO:':<{label_width}}{locale.currency(monthly_loan_payment, grouping=True):>{value_width}}")
+            print(f"{'VALOR MÁXIMO DA PARCELA PARA APROVAÇÃO:':<{label_width}}{locale.currency(max_monthly_payment_amount, grouping=True):>{value_width}}")
+            status_message = 'FINANCIAMENTO APROVADO' if eligibility_result else 'FINANCIAMENTO NEGADO'
+            print(status_message)
+            print(separator)
+            break 
+
+        except ValueError as e:
+            print(f'\nPor favor, informe corretamente os dados solicitados: {e}')
+            continue
+        except KeyboardInterrupt:
+            print('\nOperação cancelada pelo usuário.')
+            break 
+        except Exception as e:
+            print(f'\nTente realizar outra simulação em alguns instantes: {e}')
+            break 
 
 def calculate_progressive_tax(salary: float) -> Dict[str, float]:
     if salary <= 0:
@@ -696,6 +835,7 @@ def main() -> None:
     prompt_basic_calculator()
     convert_meters_to_millimeters()
     prompt_salary_increase()
+    prompt_loan_viability_analyzer()
     prompt_income_tax_calculator()
     prompt_trip_price_calculator()
     run_phone_bill_simultation()

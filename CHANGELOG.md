@@ -9,6 +9,19 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.8.0] - 2025-08-25
+Added
+Simulador de Financiamento Imobiliário: Adicionada uma nova calculadora ao módulo practical_calculators.py para analisar a viabilidade de um financiamento.
+
+Função de Análise Pura (analyze_loan_viability): Implementada para encapsular a lógica de negócio do cálculo da prestação mensal e da verificação contra a taxa máxima de comprometimento de renda. A função retorna um dicionário estruturado com o dossiê completo da análise.
+
+Função de Interface (prompt_loan_viability_analyzer): Criada para gerir a interação com o utilizador, com tratamento robusto de erros e uma apresentação de resultados formatada profissionalmente.
+
+Constante de Regra de Negócio (MAX_INCOME_COMMITMENT_RATE): Adicionada para isolar a taxa de 30% de comprometimento de renda, melhorando a manutenibilidade.
+
+Changed
+A função main() em practical_calculators.py foi atualizada para incluir a chamada ao novo simulador de financiamento.
+
 [1.7.0] - 2025-08-25
 Added
 Calculadora Aritmética Básica: Adicionada uma nova calculadora ao módulo practical_calculators.py para realizar as quatro operações aritméticas fundamentais.
