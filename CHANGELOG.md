@@ -9,6 +9,19 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.6.0] - 2025-08-25
+Added
+Calculadora de Conta de Celular: Adicionada uma nova funcionalidade ao módulo practical_calculators.py para simular o cálculo de uma fatura de telefonia móvel.
+
+Função de Simulação (run_phone_bill_simulation): Implementada uma função de interface não-interativa que simula um cenário de uso real, selecionando um plano e um consumo de minutos de forma aleatória para gerar um extrato detalhado.
+
+Função de Cálculo Pura (calculate_phone_bill_details): Criada uma função de lógica de negócio que recebe um plano e um consumo, retornando um dicionário estruturado com o detalhamento completo da fatura (custo base, minutos excedentes, custo extra e total).
+
+Modelagem de Dados para Planos (MOBILE_PHONE_PLANS): As regras de negócio dos planos de celular foram desacopladas da lógica e modeladas como uma constante estruturada (dicionário de dicionários), melhorando a manutenibilidade e escalabilidade do código.
+
+Changed
+A função main() em practical_calculators.py foi atualizada para incluir a chamada à nova simulação de fatura de celular.
+
 Editado - 2025-08-24
 (README.md): Alterações que representam a estrutura hierárquica atual do repositório.
 

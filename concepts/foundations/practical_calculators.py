@@ -13,10 +13,11 @@ o código mais legível e fácil de manter.
 """
 from __future__ import annotations
 import locale 
-from typing import List, Dict, Tuple 
+from typing import List, Dict, Tuple, Any 
+import random 
 
 __author__ = 'Enock Silos'
-__version__ = '1.5.0' 
+__version__ = '1.6.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -37,6 +38,10 @@ SALARY_TIER_2_INCREASE_PERCENTAGE: float = 0.15
 LONG_TRIP_THRESHOLD_KM: float = 2000
 SHORT_TRIP_PRICE_PER_KM: float = 2.1
 LONG_TRIP_PRICE_PER_KM: float = 1.9
+MOBILE_PHONE_PLANS: Dict[str, Dict[str, float]] = {
+    'small_talk': {'monthly_base_price': 50.0, 'included_minutes_quota': 100.0, 'excess_minute_cost': 0.20},
+    'big_talk': {'monthly_base_price': 99.0, 'included_minutes_quota': 500.0, 'excess_minute_cost': 0.15}
+}
 
 def calculate_sum_from_user_input() -> None:
     """
@@ -322,6 +327,90 @@ def prompt_trip_price_calculator() -> None:
             print('\nOperação cancelada pelo usuário.')
             break
 
+def calculate_phone_bill_details(plan_name: str, minutes_used: float) -> Dict[str, Any]:
+    """
+    Calcula o extrato detalhado de uma conta de celular com base no plano e consumo.
+
+    Consulta as regras de negócio definidas na constante `MOBILE_PHONE_PLANS`
+    para determinar o preço base, minutos excedentes, custo extra e custo total.
+
+    Args:
+        plan_name (str): O nome do plano a ser calculado (deve ser uma chave
+                         válida em `MOBILE_PHONE_PLANS`).
+        minutes_used (float): O total de minutos consumidos pelo usuário.
+
+    Returns:
+        Dict[str, Any]: Um dicionário contedo o extrato detalhado da conta, 
+                        com chaves para `base_price`, `extra_minutes_charged`,
+                        `extra_cost` e `total_cost`.
+    """
+    plan_details = MOBILE_PHONE_PLANS[plan_name]
+
+    extra_minutes_charged = max(minutes_used - plan_details['included_minutes_quota'], 0)
+
+    extra_cost = extra_minutes_charged * plan_details['excess_minute_cost']
+    total_cost = plan_details['monthly_base_price'] + extra_cost
+    
+    return {
+        'base_price': plan_details['monthly_base_price'],
+        'excess_minutes': extra_minutes_charged,
+        'extra_cost': extra_cost,
+        'total_cost': total_cost
+    }
+
+def run_phone_bill_simultation() -> None:
+    """
+     Orquestra uma simulação de fatura de telefonia móvel e exibe um extrato.
+
+    Este procedimento demonstra a aplicação de regras de negócio complexas
+    em um cenário simulado. A função opera de forma não interativa, utilizando
+    geração de dados programática para selecionar um plano de serviço e
+    simular um volume de consumo de minutos.
+
+    Adotando o princípio da Separação de Responsabilidades, esta função
+    atua como a camada de apresentação (View Layer). Ela invoca a função
+    de cálculo pura (`calculate_phone_bill_details`) para obter um extrato
+    de dados estruturado (um dicionário) e, em seguida, assume a
+    responsabilidade de formatar e renderizar esses dados em uma fatura
+    legível para o usuário final. A apresentação é condicional, detalhando
+    custos excedentes apenas quando estes são aplicáveis, mimetizando o
+    comportamento de sistemas de faturamento do mundo real.
+
+    Side Effects:
+        - Imprime dados formatados na saída padrão (`print`), constituindo a
+          interface de usuário da simulação.
+        - Altera o estado do gerador de números pseudoaleatórios global do
+          módulo `random` ao invocar `random.choice` e `random.uniform`.
+    """
+    print('\n--- EXTRATO DETALHADO DE SUA FATURA MONTY ---\n ')
+
+    candidate_plans = random.choice(list(MOBILE_PHONE_PLANS.keys()))
+    total_minutes_used = random.uniform(0.0, 800.0)
+
+    bill_details = calculate_phone_bill_details(candidate_plans, total_minutes_used)
+
+    total_cost = bill_details['total_cost']
+    base_price = bill_details['base_price']
+    extra_minutes_charged = bill_details['excess_minutes']
+    extra_cost = bill_details['extra_cost']
+
+    label_width = 20
+    value_width = 15
+
+    print(f"{'PLANO CONTRATADO:':<{label_width}} {candidate_plans}")
+    print(f"{'CUSTO BASE:':<{label_width}} {locale.currency(base_price, grouping=True):>{value_width}}")
+    print(f"{'MINUTOS CONSUMIDOS:':<{label_width}} {total_minutes_used:.0f} min.")
+
+    if extra_cost > 0:
+
+        print(f"{'MINUTOS EXCEDENTES:':<{label_width}} {extra_minutes_charged:.0f} min.")
+        print(f"{'CUSTO EXTRA:':<{label_width}} {locale.currency(extra_cost, grouping=True):>{value_width}}")
+
+    print('-' * 40)
+
+    print(f"{'VALOR TOTAL A PAGAR:':<{label_width}} {locale.currency(total_cost, grouping=True):>{value_width}}\n")
+    
+
 def prompt_product_discount() -> None:
     """
     Calcula e exibe o valor de um desconto e o preço final de um produto.
@@ -452,6 +541,7 @@ def main() -> None:
     prompt_salary_increase()
     prompt_income_tax_calculator()
     prompt_trip_price_calculator()
+    run_phone_bill_simultation()
     prompt_product_discount()
     prompt_temperature_converter()
     prompt_car_rental_calculator()
