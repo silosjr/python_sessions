@@ -18,7 +18,7 @@ from typing import List, Dict, Tuple, Any
 import random 
 import operator
 __author__ = 'Enock Silos'
-__version__ = '1.6.0' 
+__version__ = '1.7.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
