@@ -11,11 +11,12 @@ resultados de forma robusta e clara. O uso de constantes para valores que
 representam regras de negócio fixas, como taxas ou fatores de conversão, torna
 o código mais legível e fácil de manter.
 """
+
 from __future__ import annotations
 import locale 
-from typing import List, Dict, Tuple, Any 
+from typing import List, Dict, Tuple, Any
 import random 
-
+import operator
 __author__ = 'Enock Silos'
 __version__ = '1.6.0' 
 __email__ = 'init.caucasian722@passfwd.com'
@@ -69,7 +70,115 @@ def calculate_sum_from_user_input() -> None:
             break 
         except Exception as e:
             print(f'Ocorreu um erro inesperado. O programa será encerrado {e}')
-        
+
+def perform_arithmetic_operation(
+                                operand1: int | float, 
+                                operand2: int | float, 
+                                operation_symbol: str
+    ) -> int | float:    
+    """
+    Executa uma operação aritmética básica entre dois operandos.
+
+    Esta função pura serve como o motor de cálculo, abstraindo a lógica
+    matemática da interface com o usuário. Ela emprega um padrão de design
+    de mapeamento (dispatch table) utilizando um dicionário, onde os símbolos
+    das operações (chaves) são associados às suas respectivas funções do
+    módulo `operator` (valores). Esta abordagem substitui uma cadeia de
+    declarações `if/elif/else`, resultando em um código mais limpo,
+    escalável e com complexidade de tempo de busca O(1).
+
+    A função é robusta, realizando validações de pré-condição para os
+    argumentos. Ela levanta exceções específicas para operadores inválidos
+    (`ValueError`) e para a operação matematicamente indefinida de divisão
+    por zero (`ZeroDivisionError`), permitindo que a função chamadora trate
+    esses erros de forma controlada.
+
+    Args:
+        operand1 (Union[int, float]): O primeiro número da operação.
+        operand2 (Union[int, float]): O segundo número da operação.
+        operation_symbol (str): O símbolo que representa a operação a ser
+                                executada ('+', '-', '*', '/').
+
+    Returns:
+        Union[int, float]: O resultado numérico da operação aritmética.
+
+    Raises:
+        ValueError: Se o `operation_symbol` não for uma das chaves válidas
+                    no dicionário de operações.
+        ZeroDivisionError: Se a operação for uma divisão (`'/'`) e o
+                           `operand2` for zero.
+    """
+    operations: dict = {
+                        '+': operator.add,
+                        '-': operator.sub,
+                        '*': operator.mul,
+                        '/': operator.truediv
+    }
+
+    if operation_symbol == '/' and operand2 == 0:
+        raise ZeroDivisionError('Não é possível realizar uma divisão por zero.')
+
+    if operation_symbol not in operations:
+        raise ValueError('Operador inválido. Use `+`, `-`, `*` ou `/`')
+      
+    return operations[operation_symbol](operand1, operand2) 
+
+def prompt_basic_calculator() -> None:
+    """
+    Orquestra a interface de linha de comando para uma calculadora aritmética.
+
+    Este procedimento gerencia o ciclo de vida da interação com o usuário,
+    atuando como a camada de apresentação (View Layer). Ele utiliza um laço
+    `while` para criar uma sessão persistente que solicita as entradas
+    necessárias (dois operandos e um operador) e orquestra a chamada à
+    função de cálculo pura (`perform_arithmetic_operation`).
+
+    A função é projetada para ser altamente robusta, utilizando um bloco
+    `try...except` unificado para capturar e tratar de forma elegante as
+    exceções propagadas pela camada de cálculo, como `ValueError` (para
+    entradas numéricas ou operadores inválidos) e `ZeroDivisionError`.
+    Isso garante que o programa não encerre abruptamente e forneça feedback
+    claro ao usuário, permitindo uma nova tentativa.
+
+    Side Effects:
+        - Lê dados da entrada padrão (`input`).
+        - Imprime dados na saída padrão (`print`), incluindo prompts,
+          resultados e mensagens de erro.
+    """
+    print('\n--- CALCULADORA DAS OPERAÇÕES BÁSICAS ---\n')
+      
+    while True:
+        try:
+            operand1_input = input('Digite o primeiro número (ou "S" para sair): ')
+            if operand1_input.lower() == 's':
+                print('Operação finalizada.')
+                break
+
+            operand1 = float(operand1_input)
+
+            operand2_input = input('Digite o segundo número (ou "S" para sair): ')
+            if operand2_input.lower() == 's':
+                print('Operação finalizada.')
+                break
+
+            operand2 = float(operand2_input)
+
+            op_symbol_input = input("Escolha a operação [+, -, *, /]: ")
+
+            result = perform_arithmetic_operation(operand1, operand2, op_symbol_input)
+            print(f'\nRESULTADO: {operand1} {op_symbol_input} {operand2} = {result:.4f}\n')
+            break  
+
+        except ValueError as e:
+            print(f"\nERRO DE ENTRADA: {e}. Por favor, tente novamente.\n")
+            continue  
+        except ZeroDivisionError as e:
+            print(f"\nERRO MATEMÁTICO: {e}. Por favor, tente novamente.\n")
+            continue  
+        except KeyboardInterrupt:
+            print('\nOperação cancelada pelo usuário.')
+            break
+
 def convert_meters_to_millimeters() -> None:
     """
     Converte um valor de metros para milímetros forncido pelo usuário.
@@ -110,6 +219,29 @@ def calculate_salary_increase(salary: float) -> float :
     return salary * (1 + PERCENTAGE_INCREASE / 100)
 
 def calculate_tiered_salary_increase(salary: float) -> float:
+    """
+    Calcula o novo salário aplicando uma taxa de aumento progressiva.
+
+    Esta função implementa uma regra de negócio de reajuste salarial
+    baseada em faixas (tiered structure). A lógica de controle condicional
+    avalia o salário de entrada em relação a um limiar pré-definido
+    (`SALARY_INCREASE_THRESHOLD`) para determinar qual de duas alíquotas de
+    aumento deve ser aplicada.
+
+    Este modelo de cálculo é comum em cenários onde se deseja aplicar
+    benefícios distintos para diferentes faixas de remuneração,
+    diferenciando-se de um reajuste de taxa única. A função permanece pura,
+    sem efeitos colaterais (side effects), dependendo apenas de seu
+    argumento de entrada e de constantes do módulo para sua execução.
+
+    Args:
+        salary (float): O valor do salário inicial, em formato de ponto
+                        flutuante.
+
+    Returns:
+        float: O valor do novo salário após a aplicação da alíquota de
+               aumento correspondente à sua faixa.
+    """
     if salary > SALARY_INCREASE_THRESHOLD:
         increase_rate = SALARY_TIER_1_INCREASE_PERCENTAGE
     else:
@@ -203,6 +335,32 @@ def calculate_progressive_tax(salary: float) -> Dict[str, float]:
             }
         
 def prompt_income_tax_calculator() -> None:
+    """
+    Orquestra a interação com o usuário para o cálculo de Imposto de Renda.
+
+    Esta função atua como a camada de interface (View Layer) para a
+    calculadora de imposto de renda. Sua responsabilidade primária é gerenciar
+    o fluxo de I/O (Entrada/Saída) com o usuário através do console,
+    garantindo uma experiência robusta e guiada.
+
+    A implementação utiliza um laço de repetição (`while`) para a coleta e
+    validação contínua da entrada. A função realiza a validação de tipo,
+    assegurando que a entrada possa ser convertida para um tipo numérico, e a
+    validação de domínio, verificando que o valor do salário não seja
+    negativo. A lógica de negócio principal, o cálculo progressivo do
+    imposto, é delegada à função pura `calculate_progressive_tax`, em
+    conformidade com o Princípio da Responsabilidade Única. O dicionário
+    retornado por esta função é então desempacotado e formatado para uma
+    apresentação clara ao usuário, utilizando o módulo `locale` para a
+    formatação monetária.
+
+    Side Effects:
+        - Lê dados da entrada padrão (`input`) para obter o salário do
+          usuário.
+        - Imprime dados na saída padrão (`print`) para exibir o resultado,
+          mensagens de status e erros de validação.
+        - O fluxo de execução pode ser terminado via `KeyboardInterrupt`.
+    """
     print('\n --- Calculadora de Imposto de Renda Progressivo ---\n')
     while True:
         try:
@@ -212,7 +370,6 @@ def prompt_income_tax_calculator() -> None:
                 print('\tOperação Finalizada.\n')
                 break 
             
-
             gross_salary = float(user_input)
 
             if gross_salary <= 0:
@@ -410,7 +567,6 @@ def run_phone_bill_simultation() -> None:
 
     print(f"{'VALOR TOTAL A PAGAR:':<{label_width}} {locale.currency(total_cost, grouping=True):>{value_width}}\n")
     
-
 def prompt_product_discount() -> None:
     """
     Calcula e exibe o valor de um desconto e o preço final de um produto.
@@ -523,20 +679,21 @@ def prompt_smoking_impact_calculator() -> None:
             break
 
 def main() -> None:
-    '''
+    """
     Ponto de entrada principal que orquestra a execução sequencial de todas
     as calculadoras práticas do módulo.
 
     Side Effects:
         - Imprime dados na saída padrão (`print`).
         - Invoca funções que realizam I/O.
-    '''
+    """
     try:
         locale.setlocale(locale.LC_MONETARY, 'pt_BR.UTF-8')
     except locale.Error:
         print("Aviso: Locale 'pt_BR.UTF-8' não encontrado. Usando formatação padrão.\n")
 
     calculate_sum_from_user_input()
+    prompt_basic_calculator()
     convert_meters_to_millimeters()
     prompt_salary_increase()
     prompt_income_tax_calculator()

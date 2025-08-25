@@ -9,6 +9,17 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.7.0] - 2025-08-25
+Added
+Calculadora Aritmética Básica: Adicionada uma nova calculadora ao módulo practical_calculators.py para realizar as quatro operações aritméticas fundamentais.
+
+Função de Cálculo Pura (perform_arithmetic_operation): Implementada com um padrão de mapeamento (dispatch dictionary) usando o módulo operator, substituindo if/elif/else para maior clareza e escalabilidade. A função inclui validação robusta para operadores inválidos e divisão por zero, levantando exceções específicas.
+
+Função de Interface (prompt_basic_calculator): Criada para gerenciar a interação com o usuário, com um tratamento de exceções unificado que captura ValueError e ZeroDivisionError, garantindo que o programa não encerre inesperadamente e forneça feedback claro.
+
+Changed
+A função main() em practical_calculators.py foi atualizada para incluir a chamada à nova calculadora aritmética.
+
 [1.6.0] - 2025-08-25
 Added
 Calculadora de Conta de Celular: Adicionada uma nova funcionalidade ao módulo practical_calculators.py para simular o cálculo de uma fatura de telefonia móvel.
