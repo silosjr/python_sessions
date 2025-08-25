@@ -135,7 +135,11 @@ class Deck:
         for _ in range(num):
             hand.add_card(self.pop_card())
 
-    def deal_hands(self, num_hands: int, cards_per_hand: int, hand_class: Optional[Type[Hand]] = None) -> List['Hand']:
+    def deal_hands(
+            self, num_hands: int,
+            cards_per_hand: int,
+            hand_class: Optional[Type[Hand]] = None
+            ) -> List['Hand']:
         """
         Distribui cartas do baralho para um número de mãos.
 
