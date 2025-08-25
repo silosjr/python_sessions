@@ -75,7 +75,7 @@ def perform_arithmetic_operation(
                                 operand1: int | float, 
                                 operand2: int | float, 
                                 operation_symbol: str
-    ) -> int | float:    
+                                ) -> int | float:    
     """
     Executa uma operação aritmética básica entre dois operandos.
 
