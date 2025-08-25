@@ -100,7 +100,6 @@ class Time:
         new_time.hour, new_time.minute = divmod(minutes, 60)
         return new_time 
     
-      
     def __add__(self, other: 'Time' | int) -> 'Time':
         """
         Soma este objeto `self` com outro objeto `Time` usando o operador `+`
@@ -236,8 +235,3 @@ if __name__ == '__main__':
     
     # Testando o método is_after()
     print(f"\nA nova hora de início é depois da duração? {start_time.is_after(duration)}\n")
-
-
-
-
-
