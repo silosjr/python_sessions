@@ -26,7 +26,6 @@ def is_even(number: int) -> bool:
     Args:
         number (int): O número inteiro a ser verificado. 
 
-
     Returns:
         bool: True, se o número for par, False caso contrário.
     """
