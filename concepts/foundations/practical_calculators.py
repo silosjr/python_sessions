@@ -46,7 +46,12 @@ MOBILE_PHONE_PLANS: Dict[str, Dict[str, float]] = {
     'small_talk': {'monthly_base_price': 50.0, 'included_minutes_quota': 100.0, 'excess_minute_cost': 0.20},
     'big_talk': {'monthly_base_price': 99.0, 'included_minutes_quota': 500.0, 'excess_minute_cost': 0.15}
 }
-
+ELECTRICITY_TARIFFS_CONFIG: Dict[Dict[str, int | float]] = {
+    'residential': {'limit': 500, 'base_rate_per_kwh': 0.40, 'over_limit_rate_per_kwh': 0.65},
+    'commercial': {'limit': 1000, 'base_rate_per_kwh': 0.55, 'over_limit_rate_per_kwh': 0.60},
+    'industrial': {'limit': 5000, 'base_rate_per_kwh': 0.55, 'over_limit_rate_per_kwh': 0.60 }
+}
+     
 def calculate_sum_from_user_input() -> None:
     """
     Solicita dois números inteiros ao usuário e exibe a soma.
@@ -705,7 +710,125 @@ def run_phone_bill_simultation() -> None:
     print('-' * 40)
 
     print(f"{'VALOR TOTAL A PAGAR:':<{label_width}} {locale.currency(total_cost, grouping=True):>{value_width}}\n")
+
+def calculate_electricity_bill_details(
+                    installation_type: str,
+                    kwh_consumption: int
+                    )-> Dict[str, Any]:
+    """
+    Calcula o extrato detalhado de uma fatura de energia elétrica.
+
+    Esta função pura serve como o motor de cálculo para a fatura
+    dos serviços de energia, implementando uma lógica de tarifação
+    progressiva (tiered). As regras do negócio, incluindo os limites
+    e as alíquotas para cada categoria de instalação, são desacopladas
+    da lógica e armazenadas na constante de dados `ELECTRICITY_TARIFFS_CONFIG`.
+
+    A função realiza validações de pré-condição para garantir a integridade
+    dos dados de entrada, levantando `ValueError para consumo negativo ou
+    tipos de instalação desconhecidos. O algoritmo então determina a quantidade
+    excedente, aplicando os respectivos custos para calcular o valor tota.
+
+    Args:
+        installation_type (str): A categoria da instalação (ex: `residential),
+                                 que deve corresponder a uma chave válida em 
+                                 `ELECTRICITY_TARIFFS_CONFIG`.
+        kwh_consumption (int): O consumo total de energia no período, em quilowatts-
+                               hora.
+
+    Raises:
+        ValueError: Se `kwh_consumption` for negativo.
+        ValueError: Se `installation_type` não for encontrado na configuração de
+                    tarifas.
+
+    Returns:
+        Dict[str, Any]: Um dicionário estruturado contendo o dossiê completo da 
+                        fatura, incluindo as tarifas aplicadas, o detalhe do 
+                        consumo e o valor total a pagar.
+    """
+    if kwh_consumption < 0:
+        raise ValueError('Consumo de energia (kwh) não pode ser negativo.')
     
+    try:
+        tariff_details = ELECTRICITY_TARIFFS_CONFIG[installation_type]
+    except KeyError:
+        raise ValueError(f'Tipo de instalação inválido: {installation_type}')
+
+    
+    limit = tariff_details['limit']
+    excess_rate = tariff_details['over_limit_rate_per_kwh']
+    base_rate = tariff_details['base_rate_per_kwh']
+
+    extra_kwh = 0 if kwh_consumption <= limit else kwh_consumption - limit 
+    base_kwh = min(kwh_consumption, limit)
+    
+    base_cost = base_kwh * base_rate
+    extra_cost = extra_kwh * excess_rate
+
+    total_cost = base_cost + extra_cost
+
+    return {
+        'consumer_category': installation_type,
+        'tariff_base_rate_per_kwh': tariff_details['base_rate_per_kwh'],
+        'tariff_excess_rate_per_kwh': tariff_details['over_limit_rate_per_kwh'],
+        'total_energy_consumed': kwh_consumption,
+        'excess_energy_consumed_kwh': extra_kwh,
+        'total_billing_amount': total_cost
+            }
+
+def run_electricity_bill_simulation() -> None:
+    """
+    Orquestra uma simulação de fatura de energia elétrica e exibe o extrato.
+
+    Este procedimento atual como a camada de apresentação (View Layer), 
+    demonstrando a aplicação da lógica de faturamento em um cenário 
+    não-interativo do mundo real. A função utiliza o módulo `random` para 
+    simular um cliente, selecionando aleatoriamente uma categoria de consumo
+    e um volume de energia consumida.
+
+    Seguindo o princípio da Separação de Responsabilidades, a lógica de cálculo
+    é delegada à função pura `calculate_electricity_bill_details`.
+    O dicionário retornado é então desempacotado e formatado numa fatura detalhada
+    e profissionalmente alinhada, que apresenta os custos de forma condicional,
+    exibindo o consumo excedente apenas quando aplicável.
+
+    Side Effects:
+        - Imprime dados formatados na saída padrão (`print`).
+        - Altera o estado do gerador de números pseudoaleatórios do módulo `random`.
+    """
+    print('\n--- FATURA DA PRESTAÇÃO DE SERVIÇOS DE ENERGIA ELÉTRICA ---')
+
+    candidate_categories = random.choice(list(ELECTRICITY_TARIFFS_CONFIG.keys()))
+    total_consumed_kwh = random.randint(150, 10000)
+
+    bill_details = calculate_electricity_bill_details(candidate_categories, total_consumed_kwh)
+
+    installation_type = bill_details['consumer_category']
+    base_rate_per_kwh = bill_details['tariff_base_rate_per_kwh']
+    excess_cost_rate_per_kwh = bill_details['tariff_excess_rate_per_kwh']
+    total_consumption = bill_details['total_energy_consumed']
+    extra_kwh = bill_details['excess_energy_consumed_kwh']
+    total_cost = bill_details['total_billing_amount']
+
+    separator = '-' * 70
+    label_width = 50
+    value_width = 15
+
+    print(separator)
+
+    print(f"{'CATEGORIA DE CONSUMO:':<{label_width}}{installation_type:>{value_width}}")
+    print(f"{'TARIFA PADRÃO (kWh):':<{label_width}}{locale.currency(base_rate_per_kwh, grouping=True):>{value_width}}")
+    print(f"{'TARIFA EXCEDENTE (kWh):':<{label_width}}{locale.currency(excess_cost_rate_per_kwh, grouping=True):>{value_width}}")
+    print(separator)
+    print(f"{'CONSUMO NO PERÍODO:':<{label_width}}{f'{total_consumption:.0f} kWh':>{value_width}}")
+    
+    if extra_kwh > 0:
+        print(f"{'CONSUMO EXCEDENTE:':<{label_width}}{f'{extra_kwh:.0f} kWh':>{value_width}}")
+    
+    print(separator)
+    print(f"{'VALOR TOTAL A PAGAR:':<{label_width}}{locale.currency(total_cost, grouping=True):>{value_width}}")
+    print(separator)
+
 def prompt_product_discount() -> None:
     """
     Calcula e exibe o valor de um desconto e o preço final de um produto.
@@ -839,6 +962,7 @@ def main() -> None:
     prompt_income_tax_calculator()
     prompt_trip_price_calculator()
     run_phone_bill_simultation()
+    run_electricity_bill_simulation()
     prompt_product_discount()
     prompt_temperature_converter()
     prompt_car_rental_calculator()

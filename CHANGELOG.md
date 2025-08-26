@@ -9,6 +9,19 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.9.0] - 2025-08-26
+Added
+Simulador de Fatura de Energia Elétrica: Adicionada uma nova e complexa calculadora ao módulo practical_calculators.py para simular a faturação de energia elétrica com base em tarifas progressivas.
+
+Função de Cálculo Pura (calculate_electricity_bill_details): Implementada para encapsular a lógica de negócio de tarifação por faixas (tiered billing). A função é robusta, com validação de ValueError e KeyError.
+
+Função de Simulação (run_electricity_bill_simulation): Criada para orquestrar uma simulação não-interativa, demonstrando um cenário de uso realista e apresentando uma fatura profissionalmente formatada.
+
+Modelagem de Dados para Tarifas (ELECTRICITY_TARIFFS_CONFIG): As complexas regras de negócio das tarifas de energia foram desacopladas da lógica e modeladas como um dicionário de dicionários, garantindo alta manutenibilidade e escalabilidade.
+
+Changed
+A função main() em practical_calculators.py foi atualizada para incluir a chamada ao novo simulador de fatura de energia.
+
 [1.8.0] - 2025-08-25
 Added
 Simulador de Financiamento Imobiliário: Adicionada uma nova calculadora ao módulo practical_calculators.py para analisar a viabilidade de um financiamento.
