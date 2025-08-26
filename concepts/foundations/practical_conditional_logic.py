@@ -17,7 +17,7 @@ proficiência em engenharia de software.
 from __future__ import annotations
 import random
 import locale
-from typing import Final, List, Union
+from typing import Final, List, Union, Optional
 import sys
 import os
 
@@ -36,6 +36,92 @@ __status__ = 'Development'
 
 MAXIMUM_VELOCITY_CONSTRAINT: Final[float] = 80.0
 PENALTY_CALCULATION_FACTOR: Final[int] = 5
+
+def get_valid_integer_from_user(prompt_message: str) -> Optional[int]:
+    """
+    Obtém uma entrada numérica inteira e validada pelo usuário.
+
+    Esta função auxiliar (`helper function`) encapsula o processo completo de
+    solicitação, validação e conversão de uma entrada do usuário para o tipo
+    inteiro. Ela opera dentro de um laço de repetição (`while`) para garantir
+    a robustez, persistindo na solicitação até que uma entrada válida seja
+    fornecida ou que o usuário opte por cancelar a operação.
+
+    A função implementa um contrato de retorno dual: devolve um objeto do tipo
+    `int` em caso de sucesso na conversão, ou o valor `None` para sinalizar
+    explicitamente que a operação foi interrompida pelo usuário. Este padrão
+    permite que a função que a chama trate a desistência de forma graciosa, sem
+    a necessidade de levantar exceções para um comportamento esperado.
+
+    Args:
+        prompt_message (str): A mensagem a ser exibida ao usuário para
+                              solicitar a entrada de dados.
+
+    Returns:
+        Optional[int]: O número inteiro fornecido pelo usuário, ou `None` se
+                       a operação for cancelada.
+
+    Side Effects:
+        - Lê dados a entrada padrão (`input`).
+        - Imprime mensagens de erro e status na saída padrão (`print`).
+    """
+    while True:
+        try:
+            user_input = input(prompt_message)
+
+            if user_input.lower() == 's':
+                print('\nO usuário cancelou a operação.')
+                return None 
+            
+            converted_number = int(user_input)
+            return converted_number
+
+        except ValueError:
+            print('ERRO: Entrada inválida. Por favor, digite apenas números inteiros.')
+            continue
+        except Exception as e:
+            print(f'Ocorreu um erro ao tentar processar a operação: {e}')
+            break 
+
+def compare_two_numbers() -> None:
+    """
+    Orquestra a comparação de dois números inteiros fornecidos pelo usuário.
+
+    Este procedimento serve como demonstração didática da estrutura de 
+    controle condicional `if/elif/else` e do princípio da Separação de
+    Responsabilidades. A função atua como a camada de orquestração, 
+    delegando a tarefa complexa de obter e validar a entrada do usuário
+    à função auxiliar `get_valid_integer_from_user`.
+
+    A função gerencia o fluxo da aplicação, verificando se a função 
+    auxiliar retornou um sinal de cancelamento (`None`) e encerrando 
+    a sua própria execução de forma graciosa. Caso ambas as entradas 
+    sejam válidas, ela procede à avaliação lógica utilizando operadores
+    relacionais para determinar e exibir a relação de magnitude entre
+    os dois números.
+
+    Side Effects:
+        - Imprime o resultado da comparação e mensagens de status na 
+          saída padrão (`print`).
+    """
+    print('\n--- DEMONSTRAÇÃO DE COMPARAÇÃO NUMÉRICA ---')
+
+    num1 = get_valid_integer_from_user('Digite um número inteiro: ')
+    if num1 is None:
+        return 
+    
+    num2 = get_valid_integer_from_user('Digite o segundo número inteiro: ')
+    if num2 is None:
+        return 
+    
+    if num1 < num2:
+        result_message = f'{num1} é MENOR que {num2}'
+    elif num1 > num2:
+        result_message = f'{num1} é MAIOR que {num2}'
+    else:
+        result_message = f'Os números são IGUAIS ({num1} = {num2})'
+
+    print(f'\nResultado da comparação: {result_message}\n')
 
 
 def calculate_speeding_fine() -> None:
@@ -80,7 +166,6 @@ def calculate_speeding_fine() -> None:
                   Dirija com cuidado. Tenha uma boa viagem!
                   -----------------------------------------------------
                   ''')
-
 
 def get_min_max_from_user_input() -> None:
     """
@@ -135,7 +220,6 @@ def get_min_max_from_user_input() -> None:
     else:
         print('\n    Nenhum número foi inserido.\n')
 
-
 if __name__ == '__main__':
     """
     Ponto de entrada (entry point) para a execução direta do script.
@@ -152,3 +236,4 @@ if __name__ == '__main__':
 
     calculate_speeding_fine()
     get_min_max_from_user_input()
+    compare_two_numbers()

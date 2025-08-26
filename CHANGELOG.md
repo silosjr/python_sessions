@@ -9,6 +9,17 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.1.0] - 2025-08-26
+Added
+Demonstração de Comparação Numérica (compare_two_numbers): Adicionada uma nova função ao módulo practical_conditional_logic.py para demonstrar de forma interativa a estrutura de controle if/elif/else, comparando dois números inteiros fornecidos pelo usuário.
+
+Função Auxiliar de Entrada (get_valid_integer_from_user): Criada uma função auxiliar reutilizável para encapsular a lógica de solicitação e validação de entrada de números inteiros. Esta função implementa um tratamento de erros robusto e permite que o usuário cancele a operação de forma graciosa, retornando Optional[int].
+
+Changed
+Arquitetura de Código: A função compare_two_numbers foi refatorada para utilizar a nova função auxiliar, promovendo o princípio DRY (Don't Repeat Yourself) e melhorando a legibilidade e a manutenibilidade do código.
+
+A função main() em practical_conditional_logic.py foi atualizada para incluir a chamada à nova demonstração de comparação.
+
 [1.9.0] - 2025-08-26
 Added
 Simulador de Fatura de Energia Elétrica: Adicionada uma nova e complexa calculadora ao módulo practical_calculators.py para simular a faturação de energia elétrica com base em tarifas progressivas.
