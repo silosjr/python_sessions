@@ -31,7 +31,7 @@ sys.path.append(project_root)
 from concepts.algorithms.comparison_algorithms import find_min_and_max_from_list
 
 __author__ = 'Enock Silos'
-__version__ = '1.3.0'
+__version__ = '1.4.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -83,6 +83,47 @@ def get_valid_integer_from_user(prompt_message: str) -> Optional[int]:
         except Exception as e:
             print(f'Ocorreu um erro ao tentar processar a operação: {e}')
             break 
+
+def get_valid_float_from_user(prompt_message: str) -> Optional[float]:
+    """
+    Obtém uma entrada numérica de ponto flutuante e validada do usuário.
+
+    Esta função auxiliar (helper function) encapsula o processo completo de
+    solicitação, validação e conversão de uma entrada do usuário para o tipo
+    `float`. Opera dentro de um laço de repetição (`while`) para garantir a 
+    robustez, persistindo na solicitação até que uma entrada válida seja
+    fornecida ou que o usuário opte por cancelar a operação.
+
+    A função implementa um contrato de retorno dual: devolve um objeto do tipo
+    `float` em caso de sucesso, ou o valor `None` para sinalizar
+    explicitamente que a operação foi interrompida. Este padrão permite que 
+    a função chamadora trate a desistência de forma graciosa.
+
+    Args:
+        prompt_message (str): A mensagem a ser exibida ao usuário para 
+                              solicitar a entrada de dados.
+
+    Returns:
+        Optional[float]: O número de ponto flutuante fornecido pelo usuário,
+                         ou `None` se a operação for cancelada.
+    """
+    while True:
+        try:
+            user_input = input(prompt_message)
+
+            if user_input.lower() == 's':
+                print('\nO usuário cancelou a operação.')
+                return None 
+            
+            converted_number = float(user_input)
+            return converted_number
+        
+        except ValueError:
+            print('ERRO: Entrada inválida. Por favor digite apenas valores numéricos válidos. Exemplo: 8.75')
+            continue 
+        except Exception as e:
+            print(f'Ocorreu um erro interno ao tentar processa a operação: {e}')
+            break
 
 def compare_two_numbers() -> None:
     """
@@ -299,6 +340,49 @@ def get_min_max_from_user_input() -> None:
     else:
         print('\n    Nenhum número foi inserido.\n')
 
+def determine_academic_status() -> None:
+    """
+    Demonstra a classificação do status acadêmico de um aluno com base na média.
+
+    Este procedimento serve como exemplo didático da estrutura de controle
+    `if/elif/else` para classificar um valor numérico em faixas mutuamente
+    exclusivas. As regras de negócio (as notas de corte para aprovação e 
+    recuperação) são definidas como constantes locais para maior clareza e 
+    manutenibilidade.
+
+    A função adota o princípio de Separação de Responsabilidades ao delegar
+    a tarefa de obter e validar a entrada do usuário (a média) à função
+    auxiliar `get_valid_float_from_user`. Além da validação de tipo, a função
+    implementa uma validação de domínio, garantindo que a média inserida 
+    esteja dentro de um intervalo academicamente plausível (0 a 10).
+
+    Side Effects:
+        - Imprime o resultado da classificação e mensagens de status na saída
+          padrão (`print`).
+    """
+    print('\n--- DEMONSTRAÇÃO DE STATUS ACADÊMICO ---\n')
+
+    PASSING_GRADE_THRESHOLD = 7.0 
+    RECOVERY_GRADE_THRESHOLD = 4.0
+
+    student_average = get_valid_float_from_user('Digite a média final do aluno ("S" SAIR): ')
+
+    if student_average is None:
+        return
+    
+    if not (0.0 <= student_average <= 10.0):
+        print(f'ERRO: A média {student_average} é inválida. Digite apenas valores entre 0.0 e 10.0')
+        return 
+
+    if student_average >= PASSING_GRADE_THRESHOLD:
+        academic_status = 'APROVADO'
+    elif RECOVERY_GRADE_THRESHOLD <= student_average < PASSING_GRADE_THRESHOLD:
+        academic_status = 'EM RECUPERAÇÃO'
+    else:
+        academic_status = 'REPROVADO'
+
+    print(f'Média Final = {student_average:.2f} *** STATUS => {academic_status}\n')
+ 
 if __name__ == '__main__':
     """
     Ponto de entrada (entry point) para a execução direta do script.
@@ -313,8 +397,9 @@ if __name__ == '__main__':
     except locale.Error:
         print("Aviso: Locale 'pt_BR.UTF-8' não foi encontrado. Usando formatação padrão.")
 
-    calculate_speeding_fine()
-    get_min_max_from_user_input()
-    compare_two_numbers()
-    get_time_of_day_greeting()
-    demonstrate_classification_of_numbers_by_range()
+    # calculate_speeding_fine()
+    # get_min_max_from_user_input()
+    # compare_two_numbers()
+    # get_time_of_day_greeting()
+    # demonstrate_classification_of_numbers_by_range()
+    determine_academic_status()

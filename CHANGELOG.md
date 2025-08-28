@@ -9,6 +9,17 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.4.0] - 2025-08-28
+Added
+Demonstração de Status Acadêmico (determine_academic_status): Adicionada uma nova função ao módulo practical_conditional_logic.py para demonstrar uma cadeia if/elif/else na classificação da média de um aluno.
+
+Função Auxiliar de Entrada para float (get_valid_float_from_user): Criada uma nova função auxiliar reutilizável para a solicitação e validação de números de ponto flutuante, expandindo a "caixa de ferramentas" de entrada do módulo.
+
+Validação de Domínio: A função determine_academic_status agora inclui uma validação de domínio para garantir que a média inserida pelo usuário esteja dentro do intervalo válido (0-10).
+
+Changed
+A função main() em practical_conditional_logic.py foi atualizada para incluir a chamada à nova demonstração de status acadêmico.
+
 [1.3.0] - 2025-08-28
 Added
 Demonstração de Saudação Contextual (demonstrate_time_of_day_greeting): Adicionada uma nova função ao módulo practical_conditional_logic.py para demonstrar uma cadeia if/elif/else que seleciona uma saudação apropriada com base na hora atual do sistema.
