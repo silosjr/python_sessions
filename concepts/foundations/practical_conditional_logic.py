@@ -30,7 +30,7 @@ sys.path.append(project_root)
 from concepts.algorithms.comparison_algorithms import find_min_and_max_from_list
 
 __author__ = 'Enock Silos'
-__version__ = '1.0.0'
+__version__ = '1.2.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -123,6 +123,49 @@ def compare_two_numbers() -> None:
 
     print(f'\nResultado da comparação: {result_message}\n')
 
+def demonstrate_classification_of_numbers_by_range() -> None:
+    """
+    Demonstra a classificação de um número em faixas de valores dinâmicos.
+
+    Este procedimento serve como um exemplo didático avançado da estrutura de
+    controle `if/elif/else` e da sintaxe de comparações encadeadas em Python
+    (ex: `min <= valor < max`). A função eleva o conceito de classificação
+    ao utiliza limites de faixa gerados de forma pseudoaleatória,
+    garantido que cada execução apresente um novo desafio lógico.
+
+    A função adota o princípio de Separação de Responsabilidades ao delegar
+    a complexa tarefa de obter e validar a entrada do usuário à função 
+    auxiliar `get_valid_integer_from_user`. Ela gerencia o fluxo da 
+    aplicação, tratando o caso de cancelamento pelo usuário de forma graciosa
+    e, em caso de sucesso, executa a lógica de classificação e apresenta o 
+    resultado de forma clara e contextualizada.
+
+    Side Effects:
+        - Imprime o resultado da classificação e mensagens de status na saída
+          padrão (`print`).
+        - Altera o estado do gerador de números pseudoaleatórios do módulo 
+          `random`
+    """
+    print('\n--- DEMONSTRAÇÃO DE CLASSIFICAÇÃO EM FAIXAS DINÂMICAS ---')
+
+    reference_value_1 = random.randint(-10, 10)
+    reference_value_2 = random.randint(20, 40)
+
+    print(f'As faixas de referência para esta execução são: < {reference_value_1} e >= {reference_value_2}')
+
+    number_to_classify = get_valid_integer_from_user('Digite um número inteiro para ser classificado: ')
+
+    if number_to_classify is None:
+        return 
+    
+    if number_to_classify < reference_value_1:
+        result_message = f'O número {number_to_classify} é MENOR que a primeira faixa ({reference_value_1}).'
+    elif reference_value_1 <= number_to_classify < reference_value_2:
+        result_message = f'O número {number_to_classify} está NO INTERVALO entre ({reference_value_1}) e ({reference_value_2}).'
+    else:
+        result_message = f'O número digitado {number_to_classify} é MAIOR OU IGUAL que a segunda faixa {reference_value_2}'
+
+    print(f'\nResultado da Classificação: {result_message}\n')
 
 def calculate_speeding_fine() -> None:
     """
@@ -237,3 +280,4 @@ if __name__ == '__main__':
     calculate_speeding_fine()
     get_min_max_from_user_input()
     compare_two_numbers()
+    demonstrate_classification_of_numbers_by_range()

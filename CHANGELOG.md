@@ -9,6 +9,17 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.2.0] - 2025-08-28
+Added
+Demonstração de Classificação por Faixas (demonstrate_classification_of_numbers_by_range): Adicionada uma nova função ao módulo practical_conditional_logic.py para demonstrar a estrutura if/elif/else na classificação de um número em faixas de valores.
+
+Uso de Faixas Dinâmicas: A nova demonstração utiliza o módulo random para gerar os limites das faixas a cada execução, tornando o exemplo mais interativo e didático.
+
+Comparações Encadeadas: O código exemplifica o uso da sintaxe de comparações encadeadas (min <= valor < max), uma prática recomendada em Python para verificar se um valor se encontra num intervalo.
+
+Changed
+A função main() em practical_conditional_logic.py foi atualizada para incluir a chamada à nova demonstração de classificação.
+
 [1.1.0] - 2025-08-26
 Added
 Demonstração de Comparação Numérica (compare_two_numbers): Adicionada uma nova função ao módulo practical_conditional_logic.py para demonstrar de forma interativa a estrutura de controle if/elif/else, comparando dois números inteiros fornecidos pelo usuário.
