@@ -9,6 +9,15 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.3.0] - 2025-08-28
+Added
+Demonstração de Saudação Contextual (demonstrate_time_of_day_greeting): Adicionada uma nova função ao módulo practical_conditional_logic.py para demonstrar uma cadeia if/elif/else que seleciona uma saudação apropriada com base na hora atual do sistema.
+
+Uso do Módulo datetime: A nova demonstração foi implementada utilizando o módulo datetime para obter a hora do sistema de forma robusta, seguindo o princípio de "Fonte Única da Verdade" para derivar os dados para a lógica e para a apresentação.
+
+Changed
+A função main() em practical_conditional_logic.py foi atualizada para incluir a chamada à nova demonstração de saudação.
+
 [1.2.0] - 2025-08-28
 Added
 Demonstração de Classificação por Faixas (demonstrate_classification_of_numbers_by_range): Adicionada uma nova função ao módulo practical_conditional_logic.py para demonstrar a estrutura if/elif/else na classificação de um número em faixas de valores.

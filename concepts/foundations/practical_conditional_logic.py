@@ -20,6 +20,7 @@ import locale
 from typing import Final, List, Union, Optional
 import sys
 import os
+import datetime 
 
 # Bloco de configuração de path para permitir importações inter-módulos
 # em um ambiente de desenvolvimento local.
@@ -30,7 +31,7 @@ sys.path.append(project_root)
 from concepts.algorithms.comparison_algorithms import find_min_and_max_from_list
 
 __author__ = 'Enock Silos'
-__version__ = '1.2.0'
+__version__ = '1.3.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -167,6 +168,41 @@ def demonstrate_classification_of_numbers_by_range() -> None:
 
     print(f'\nResultado da Classificação: {result_message}\n')
 
+def get_time_of_day_greeting() -> None:
+    """
+    Demonstra uma saudação contextual baseada na hora atual do sistema.
+
+    Este procedimento serve como um exemplo didático da estrutura de controle
+    `if/elif/else` para a tomada de decisão baseada em faixas numéricas. A 
+    função opera de forma não interativa, obtendo a hora atual diretamente 
+    do sistema operacional, o que a torna uma simulação robusta e autônoma.
+
+    A implementação adota o princípio da "Fonte Única da Verdade" (Single
+    Source of Truth) ao obter a data e a hora completas uma única vez através
+    do módulo `datetime`. A partir deste único objeto, os dados necessários
+    tanto para a lógica de controle (a hora como um inteiro) quanto para a 
+    apresentação (a hora formatada como texto) são derivados. Esta abordagem
+    garante a consistência dos dados e a clareza do código.
+
+    Side Effects:
+        - Imprime a saudação resultante e a hora atual na saída padrão (`print`).
+        - Realiza uma chamada de sistema para obter a hora local.
+    """
+    print('\n--- DEMONSTRAÇÃO DE SAUDAÇÃO CONTEXTUAL ---')
+
+    now_date_time = datetime.datetime.now()
+    hour = now_date_time.hour
+    now = now_date_time.strftime('%H:%M:%S')
+
+    if hour < 12:
+        greeting = 'Bom dia!'
+    elif 12 <= hour < 18:
+        greeting = 'Boa tarde!'
+    else:
+        greeting = 'Boa noite!'
+
+    print(f'{greeting} A hora atual é: {now}')
+
 def calculate_speeding_fine() -> None:
     """
     Simula a operação de um radar de velocidade e calcula uma multa se aplicável.
@@ -280,4 +316,5 @@ if __name__ == '__main__':
     calculate_speeding_fine()
     get_min_max_from_user_input()
     compare_two_numbers()
+    get_time_of_day_greeting()
     demonstrate_classification_of_numbers_by_range()
