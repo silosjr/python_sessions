@@ -45,6 +45,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |    |-- practical_calculators.py
 |   |    |-- function_return_values_and_design.py
 |   |    |-- practical_conditional_logic.py
+|   |    |-- iterative_process_examples.py
 |   |   
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py

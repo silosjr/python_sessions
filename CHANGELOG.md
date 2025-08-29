@@ -9,6 +9,14 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.1.0] - 2025-08-29
+Added
+Novo Módulo (iterative_process_examples.py): Criado um novo módulo na pasta concepts/foundations para abrigar exemplos didáticos focados em processos iterativos e laços de repetição.
+
+Demonstração de Contagem Simples (demonstrate_simple_counting): Adicionada a primeira função ao novo módulo. Esta função refatora um snippet de contagem simples, transformando-o em uma demonstração interativa e robusta que ensina a coleta de dados, validação e o uso de padrões de formatação como List Comprehension e .join().
+
+Reutilização de Código: A nova função importa e reutiliza a ferramenta get_valid_integer_from_user do módulo de lógica condicional, demonstrando a modularidade do projeto.
+
 [1.4.0] - 2025-08-28
 Added
 Demonstração de Status Acadêmico (determine_academic_status): Adicionada uma nova função ao módulo practical_conditional_logic.py para demonstrar uma cadeia if/elif/else na classificação da média de um aluno.
