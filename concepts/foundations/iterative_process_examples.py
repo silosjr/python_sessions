@@ -7,7 +7,7 @@ from typing import List
 from practical_conditional_logic import get_valid_integer_from_user
 
 __author__ = 'Enock Silos'
-__version__ = '1.1.0' 
+__version__ = '1.2.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -46,6 +46,7 @@ def demonstrate_simple_counting() -> None:
         return
     
     end_number = get_valid_integer_from_user('Digite um número final para a contagem ("S" -> SAIR): ')
+    
     if end_number is None:
             return
     
@@ -59,8 +60,55 @@ def demonstrate_simple_counting() -> None:
         print('ERRO: O número inicial deve ser menor do que o número final.')
         return 
 
+def demonstrate_iterative_countdown() -> None:
+    """
+    Demonstra um processo de contagem regressiva utilizando uma abordagem declarativa.
+
+    Este procedimento serve como um exemplo didático para o conceito de iteração 
+    controlada em ordem decrescente. Em vez de um laço iterativo explícito
+    (como `while`ou `for`), esta implementação utiliza uma List Comprehension
+    combinada com a função `range()` e um passo (step) negativo. Esta é uma 
+    técnica "Pythonica" avançada que expressa a intenção do código de forma 
+    mais concisa e declarativa.
+
+    Pedagogicamente, esta função serve como um contraponto direto à sua
+    contraparte recursiva (`countdown`em `control_flow_and_recursion.py`),
+    permitindo ao usuário comparar e constrastar as duas principais
+    abordagens para resolver problemas que envolvem repetição.
+
+    A função encapsula um fluxo completo: coleta de dados, validação robusta
+    e execução do processo iterativo, culminando em uma apresentação de dados
+    formatada.
+
+    Side Effects:   
+        - Imprime o resultado da contagem e mensagens de status na saída
+          padrão (`print`).
+        - Realiza chamada de I/O para obter dados do usuário.
+    """
+    print('\n--- DEMONSTRAÇÃO DE CONTAGEM REGRESSIVA ITERATIVA ---')
+
+    start_number = get_valid_integer_from_user('Digite um número inicial para a contagem regressiva ("S" SAIR): ')
+
+    if start_number is None:
+          return
+     
+    end_number = get_valid_integer_from_user('Digite um número final para a contagem regressiva ("S" SAIR): ')
+
+    if end_number is None:
+          return 
+     
+    if start_number >= end_number:
+        numbers_to_print: List[str] = [str(i) for i in range(start_number, end_number - 1, -1)]
+        formatted_list = ' -> '.join(numbers_to_print)        
+        print(f'\nContagem Regressiva: {formatted_list}')
+        print('--- FIM DA CONTAGEM ---\n')
+    else:
+          print('ERRO: O número inicial deve ser maior ou igual do que o número final.')
+          return 
+
 def main() -> None:
-    demonstrate_simple_counting()
+    # demonstrate_simple_counting()
+    demonstrate_iterative_countdown()
 
 if __name__ == '__main__':
     main()

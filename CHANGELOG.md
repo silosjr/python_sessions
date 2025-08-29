@@ -9,6 +9,15 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.2.0] - 2025-08-29
+Added
+Demonstração de Contagem Regressiva (demonstrate_iterative_countdown): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função serve como um exemplo didático de um processo iterativo decrescente, utilizando a função range() com um passo negativo.
+
+Par Pedagógico Iteração vs. Recursão: A nova função foi projetada para ser um contraponto direto à função recursiva countdown, enriquecendo o valor didático do projeto ao permitir a comparação entre as duas abordagens para resolver o mesmo problema.
+
+Changed
+A função main() em iterative_process_examples.py foi atualizada para incluir a chamada à nova demonstração.
+
 [1.1.0] - 2025-08-29
 Added
 Novo Módulo (iterative_process_examples.py): Criado um novo módulo na pasta concepts/foundations para abrigar exemplos didáticos focados em processos iterativos e laços de repetição.
