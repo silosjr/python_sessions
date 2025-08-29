@@ -9,6 +9,15 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.3.0] - 2025-08-29
+Added
+Demonstração de Geração de Sequência Filtrada (demonstrate_generation_of_filtered_numbers): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função serve como um exemplo didático da combinação de um processo iterativo com uma lógica de decisão para filtrar dados.
+
+Ensino de List Comprehension com Filtro: A nova função foi implementada utilizando uma List Comprehension com uma cláusula if, ensinando uma técnica "Pythonica" avançada para a criação de listas baseadas em condições.
+
+Changed
+A função main() em iterative_process_examples.py foi atualizada para incluir a chamada à nova demonstração.
+
 [1.2.0] - 2025-08-29
 Added
 Demonstração de Contagem Regressiva (demonstrate_iterative_countdown): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função serve como um exemplo didático de um processo iterativo decrescente, utilizando a função range() com um passo negativo.
