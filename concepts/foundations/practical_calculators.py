@@ -467,16 +467,58 @@ def prompt_loan_viability_analyzer() -> None:
             break 
 
 def calculate_progressive_tax(salary: float) -> Dict[str, float]:
-    if salary <= 0:
-        return 0.0
-    
+    """
+    Calcula o imposto de renda progressivo com base no salário mensal.
+
+    Este procedimento computacional implementa o algoritmo para o cálculo do
+    Imposto de Renda Retido na Fonte (IRRF) no Brasil, conforme a tabela
+    progressiva mensal. A função exemplifica um padrão de design de software
+    fundamental: a separação entre dados (regras de negócio) e lógica
+    (algoritmo).
+
+    As regras tributárias — as faixas de rendimento, alíquotas e parcelas a
+    deduzir — são externalizadas na constante `INCOME_TAX_BRACKETS`. Esta
+    abstração permite que a função opere de forma agnóstica a estas regras,
+    facilitando a manutenção futura do sistema em caso de alterações na
+    legislação fiscal.
+
+    O algoritmo executa uma busca linear através das faixas, que devem estar
+    previamente ordenadas de forma decrescente por seu limite, para
+    identificar o enquadramento correto do salário fornecido. Uma vez
+    identificada a faixa, o imposto devido é calculado utilizando a fórmula
+    canônica: `(base_de_cálculo * alíquota) - parcela_a_deduzir`.
+
+    Args:
+        salary (float): O valor do salário bruto mensal, que serve como
+                        base de cálculo para o imposto.
+
+    Returns:
+        Dict[str, float]: Um dicionário contendo o extrato detalhado do
+                          cálculo, com as seguintes chaves:
+                          - 'tax_due': O valor do imposto a ser pago.
+                          - 'rate': A alíquota percentual aplicada.
+                          - 'deduction': A parcela a deduzir correspondente.
+
+    Raises:
+        ValueError: Lançado se o `salary` fornecido for um valor negativo,
+                    pois tal entrada é inválida no domínio do problema.
+    """
+    if salary < 0:
+        raise ValueError("O salário não pode ser um valor negativo.")
+
+    if salary == 0:
+        return {'tax_due': 0.0, 'rate': 0.0, 'deduction': 0.0}
+
     for salary_range in INCOME_TAX_BRACKETS:
         if salary > salary_range['limit']:
+            tax_due = (salary * salary_range['rate']) - salary_range['deduction']
             return {
-                'tax_due': (salary * salary_range['rate']) - salary_range['deduction'],
+                'tax_due': max(0.0, tax_due),
                 'rate': salary_range['rate'],
                 'deduction': salary_range['deduction']
             }
+        
+    return {'tax_due': 0.0, 'rate': 0.0, 'deduction': 0.0}
         
 def prompt_income_tax_calculator() -> None:
     """
