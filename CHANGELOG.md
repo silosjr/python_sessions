@@ -9,6 +9,13 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.4.0] - 2025-08-29
+Changed
+Generalização da Função de Filtragem: A função demonstrate_generation_of_filtered_numbers foi significativamente refatorada e renomeada para demonstrate_custom_filtering.
+
+Added
+Suporte para Filtragem Customizável: A função demonstrate_custom_filtering agora opera como uma Função de Ordem Superior, aceitando um predicado (Callable) como argumento. Isto permite a geração de sequências numéricas com qualquer regra de filtragem, como demonstrado na função main com o uso de funções lambda para gerar números ímpares e múltiplos de 3.
+
 [1.3.0] - 2025-08-29
 Added
 Demonstração de Geração de Sequência Filtrada (demonstrate_generation_of_filtered_numbers): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função serve como um exemplo didático da combinação de um processo iterativo com uma lógica de decisão para filtrar dados.

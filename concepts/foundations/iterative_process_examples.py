@@ -3,11 +3,11 @@ iterative_process_examples.py
 """
 
 from __future__ import annotations
-from typing import List 
+from typing import List, Callable
 from practical_conditional_logic import get_valid_integer_from_user
 
 __author__ = 'Enock Silos'
-__version__ = '1.2.0' 
+__version__ = '1.4.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -106,25 +106,34 @@ def demonstrate_iterative_countdown() -> None:
           print('ERRO: O número inicial deve ser maior ou igual do que o número final.')
           return 
 
-def demonstrate_generation_of_filtered_numbers() -> None:
+def demonstrate_custom_filtering(sequence_description: str, filter_rule: Callable[[int], bool]) -> None:
     """
-    Demonstra a geração de uma sequência numérica filtrada por uma condição.
+    Demonstra a geração de uma sequência numérica filtrada por uma regra customizável.
 
-    Este procedimento serve como um exemplo didático para a combinação de um
-    processo iterativo com uma lógica de decisão (filtragem), um padrão
-    fundamental em processamento de dados. A função encapsula um fluxo 
-    completo: coleta de dados, validação robusta e a geração da sequência
-    final, culminando em uma apresentação de dados formatada.
+    Este procedimento exemplifica o conceito de Função de Ordem Superior
+    (High-Order Function), um pilar da programação funcional. A função aceita
+    não apenas dados (o limite da sequência), mas também lógica na forma de um
+    predicado (`filter_rule`). Este predicado é uma função `Callable`que recebe
+    um inteiro e retorna um booleano, determinando se o número deve ou não ser
+    incluído na sequência resultante.
 
-    A implementação utiliza uma abordagem declarativa e "Pythonica" através de
-    uma List Comprehension com uma cláusula `if`. Esta técnica permite a
-    construção de uma lista de resultados de forma concisa e eficiente, 
-    expressando a intenção de "gerar uma lista de números que satisfaçam
-    uma condição" em uma única linha concise e legível de código.
+    Esta abordagem de design abstrai a lógica de filtragem, transformando a
+    função em uma ferramenta genérica e reutilizável, capaz de gerar qualquer
+    tipo de sequência filtrada (números ímpares, múltipos de um valo, etc.)
+    sem que a sua implementação interna precise ser alterada.
 
-    A função também pratica a programação defensiva, validando a entrada do
-    usuário para garantir que o limite da sequência seja um número positivo,
-    evitando comportamentos inesperados ou ilógicos.
+    A implementação utiliza uma List Comprehension, passando cada elemento da
+    sequência gerada pelo `range()` através da `filter_rule` fornecida,
+    numa demonstração de código declarativo, conciso e "Pythonico".
+
+    Args:
+        sequence_description (str): Uma descrição textual da sequência que está
+                                    a ser gerada (ex: "Números Ímpares),
+                                    utilizada para a apresentação dos resultados.
+        filter_rule (Callable[[int], bool]): A função predicado que será executada
+                                             para cada número. Deve retornar `True`
+                                             para os números a serem incluídos e 
+                                             `False` caso contrário.
 
     Side Effects:
         - Imprime a sequência gerada e mensagens de status na saída 
@@ -133,7 +142,7 @@ def demonstrate_generation_of_filtered_numbers() -> None:
     """
     print('\n--- DEMONSTRAÇÃO DE GERAÇÃO DE NÚMEROS FILTRADOS ---\n')
 
-    upper_limit = get_valid_integer_from_user('Digite o limite numérico para a sequência a ser gerada: ')
+    upper_limit = get_valid_integer_from_user('Digite o limite numérico máximo para a sequência a ser gerada: ')
 
     if upper_limit is None:
           return
@@ -142,18 +151,17 @@ def demonstrate_generation_of_filtered_numbers() -> None:
           print('ERRO: O valor limite deve ser um número positivo e maior que 0. Encerrando o programa')
           return
     
-    odd_numbers: List[str] = [str(i) for i in range(1, upper_limit + 1) if i % 2 != 0]
+    filtered_number_strings: List[str] = [str(i) for i in range(1, upper_limit + 1) if filter_rule(i)]
 
-    formatted_list = ' -> '.join(odd_numbers)
-    print(f'\nSequência de Números Ímpares Gerada até {upper_limit}: \n{formatted_list}\n --- FIM DA SEQUÊNCIA ---')
-
-
+    formatted_list = ' -> '.join(filtered_number_strings)
+    print(f'\n>>> Sequência Gerada para a condição fornecida: {sequence_description}: \n{formatted_list} ', end='')
+    print('FIM DA SEQUÊNCIA ')
 
 def main() -> None:
-    # demonstrate_simple_counting()
-    # demonstrate_iterative_countdown()
-    demonstrate_generation_of_filtered_numbers()
-
-
+    demonstrate_simple_counting()
+    demonstrate_iterative_countdown()
+    demonstrate_custom_filtering('Números Ímpares', lambda n: n % 2 != 0)
+    demonstrate_custom_filtering('Múltiplos de 3', lambda n: n % 3 == 0)
+    
 if __name__ == '__main__':
     main()
