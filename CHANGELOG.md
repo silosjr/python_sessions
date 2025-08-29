@@ -9,6 +9,12 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.5.0] - 2025-08-29
+Added
+Demonstração de Tabuada Customizável (demonstrate_custom_multiplication_table): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função demonstra a geração de uma tabuada de multiplicação com base, início e fim definidos pelo usuário.
+
+Ensino de Formatação Dinâmica: A nova função implementa um padrão profissional de formatação de saída, calculando dinamicamente a largura das colunas para garantir um alinhamento perfeito, servindo como um exemplo avançado do uso de f-strings.
+
 [1.4.0] - 2025-08-29
 Changed
 Generalização da Função de Filtragem: A função demonstrate_generation_of_filtered_numbers foi significativamente refatorada e renomeada para demonstrate_custom_filtering.

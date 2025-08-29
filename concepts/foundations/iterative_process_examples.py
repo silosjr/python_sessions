@@ -7,7 +7,7 @@ from typing import List, Callable
 from practical_conditional_logic import get_valid_integer_from_user
 
 __author__ = 'Enock Silos'
-__version__ = '1.4.0' 
+__version__ = '1.5.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -157,11 +157,76 @@ def demonstrate_custom_filtering(sequence_description: str, filter_rule: Callabl
     print(f'\n>>> Sequência Gerada para a condição fornecida: {sequence_description}: \n{formatted_list} ', end='')
     print('FIM DA SEQUÊNCIA ')
 
+def demonstrate_custom_multiplication_table() -> None:
+    """
+    Demonstra a geração de uma tabuada de multiplicação com intervalo customizável.
+
+    Este procedimento serve como um exemplo didático avançado de um processo
+    iterativo. A função não apenas executa uma repetição controlada, mas também
+    implementa um padrão de design profissional para a apresentação de dados 
+    tabulados: o cálculo dinâmico de largura de coluna.
+
+    A lógica de iteração é realizada utilizando um laço `for` em conjunto com a 
+    função `range()`, a abordagem canônica e "Pythonica" para percorrer
+    sequências numéricas definidas.
+
+    O principal valor pedagógico reside na lógica de formatação. Antes da
+    iteração, a função pré-calcula a largura máxima necessária para cada
+    coluna, inspecionando os valores de entrada. Esta largura é então
+    utilizada em f-strings para garantir um alinhamento perfeito de saída,
+    independentemente da magnitude dos números fornecidos pelo usuário.
+    Esta técnica é um exemplo prático de programação adaptativa e robusta.
+
+    A função também encapsula um fluxo completo de iteração, incluindo a
+    coleta de múltiplos dados, validação de consistência lógica (o início
+    do intervalo não pode ser maior que o fim) e o tratamento de erros.
+
+    Side Effects:
+        - Imprime a tabuada gerada e mensagens de status na saída 
+          padrão (`print`).
+        - Realiza chamadas de I/O para obter os dados do usuário.
+    """
+    print('\n--- DEMONSTRAÇÃO DE TABUADA CUSTOMIZADA DE MULTIPLICAÇÃO ---\n')
+
+    table_number = get_valid_integer_from_user('Informe o número da tabuada a ser gerada: ')
+
+    if table_number is None:
+         return 
+    
+    if table_number <= 0:
+         print('ATENÇÃO: O número para a tabuada deve ser não-negativo e diferente de zero. Encerrando.')
+         return 
+    
+    start_range = get_valid_integer_from_user('Digite o número inicial do intervalo: ')
+
+    if start_range is None:
+         return
+    
+    end_range = get_valid_integer_from_user('Digite o número final do intervalo: ')
+    print()
+
+    if end_range is None:
+         return 
+    
+    if start_range > end_range:
+         print('ATENÇÃO: O valor para o número inicial não pode ser maior que o valor número final do intervalo. Encerrando.')
+         return 
+    
+    max_table_number_width = len(str(table_number))
+    max_result_width = len(str(table_number * end_range))
+    max_width_start_range = len(str(start_range))
+    max_width_end_range = len(str(end_range))
+    max_result_multiplier = max(max_width_start_range, max_width_end_range)
+
+    for n in range(start_range, end_range + 1):
+         print(f'{table_number:>{max_table_number_width}} x {n:>{max_result_multiplier}} = {n * table_number:>{max_result_width}}\n')
+
 def main() -> None:
     demonstrate_simple_counting()
     demonstrate_iterative_countdown()
     demonstrate_custom_filtering('Números Ímpares', lambda n: n % 2 != 0)
     demonstrate_custom_filtering('Múltiplos de 3', lambda n: n % 3 == 0)
+    demonstrate_custom_multiplication_table()
     
 if __name__ == '__main__':
     main()
