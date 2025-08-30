@@ -7,7 +7,7 @@ from typing import List, Callable
 from practical_conditional_logic import get_valid_integer_from_user
 
 __author__ = 'Enock Silos'
-__version__ = '1.5.0' 
+__version__ = '1.6.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -221,12 +221,74 @@ def demonstrate_custom_multiplication_table() -> None:
     for n in range(start_range, end_range + 1):
          print(f'{table_number:>{max_table_number_width}} x {n:>{max_result_multiplier}} = {n * table_number:>{max_result_width}}\n')
 
+def multiply_by_addition(number_to_add: int, times_to_add: int) -> int:
+    """
+    Simula a operação de multiplicação através de um processo de adição iterativa.
+
+    Este procedimento computacional demonstra, a partir de princípios elementares,
+    como uma operação aritmética de ordem superior (multiplicação) pode ser 
+    decomposta em uma sequência de operações fundamentais (adição). A função
+    serve como um exemplo canônico de um algoritmo de acumulação.
+
+    A lógica opera sobre um acumulador, inicializado com o elemento neutro da
+    adição (zero), e itera um número de vezes definido por `times_to_add`. A 
+    cada iteração, o `number_to_add` é somado ao valor corrente do acumulador.
+    O resultado final é o produto dos dois operandos de entrada.
+
+    Args:
+        number_to_add (int): O número a ser repetidamente somado (o multiplicando).
+        times_to_add (int): O número de vezes que a adição será executada (o
+        multiplicador).
+
+    Returns:
+        int: O resultado final da operação, equivalente a `number_to_add` * `times_to_add`.
+    """
+    accumulator = 0
+         
+    for _ in range(times_to_add):
+         accumulator += number_to_add
+         
+    return accumulator
+
+def demonstrate_multiplication_with_addition() -> None:
+    """
+    Orquestra uma demonstração interativa da simulação da multiplicação.
+
+    Esta função serve como a camada de interface para o algoritmo puro
+    `multiply_by_addition`. Ela encapsula todo o fluxo de interação com o
+    usuário, incluindo a solicitação de dados, a validação de cancelamento e
+    a apresentação final do resultado.
+
+    A implementação exemplifica o princípio da Separação de Responsabilidades
+    (Separation of Concerns), onde a lógica de negócio (o cálculo em si) é
+    isolada da lógica de apresentação (I/O), resultando em um código mais
+    modular, testável e de fácil manutenção.
+
+    Side Effects:
+        - Realiza chamadas de I/O para obter os dados do usuário (`input`).
+        - Imprime o resultado formatado e mensagens de status na saída 
+          padrão (`print`).
+    """
+    print('\n--- DEMONSTRAÇÃO: MULTIPLICAÇÃO VIA ADIÇÃO ---\n')
+
+    first_number = get_valid_integer_from_user('Digite o multiplicando ("S" SAIR):')
+    if first_number is None:
+         return 
+    
+    second_number = get_valid_integer_from_user('Digite o multiplicador ("S" SAIR):')
+    if second_number is None:
+         return 
+
+    result = multiply_by_addition(first_number, second_number)
+    print(f'\n{first_number} x {second_number} = {result}')
+
 def main() -> None:
     demonstrate_simple_counting()
     demonstrate_iterative_countdown()
     demonstrate_custom_filtering('Números Ímpares', lambda n: n % 2 != 0)
     demonstrate_custom_filtering('Múltiplos de 3', lambda n: n % 3 == 0)
     demonstrate_custom_multiplication_table()
-    
+    demonstrate_multiplication_with_addition()    
+
 if __name__ == '__main__':
     main()

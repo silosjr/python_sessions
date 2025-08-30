@@ -9,6 +9,12 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.6.0] - 2025-08-30
+Added
+Demonstração de Multiplicação via Adição (demonstrate_multiplication_with_addition): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função demonstra, de forma didática, como a operação de multiplicação pode ser simulada através da adição repetida.
+
+Função de Cálculo Pura (multiply_by_addition): Implementada uma função auxiliar que isola a lógica de cálculo, servindo como um exemplo claro do princípio de Separação de Responsabilidades e de um algoritmo de acumulação.
+
 [1.5.0] - 2025-08-29
 Added
 Demonstração de Tabuada Customizável (demonstrate_custom_multiplication_table): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função demonstra a geração de uma tabuada de multiplicação com base, início e fim definidos pelo usuário.
