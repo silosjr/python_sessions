@@ -9,6 +9,12 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.7.0] - 2025-08-31
+Added
+Demonstração de Divisão via Subtração (demonstrate_division_with_subtraction): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função demonstra, de forma didática, como a operação de divisão inteira (quociente e resto) pode ser simulada através da subtração repetida.
+
+Função de Cálculo Pura (divide_by_subtraction): Implementada uma função auxiliar que isola a lógica de cálculo, servindo como um exemplo claro do princípio de Separação de Responsabilidades e um par conceitual para a função de multiplicação via adição.
+
 [1.6.0] - 2025-08-30
 Added
 Demonstração de Multiplicação via Adição (demonstrate_multiplication_with_addition): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função demonstra, de forma didática, como a operação de multiplicação pode ser simulada através da adição repetida.

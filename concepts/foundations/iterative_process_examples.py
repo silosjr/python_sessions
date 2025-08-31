@@ -3,11 +3,11 @@ iterative_process_examples.py
 """
 
 from __future__ import annotations
-from typing import List, Callable
+from typing import List, Callable, Tuple 
 from practical_conditional_logic import get_valid_integer_from_user
 
 __author__ = 'Enock Silos'
-__version__ = '1.6.0' 
+__version__ = '1.7.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -282,13 +282,89 @@ def demonstrate_multiplication_with_addition() -> None:
     result = multiply_by_addition(first_number, second_number)
     print(f'\n{first_number} x {second_number} = {result}')
 
+def divide_by_subtraction(dividend: int, divisor: int) -> Tuple[int, int]:
+    """
+    Simula a operação de divisão inteira através de um processo de subtração iterativa.
+
+    Este procedimento computacional demonstra, a partir de princípios elementares, como
+    a operação da divisão inteira, que resulta em um quociente e um resto, pode ser 
+    decomposta em uma sequência de subtrações. A função serve como um exemplo canônico
+    de um algoritmo de redução e contagem.
+
+    A lógica opera sobre uma variável que representa o dividendo corrente, subtraindo 
+    iterativamente o divisor desta enquanto o resultado se mantiver não-negativo. Um 
+    contador é incrementado a cada subtração bem-sucedida. Ao término do laço, o valor
+    final do contador representa o quociente, e o valor remanescente no dividendo 
+    corrente constitui o resto.
+
+    Args:
+        dividend (int): O número a ser dividido.
+        divisor (int): O número pelo qual se divide.
+
+    Returns:
+        Tuple[int, int]: Uma tupla contendo dois inteiros, representando respectivamente
+                         o quociente e o resto da divisão.
+    """
+    quotient_counter = 0
+    current_dividend = dividend
+
+    while current_dividend >= divisor:
+          current_dividend -= divisor 
+          quotient_counter += 1
+
+    return quotient_counter, current_dividend
+
+def demonstrate_division_with_subtraction() -> None:
+    """
+    Orquestra uma demonstração interativa da simulação de divisão inteira.
+
+    Esta função serve como a camada de interface para o algoritmo puro
+    `divide_by_subtraction`. Ela encapsula todo o fluxo de interação com
+    o usuário incluindo a solicitação de dados (dividendo e divisor), a
+    validação de entradas e casos de borda (como a divisão por zero), e 
+    a apresentação final do resultado de forma didática.
+
+    A implementação exemplifica o princípio de Separação de Responsabilidades,
+    onde a lógica de negócio (o cálculo em si) é isolada da lógica de 
+    apresentação (I/O). A mensagem de saída é construída para não apenas mostrar
+    o resultado, mas para explicar o processo algorítmico subjacente, reforçando
+    o valor pedagógicoda demonstração.
+
+    Side Effects:
+        - Realiza chamadas de I/O para obter os dados do usuário (`input`).
+        - Imprime o resultado formatado e mensagens de status na saída 
+          padrão (`print`).
+    """
+    print('\n--- DEMONSTRAÇÃO DA DIVISÃO COM USO DA SUBTRAÇÃO ---\n')
+
+    dividend = get_valid_integer_from_user('Digite um número para o dividendo ("S" SAIR): ')
+    if dividend is None:
+        return  
+
+    divisor = get_valid_integer_from_user('Digite um número para o divisor ("S" SAIR): ')
+    if divisor is None:
+        return 
+    
+    if divisor == 0:
+        print('Não é possível dividir por zero. Encerrando.')
+        return
+    
+    quotient, remainder = divide_by_subtraction(dividend, divisor)
+
+    print(f'''
+             Análise do Processo: O divisor ({divisor}) foi subtraído do dividendo ({dividend})
+             com sucesso por {quotient} vezes (o quociente), resultando em um valor final de 
+             {remainder} ( o resto).   
+          \n''')
+
 def main() -> None:
     demonstrate_simple_counting()
     demonstrate_iterative_countdown()
     demonstrate_custom_filtering('Números Ímpares', lambda n: n % 2 != 0)
     demonstrate_custom_filtering('Múltiplos de 3', lambda n: n % 3 == 0)
     demonstrate_custom_multiplication_table()
-    demonstrate_multiplication_with_addition()    
+    demonstrate_multiplication_with_addition()   
+    demonstrate_division_with_subtraction() 
 
 if __name__ == '__main__':
     main()
