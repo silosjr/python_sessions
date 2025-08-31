@@ -9,6 +9,10 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.8.0] - 2025-08-31
+Added
+Demonstração de Sessão de Quiz (demonstrate_quiz_session): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função refatora um snippet de quiz em um motor de quiz genérico, ensinando o princípio da Separação de Responsabilidades ao modelar as perguntas e respostas como uma estrutura de dados externa (QUIZ_DATA). A implementação também demonstra o gerenciamento de estado em laços, o uso de enumerate para numeração, e técnicas de formatação para uma interface de usuário robusta e gramaticalmente correta.
+
 [1.7.0] - 2025-08-31
 Added
 Demonstração de Divisão via Subtração (demonstrate_division_with_subtraction): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função demonstra, de forma didática, como a operação de divisão inteira (quociente e resto) pode ser simulada através da subtração repetida.

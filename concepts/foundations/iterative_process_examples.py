@@ -7,9 +7,15 @@ from typing import List, Callable, Tuple
 from practical_conditional_logic import get_valid_integer_from_user
 
 __author__ = 'Enock Silos'
-__version__ = '1.7.0' 
+__version__ = '1.8.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
+
+QUIZ_DATA = [
+     {'question_text': 'What?', 'correct_answer': 'b'},
+     {'question_text': 'How?', 'correct_answer': 'a'},
+     {'question_text': 'Why?', 'correct_answer': 'd'}
+]
 
 def demonstrate_simple_counting() -> None:
     """
@@ -357,6 +363,51 @@ def demonstrate_division_with_subtraction() -> None:
              {remainder} ( o resto).   
           \n''')
 
+def demonstrate_quiz_session() -> None:
+    """
+    Orquestra uma demonstração de uma sessão de quiz interativo.
+
+    Este procedimento computacional exemplifica a implementação de um motor
+    de quiz genérico, um padrão arquitetural fundamental que promove a 
+    Separação de Responsabilidades (Separation of Concerns). A lógica do quiz
+    - o conjunto de perguntas e suas respectivas respostas corretas - é
+    abstraída em uma estrutura de dados externa (`QUIZ_DATA`), permitindo que
+    a função opere como um executor agnóstico ao conteúdo específico.
+
+    O algoritmo demonstra um processo iterativo com estado, onde um laço 
+    percorre a estrutura de dados do quiz. A cada iteração, o estado da 
+    sessão (a pontuação do usuário) é atualizado com base na avaliação da
+    resposta fornecida. A função `enumerate` é utilizada para a geração
+    dinâmica e correta da numeração das questões.
+
+    A implementação também foca na experiência do usuário (UX), fornecendo
+    feedback imediato após cada resposta. Adicionalmente, emprega uma 
+    expressão condicional aninhada em uma f-string para garantir a 
+    correção gramatical na apresentação da pontuação final (singular vs.
+    plural), um exemplo de refinamento de interface.
+
+    Side Effects:
+        - Realiza chamadas de I/O para obter as respostas do usuário (`input`).
+        - Imprime as questões, o feedback e o resultado final na saída padrão
+          (`print`).
+
+    """
+    points = 0
+    print('\n--- DEMONSTRAÇÃO DE SESSÃO DE QUIZ INTERATIVO ---\n')
+    for question_number, question_data in enumerate(QUIZ_DATA):
+        print(f'Questão {question_number + 1}: {question_data['question_text']}')
+
+        user_answer: str = input('Sua Resposta: ')
+        if user_answer.lower() == question_data['correct_answer']:
+            print('✅ Resposta Correta!')
+            points += 1
+        else:
+             print(f'❌ Resposta Incorreta. A resposta correta era: {question_data['correct_answer']}')
+    
+    print('\n' + '-' * 30)
+    print(f'Pontuação Final: {points} {'ponto' if points == 1 else 'pontos'}')
+    print('--- FIM DA SESSÃO ---\n')
+
 def main() -> None:
     demonstrate_simple_counting()
     demonstrate_iterative_countdown()
@@ -365,6 +416,7 @@ def main() -> None:
     demonstrate_custom_multiplication_table()
     demonstrate_multiplication_with_addition()   
     demonstrate_division_with_subtraction() 
+    demonstrate_quiz_session()
 
 if __name__ == '__main__':
     main()
