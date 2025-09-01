@@ -57,6 +57,8 @@ ELECTRICITY_TARIFFS_CONFIG: Dict[Dict[str, int | float]] = {
 }
 BASE_SAVINGS_YIELD_RATE = 0.005
 SELIC_THRESHOLD_FOR_SAVINGS_YIELD_RULE = 8.5
+PERCENT_TO_DECIMAL: float = 100.0
+MONTHS_IN_YEAR: int = 12
 
 def calculate_sum_from_user_input() -> None:
     """
@@ -822,6 +824,186 @@ def prompt_simple_savings_simulation() -> None:
     
     print(separator)
 
+def calculate_loan_amortization_schedule(
+                            principal: float, 
+                            monthly_payment: float
+                            ) -> Optional[List[Dict[str, Any]]]:
+    """
+    Calcula a projeção completa de um cronograma de amortização para um empréstimo.
+
+    Esta função constitui o motor de cálculo (backend) para uma ferramenta de
+    simulação de empréstimo pessoal não consignado. O seu objetivo de negócio
+    é fornecer uma análise de viabilidade e um extrato detalhado (cronograma)
+    com base no montante do empréstimo e na parcela proposta pelo cliente,
+    utilizando a taxa de juros média do mercado, obtida em tempo real.
+
+    Este procedimento implementa um algoritmo iterativo para modelar o processo
+    financeiro de amortização de uma dívida sob o regime de juros compostos.
+    A função é projetada como um componente puro de lógica de negócio,
+    separando o cálculo da interface com o usuário. Ela possui uma dependência
+    externa, a função `fetch_bcb_economic_indicator`, para obter dados
+    econômicos (taxa de juros) de uma API, refletindo um sistema dinâmico.
+
+    O algoritmo primeiramente valida uma premissa de negócio crítica: se a
+    parcela mensal é suficiente para cobrir os juros incidentes no primeiro
+    mês, evitando um cenário de dívida crescente. Em seguida, um laço `while`
+    simula o passar dos meses, e a cada iteração, calcula:
+    1.  O valor dos juros sobre o saldo devedor.
+    2.  O pagamento real a ser efetuado (ajustado para a última parcela).
+    3.  A porção do pagamento que amortiza o principal.
+    4.  O novo saldo devedor.
+
+    Args:
+        principal (float): O valor total do empréstimo solicitado (o principal).
+        monthly_payment (float): O valor da parcela mensal que o cliente se 
+                                 propõe a pagar.
+
+    Returns:
+        Optional[List[Dict[str, Any]]]: Em caso de sucesso uma lista de 
+                                        dicionários, em que cada dicionário é um
+                                        extrato mensal contendo o detalhamento da
+                                        amortização. Em caso de falha na comunicação
+                                        com a API do Banco Central, retorna `None`.
+    
+    Raises: 
+        ValueError: Lançado se o `monthly_payment` for insuficiente para
+                    cobrir os juros do primeiro mês, uma condição que torna
+                    a amortização matematicamente inviável.
+    """
+    interest_rate_percent = fetch_bcb_economic_indicator(25464)
+    # (25464 -> Taxa de juros média atual do mercado para Empréstimos Pessoais não consignados.)
+    if interest_rate_percent is None:
+        return 
+    
+    monthly_interest_rate = interest_rate_percent / PERCENT_TO_DECIMAL / MONTHS_IN_YEAR 
+
+    first_month_interest = principal * monthly_interest_rate
+
+    if monthly_payment <= first_month_interest:
+        raise ValueError('O valor informado é insuficiente para cobrir os juros do primeiro mês.')
+    
+    outstanding_balance = principal 
+    current_month = 1
+    
+    amortization_schedule = []
+
+    while outstanding_balance > 0:
+        monthly_interest_amount = outstanding_balance * monthly_interest_rate
+        total_due_this_month = outstanding_balance + monthly_interest_amount
+        actual_payment_this_month = min(monthly_payment, total_due_this_month)
+        principal_payment = actual_payment_this_month - monthly_interest_amount
+        outstanding_balance -= principal_payment
+        monthly_amortization_record = {
+            'current_month': current_month,
+            'monthly_interest_amount': monthly_interest_amount,
+            'principal_payment': principal_payment,
+            'outstanding_balance': outstanding_balance
+        }
+        amortization_schedule.append(monthly_amortization_record)
+        current_month += 1
+
+    last_record = amortization_schedule[-1]
+    if last_record['outstanding_balance'] < 0:
+        last_record['outstanding_balance'] = 0.0
+
+    return amortization_schedule
+
+def prompt_loan_amortization_simulation() -> None:
+    """
+    Orquestra uma sessão interativa para a simulação de amortização de empréstimo.
+
+    Esta função serve como a camada de interface com o usuário (UI) para o
+    simulador de empréstimo pessoal. O seu objetivo de negócio é guiar o
+    cliente através do processo de simulação, coletando os dados necessários
+    (valor do empréstimo e parcela desejada) e apresentando um relatório 
+    final claro e profissional, similar a um extrato de amortização bancário.
+
+    Este procedimento atua como uma função orquestradora que gerencia o fluxo
+    de I/O, a validação de entrada e a apresentação dos dados. A função
+    demonstra a prática de programação defensiva ao reutilizar funções 
+    auxiliares (`get_valid_float_from_user`) para uma coleta e dados robusta e
+    ao implementar a validação de domínio (garantindo que os valores sejam
+    positivos).
+
+    A sua arquitetura de tratamento de erros é projetada para lidar com dois
+    tipos distintos de falha que podem ser sinalizados pelo motor de cálculo
+    (`calculate_loan_amortization_schedule`):
+    1.  **Falha de comunicação**: Tratada pela verificação do retorno `None`,
+        resultando numa mensagem informativa para o usuário.
+    2.  **Falha de Lógica de Negócio**: Tratada pela captura da exceção
+        `ValueError`, exibindo a mensagem de erro específica gerada pelo motor.
+
+    Em caso de sucesso na simulação, a função itera sobre a estrutura de dados
+    retornada (a lista de extratos) e formata cada registro em uma tabela
+    alinhada, proporcionando uma visualização clara da evolução da dívida.
+
+    Side Effects:
+        - Realiza chamadas de I/O para obter os dados do usuário (`input`).
+        - Imprime o extrato de amortização e mensagens de status na saída 
+          padrão (`print`).
+    """
+    print('\n--- SIMULAÇÃO PARA NEGOCIAÇÃO DE DÍVIDA DE EMPRÉSTIMO NÃO CONSIGNADO ---\n')
+
+    loan_principal = get_valid_float_from_user(
+    'Informe o valor do empréstimo para abertura da negociação ("S" -> SAIR): R$'
+    )
+    if loan_principal is None:
+        return 
+    
+    if loan_principal <= 0.0:
+        print('\nÉ preciso informar um valor positivo. Encerrando')
+        return 
+    
+    monthly_payment = get_valid_float_from_user(
+    'Insira o valor da parcela mensal proposta ("S" -> SAIR): R$'
+    )
+    if monthly_payment is None:
+        return 
+    
+    if monthly_payment <= 0.0:
+        print('\nÉ preciso informar um valor positivo. Encerrando')
+        return
+
+    try:
+        amortization_schedule = calculate_loan_amortization_schedule(loan_principal, monthly_payment)
+        if amortization_schedule is None:
+            print('Falha em se conectar com o servidor SGS. Tente novamente dentro de alguns instantes.')
+    except ValueError as e:
+        print(f'{e}')
+        return 
+    
+    title_month = 'MÊS'
+    title_interest_paid = 'JUROS'
+    title_principal_paid = 'AMORTIZAÇÃO'
+    title_outstanding_balance = 'SALDO DEVEDOR'
+
+    col_month_width = 10
+    col_interest_paid = 25
+    col_principal_paid = 25
+    col_outstanding_balance = 25
+
+    header_line = f'│{title_month:^{col_month_width}}│{title_interest_paid:^{col_interest_paid}}│{title_principal_paid:^{col_principal_paid}}│{title_outstanding_balance:^{col_outstanding_balance}}│'
+    separator = '─' * len(header_line)
+
+    print(separator)
+    print(header_line)
+    print(separator)
+
+    for record in amortization_schedule:
+        month_num = record['current_month']
+        interest_paid = record['monthly_interest_amount']
+        principal_paid = record['principal_payment']
+        outstanding_balance = record['outstanding_balance']
+        data_row = (
+            f'│{month_num:^{col_month_width}}│'
+            f'{locale.currency(interest_paid, grouping=True):^{col_interest_paid}}│'
+            f'{locale.currency(principal_paid, grouping=True):^{col_principal_paid}}│'
+            f'{locale.currency(outstanding_balance, grouping=True):^{col_outstanding_balance}}│'
+            )
+        print(data_row)
+
+    print(separator)
+
 def calculate_trip_price(distance_in_km: float) -> Tuple[float, float]:
     """
     Calcula o preço total de uma viagem e a tarifa por km aplicada.
@@ -1238,20 +1420,21 @@ def main() -> None:
     except locale.Error:
         print("Aviso: Locale 'pt_BR.UTF-8' não encontrado. Usando formatação padrão.\n")
 
-    # calculate_sum_from_user_input()
-    # prompt_basic_calculator()
-    # convert_meters_to_millimeters()
-    # prompt_salary_increase()
-    # prompt_loan_viability_analyzer()
-    # prompt_income_tax_calculator()
+    calculate_sum_from_user_input()
+    prompt_basic_calculator()
+    convert_meters_to_millimeters()
+    prompt_salary_increase()
+    prompt_loan_viability_analyzer()
+    prompt_income_tax_calculator()
     prompt_simple_savings_simulation()
-    # prompt_trip_price_calculator()
-    # run_phone_bill_simultation()
-    # run_electricity_bill_simulation()
-    # prompt_product_discount()
-    # prompt_temperature_converter()
-    # prompt_car_rental_calculator()
-    # prompt_smoking_impact_calculator()
+    prompt_loan_amortization_simulation()
+    prompt_trip_price_calculator()
+    run_phone_bill_simultation()
+    run_electricity_bill_simulation()
+    prompt_product_discount()
+    prompt_temperature_converter()
+    prompt_car_rental_calculator()
+    prompt_smoking_impact_calculator()
 
 if __name__ == '__main__':
     main()

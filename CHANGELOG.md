@@ -9,6 +9,16 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.11.0] - 2025-09-01
+Added
+Simulador de Amortização de Empréstimo Pessoal: Foi adicionada uma nova e robusta calculadora financeira ao módulo. Esta funcionalidade modela o processo de amortização de uma dívida, proporcionando um exemplo didático de um sistema financeiro que decai com o tempo.
+
+Integração com API do Banco Central: O simulador foi projetado para operar com dados do mundo real, conectando-se à API do Banco Central do Brasil (BCB) através da função fetch_bcb_economic_indicator para obter a taxa de juros média e atual do mercado para empréstimos pessoais não consignados.
+
+Motor de Cálculo Financeiramente Preciso: Foi implementada a função pura calculate_loan_amortization_schedule, que contém o algoritmo de amortização. Este motor realiza a validação de negócio crítica para detetar cenários de "espiral de dívida" e inclui a lógica para o ajuste preciso da última parcela, garantindo a exatidão financeira da simulação.
+
+Interface de Usuário Profissional: Foi criada a função prompt_loan_amortization_simulation para orquestrar a interação com o usuário. A função apresenta um extrato de amortização completo, formatado numa tabela profissional que detalha, mês a mês, a alocação do pagamento entre juros e principal, e a evolução do saldo devedor.
+
 [1.10.0] - 2025-09-01
 Changed
 Aprimoramento do Simulador Financeiro: A função calculate_simple_savings_projection foi refatorada para aceitar um novo parâmetro opcional, monthly_deposit. Esta alteração transforma a ferramenta de um simples simulador de juros compostos num motor de cálculo para planos de acumulação de capital, com ou sem aportes mensais. A lógica interna foi ajustada para incorporar o depósito ao saldo antes do cálculo do rendimento, garantindo a precisão financeira.
