@@ -9,6 +9,16 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.10.0] - 2025-09-01
+Changed
+Aprimoramento do Simulador Financeiro: A função calculate_simple_savings_projection foi refatorada para aceitar um novo parâmetro opcional, monthly_deposit. Esta alteração transforma a ferramenta de um simples simulador de juros compostos num motor de cálculo para planos de acumulação de capital, com ou sem aportes mensais. A lógica interna foi ajustada para incorporar o depósito ao saldo antes do cálculo do rendimento, garantindo a precisão financeira.
+
+Aprimoramento da Interface de Simulação: A função prompt_simple_savings_simulation foi atualizada para incluir um diálogo com o usuário sobre a inclusão de depósitos mensais. A tabela de resultados agora apresenta uma nova coluna para o "Depósito Mensal", e toda a informação exibida é extraída diretamente da estrutura de dados retornada pelo motor de cálculo, respeitando o princípio da Fonte Única da Verdade.
+
+[1.5.0] - 2025-09-01
+Added
+Função Auxiliar de Decisão (get_valid_answer_from_user): Adicionada uma nova função auxiliar reutilizável ao módulo practical_conditional_logic.py. Esta ferramenta é projetada para obter uma resposta binária (Sim/Não) do usuário de forma robusta e consistente com a interface do projeto, retornando um valor booleano (True/False) ou None em caso de cancelamento.
+
 [1.9.0] - 2025-09-01
 Added
 Simulador Financeiro Dinâmico (calculate_simple_savings_projection): Adicionada uma calculadora de projeção de rendimentos para a Caderneta de Poupança. Esta funcionalidade representa um avanço arquitetural significativo, movendo o módulo de calculadoras estáticas para simulações dinâmicas baseadas em dados económicos reais.

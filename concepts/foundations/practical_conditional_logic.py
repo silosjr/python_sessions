@@ -122,8 +122,51 @@ def get_valid_float_from_user(prompt_message: str) -> Optional[float]:
             print('ERRO: Entrada inválida. Por favor digite apenas valores numéricos válidos. Exemplo: 8.75')
             continue 
         except Exception as e:
-            print(f'Ocorreu um erro interno ao tentar processa a operação: {e}')
+            print(f'Ocorreu um erro interno ao tentar processar a operação: {e}')
             break
+
+def get_valid_answer_from_user(prompt_message: str) -> Optional[bool]:
+    """
+    Solicita uma resposta binária (Sim/Não) ao usuário de forma robusta.
+
+    Este procedimento serve como ferramenta de I/O (Entrada/Saída) de
+    alto nível, projetada para obter uma decisão inequívoca do usuário. A
+    função abstrai a complexidade da validação de entrada, criando um 
+    ciclo de solicitação que persiste até que uma resposta válida ("Y" para
+    Sim, "N" para Não) seja fornecida.
+
+    A função foi arquiteturada para ser "silenciosa": ela não realiza ações
+    secundárias de impreessão em caso de erro, apenas devolve um resultado.
+    A comunicação de falha ou cancelamento é feita através do retorno de
+    `None`, permitindo que a função chamadora lide com a interrupção do
+    fluxo de forma controlada. A robustez é garantida pela captura da
+    exceção `KeyboardInterrupt`, tratando o cancelamento pelo usuário
+    (Ctrl+C) como um comportamento esperado.
+
+    Args:
+        prompt_message (str): A mensagem a ser exibida para o usuário,
+                              instruindo-o sobre a pergunta a ser respondida.
+
+    Returns:
+        Optional[bool]: Retorna `True` se o usuário responder afirmativamente ("Y"),
+                        `False` se responder negativamente ("N"), ou `None`
+                        se a operação for cancelada ou se ocorrer um erro 
+                        inesperado.
+    """
+    while True:
+        try:
+            user_input = input(prompt_message)
+            if user_input.lower() == 'y':
+                return True
+            elif user_input.lower() == 'n':
+                return False  
+            else:
+                print('ERRO: Resposta inválida, digite "Y" para SIM ou "N" para NÃO): ')
+                continue
+        except KeyboardInterrupt:
+            return 
+        except Exception:
+            return 
 
 def compare_two_numbers() -> None:
     """
@@ -402,4 +445,4 @@ if __name__ == '__main__':
     # compare_two_numbers()
     # get_time_of_day_greeting()
     # demonstrate_classification_of_numbers_by_range()
-    determine_academic_status()
+    # determine_academic_status()

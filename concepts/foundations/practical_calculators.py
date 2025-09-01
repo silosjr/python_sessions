@@ -19,7 +19,9 @@ import random
 import operator
 import time 
 import requests
-from practical_conditional_logic import get_valid_float_from_user, get_valid_integer_from_user
+from practical_conditional_logic import get_valid_float_from_user
+from practical_conditional_logic import get_valid_integer_from_user
+from practical_conditional_logic import get_valid_answer_from_user
 
 __author__ = 'Enock Silos'
 __version__ = '1.9.0' 
@@ -638,40 +640,50 @@ def fetch_bcb_economic_indicator(series_code: int) -> float | None:
 
 def calculate_simple_savings_projection(
     initial_deposit: float,
-    num_months: int
+    num_months: int,
+    monthly_deposit: float = 0.0
 ) -> Optional[List[Dict[str, Any]]]:
     """
     Simula a projeção de rendimentos de uma Caderneta de Poupança.
 
-    Este procedimento computacional modela a evolução de um capital inicial
-    aplicado na poupança, calculando o rendimento mês a mês com base nas 
-    regras de negócio oficiais do sistema financeiro brasileiro. A função
-    serve como um motor de cálculo puro, abstraindo a lógica financeira da
-    interação com o usuário.
+    Este procedimento computacional modela a evolução de um capital que pode ser
+    incrementado por depósitos mensais e regulares. A função foi aprimorada
+    para aceitar um parâmetro opcional `monthly_deposit`, transformando-a
+    de um simples simulador de juros compostos em um motor de cálculo para
+    planos de investimento e acumulação. O uso de um valor padrão (`0.0`)
+    garante a retrocompatibilidade, permitindo que a função seja chamada
+    da forma original para simulações sem aportes.
 
     A principal característica desta simulação é a sua conexão com a realidade
     econômica. A função invoca `fetch_bcb_economic_indicator` para obter em 
     tempo real as taxas Selic e TR, que são os insumos para a determinação da
     taxa de rendimento mensal. Esta abordagem garante que a projeção reflita o
-    cenário econômico no momento da sua execução.
+    cenário econômico no momento da sua execução. A lógica interna agora incorpora
+    a adição do depósito mensal ao saldo *antes* do cálculo do rendimento, 
+    garantindo a máxima precisão financeira na simulação.
 
     O retorno é uma estrutura de dados rica: uma lista de dicionários, em que 
-    cada dicionário representa o extrato de um único mês, permitindo uma
-    análise detalhada da progressão do investimento. A função falhará
-    graciosamente, retornando `None`, se os dados econômicos não puderem ser
-    obtidos, mantendo a integridade do contrato de sua assinatura.
+    cada dicionário representa não somente o extrato de um único mês, 
+    mas os possíveis e recorrentes depósitos permitindo uma análise detalhada 
+    da progressão do investimento, servindo como fonte única da verdade para a 
+    camada de apresentação. A função falhará graciosamente, retornando `None`,
+    se os dados econômicos não puderem ser obtidos, mantendo a integridade do 
+    contrato de sua assinatura.
 
     Args:
         initial_deposit (float): O capital inicial a ser investido.
         num_months (int): O horizonte da simulação em meses.
+        monthly_deposit (float, optional): O valor do depósito recorrente
+                                           a ser adicionado ao saldo a cada
+                                           mês. O padrão é 0.0.
 
     Returns:
         Optional[List[Dict[str, Any]]]: Uma lista de dicionários, em que cada
                                         dicionário representa um mês e contém 
-                                        as chaves 'month', 'monthly_yield' e 
-                                        'current_account_balance'. Retorna
-                                        `None`se a obtenção dos dados econômicos
-                                        do BCB falhar.
+                                        as chaves 'month', 'monthly_deposit', 
+                                        'monthly_yield' e 'current_account_balance'.
+                                         Retorna `None`se a obtenção dos dados 
+                                        econômicos do BCB falhar.
     """
     selic_rate = fetch_bcb_economic_indicator(432) # (432 -> código oficial do BCB para taxa SELIC)
     if selic_rate is None:
@@ -692,11 +704,13 @@ def calculate_simple_savings_projection(
     current_account_balance = initial_deposit
 
     for month_num in range(1, num_months + 1):
+        current_account_balance += monthly_deposit 
         monthly_yield = current_account_balance * monthly_interest_rate
         current_account_balance += monthly_yield
 
         monthly_record = {
             'month': month_num,
+            'monthly_deposit': monthly_deposit,
             'monthly_yield': monthly_yield,
             'current_account_balance': current_account_balance
             }
@@ -710,20 +724,23 @@ def prompt_simple_savings_simulation() -> None:
 
     Esta função serve como a camada de interface (UI) para o simulador
     financeiro. Sua única responsabilidade é gerir o diálogo com o 
-    usuário, coletar os parâmetros da simulação, invocar o motor de cálculo
-    e apresentar os resultados de forma clara e profissional.
+    usuário, que foi aprimorado para incluir a pergunta opcional sobre a
+    inclusão de depósitos mensais, modelando um cenário de "poupança automárica
+    comum em aplicações bancárias.
 
-    A implementação segue um padrão de design robusto, reutilizando as
-    funções auxiliares `get_valid_float_from_user` e `get_valid_integer_from_user`
-    para garantir uma coleta de dados segura. A função também realiza a validação
-    de domínio, garantindo que os valores de entrada sejam logicamente válidos para
-    uma simulação financeira.
+    A implementação segue um padrão de design robusto, reutilizando asfunções 
+    auxiliares `get_valid_float_from_user`, `get_valid_integer_from_user` e
+    `get_valid_answwer_from_user` para garantir uma coleta de dados segura. A 
+    função também realiza a validação de domínio, garantindo que os valores de
+    entrada sejam logicamente válidos para uma simulação financeira.
 
     Após invocar `calculate_simple_savings_projection`, a função verifica se a
     simulação foi bem-sucedida. Em caso de falha na comunicação com a API, uma 
     mensagem informativa é exibida. Em caso de sucesso, um relatório tabular é 
-    gerado, mostrando a evolução do investimento mês a mês, com uma formatação
-    profissional digna de um extrato bancário.
+    gerado, agora com uma coluna adicional para o "Depósito Mensal". A função
+    extrai toda a informação necessária para a apresentação diretamente de
+    `projection_data` devolvido pelo motor de cálculo, respeitando o princípio
+    da Fonte Única da Verdade.
 
     Side Effects:
         - Realiza chamadas de I/0 para obter os dados do usuário (`input`).
@@ -742,6 +759,20 @@ def prompt_simple_savings_simulation() -> None:
         print('É preciso informar um valor positivo. Encerrando.')
         return
     
+    monthly_savings_opt_in = get_valid_answer_from_user(
+    'Adere ao programa de transferência mensal automática da Conta Corrente para a Conta Poupança?\nY -> SIM ou N -> NÃO: '
+    )
+    if monthly_savings_opt_in is None:
+        return 
+    
+    if monthly_savings_opt_in == True:
+        monthly_deposit = get_valid_float_from_user(
+    'Informe o valor da transferência automática mensal para a Conta Poupança ("S" -> CANCELA SIMULAÇÃ0): R$ ')
+        if monthly_deposit is None:
+            return
+    else:
+        monthly_deposit = 0.0
+
     num_months = get_valid_integer_from_user(
     'Informe o número de meses para cálculo da simulação ("S" -> SAIR): '
     )
@@ -752,7 +783,7 @@ def prompt_simple_savings_simulation() -> None:
         print('Número mínimo de meses para cálculo de rendimentos: (1). Encerrando. ')
         return
     print('\nProcessando...Obtendo dados econômicos para cálculo de projeção...')
-    projection_data = calculate_simple_savings_projection(initial_deposit, num_months)
+    projection_data = calculate_simple_savings_projection(initial_deposit, num_months, monthly_deposit=monthly_deposit)
 
     if projection_data is None:
         print('Falha ao se comunicar com o servidor do Banco Central, tente novamente dentro de alguns instantes.')
@@ -761,12 +792,14 @@ def prompt_simple_savings_simulation() -> None:
     title_month = 'MÊS Nº'
     title_yield  = 'RENDIMENTO MENSAL'
     title_balance = 'SALDO FINAL'
+    title_monthly_deposit = 'DEPÓSITO MENSAL AUTOMÁTICO (C/C)'
 
     col_month_width = 10
     col_yield_width = 25
     col_balance_width = 25
+    col_monthly_deposit_width = 35
     
-    header_line = f'│ {title_month:^{col_month_width}} │ {title_yield:^{col_yield_width}} │ {title_balance:^{col_balance_width}} │'
+    header_line = f'│ {title_month:^{col_month_width}} │ {title_monthly_deposit:^{col_monthly_deposit_width}} | {title_yield:^{col_yield_width}} │ {title_balance:^{col_balance_width}}  │'
     separator = '─' * len(header_line)
 
     print(separator)
@@ -775,12 +808,14 @@ def prompt_simple_savings_simulation() -> None:
 
     for record in projection_data:
         month_num = record['month']
+        monthly_deposit_value = record['monthly_deposit']
         monthly_yield = record['monthly_yield']
         current_account_balance = record['current_account_balance']
         data_row = (
-            f'│{month_num:^{col_month_width}}  │ ' 
-            f' {locale.currency(monthly_yield, grouping=True):^{col_yield_width}}│'
-            f' {locale.currency(current_account_balance, grouping=True):^{col_balance_width}} │'
+            f'│{month_num:^{col_month_width}}  │'
+            f' {locale.currency(monthly_deposit_value, grouping=True):^{col_monthly_deposit_width}} │' 
+            f' {locale.currency(monthly_yield, grouping=True):^{col_yield_width}} │'
+            f' {locale.currency(current_account_balance, grouping=True):^{col_balance_width}}  │'
             )
             
         print(data_row)
@@ -1203,20 +1238,20 @@ def main() -> None:
     except locale.Error:
         print("Aviso: Locale 'pt_BR.UTF-8' não encontrado. Usando formatação padrão.\n")
 
-    calculate_sum_from_user_input()
-    prompt_basic_calculator()
-    convert_meters_to_millimeters()
-    prompt_salary_increase()
-    prompt_loan_viability_analyzer()
-    prompt_income_tax_calculator()
+    # calculate_sum_from_user_input()
+    # prompt_basic_calculator()
+    # convert_meters_to_millimeters()
+    # prompt_salary_increase()
+    # prompt_loan_viability_analyzer()
+    # prompt_income_tax_calculator()
     prompt_simple_savings_simulation()
-    prompt_trip_price_calculator()
-    run_phone_bill_simultation()
-    run_electricity_bill_simulation()
-    prompt_product_discount()
-    prompt_temperature_converter()
-    prompt_car_rental_calculator()
-    prompt_smoking_impact_calculator()
+    # prompt_trip_price_calculator()
+    # run_phone_bill_simultation()
+    # run_electricity_bill_simulation()
+    # prompt_product_discount()
+    # prompt_temperature_converter()
+    # prompt_car_rental_calculator()
+    # prompt_smoking_impact_calculator()
 
 if __name__ == '__main__':
     main()
