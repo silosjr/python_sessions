@@ -14,13 +14,15 @@ o código mais legível e fácil de manter.
 
 from __future__ import annotations
 import locale 
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict, Tuple, Any, Optional
 import random 
 import operator
 import time 
+import requests
+from practical_conditional_logic import get_valid_float_from_user, get_valid_integer_from_user
 
 __author__ = 'Enock Silos'
-__version__ = '1.8.0' 
+__version__ = '1.9.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -51,7 +53,9 @@ ELECTRICITY_TARIFFS_CONFIG: Dict[Dict[str, int | float]] = {
     'commercial': {'limit': 1000, 'base_rate_per_kwh': 0.55, 'over_limit_rate_per_kwh': 0.60},
     'industrial': {'limit': 5000, 'base_rate_per_kwh': 0.55, 'over_limit_rate_per_kwh': 0.60 }
 }
-     
+BASE_SAVINGS_YIELD_RATE = 0.005
+SELIC_THRESHOLD_FOR_SAVINGS_YIELD_RULE = 8.5
+
 def calculate_sum_from_user_input() -> None:
     """
     Solicita dois números inteiros ao usuário e exibe a soma.
@@ -579,7 +583,210 @@ def prompt_income_tax_calculator() -> None:
         except KeyboardInterrupt:
             print('\nOperação cancelada pelo usuário.\n')
             break 
-     
+
+def fetch_bcb_economic_indicator(series_code: int) -> float | None:
+    """
+    Busca o valor mais recente de um indicador econômico na API do Banco Central.
+
+    Este procedimento estabelece uma ponte de comunicação com a API de Séries
+    Temporais (SGS) do Banco Central do Brasil (BCB) para obter dados
+    econômicos em tempo real. A função exemplifica um padrão de design robusto
+    para a interação com serviçoes externos via rede.
+
+    A implementação é defensiva por natureza, envolvendo a requisição em um
+    bloco de tratamentos de exceções que captura qualquer falha de comunicação
+    (e. g., timeouts, erros de DNS, ausência de conexão) encapsulada pela
+    exceção de ordem superior `requests.RequestException`. Adicionalmente, o método
+    `raise_for_status()` é invocado para validar que a resposta do servidor
+    HTTP indica sucesso (códigos 2xx), tratando erros de aplicação como
+    "série não encontrada" (404) de forma controlada.
+
+    A função foi projetada para ser uma ferramenta de baixo nível, cuja única
+    responsabilidade é a extração de um único dado. A falha em qualquer
+    etapa do processo (comunicação, validação ou análise da resposta JSON)
+    resulta em um retorno de `None`, sinalizando à camada de lógica de
+    negócio que os dados necessários não estão disponíveis.
+
+    Args:
+        series_code (int): O código numérico da série temporal conforme
+                           catalogado pelo SGS do BCB. Exemplos notáveis
+                           incluem 432 para a meta da taxa Selic e 226
+                           para a Taxa Referencial.
+
+    Returns:
+        Optional[float]: O valor mais recente do indicador como um número de
+                         ponto flutuante em caso de sucesso, ou `None` se
+                         ocorrer qualquer falha durante o processo de
+                         comunicação, vaidação ou extração de dados.
+    """
+    api_url = f'https://api.bcb.gov.br/dados/serie/bcdata.sgs.{series_code}/dados/ultimos/1?formato=json'
+
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()
+        data = response.json()
+        # print(f'DEBUG: Dados recebidos do BCB: {data}')
+
+        if isinstance(data, list) and len(data) > 0 and 'valor' in data[0]:
+            last_record = data[0]
+            indicator_value = float(last_record['valor'])
+            return indicator_value
+        else:
+            return 
+    except (requests.exceptions.RequestException, ValueError, KeyError):
+        return None
+
+def calculate_simple_savings_projection(
+    initial_deposit: float,
+    num_months: int
+) -> Optional[List[Dict[str, Any]]]:
+    """
+    Simula a projeção de rendimentos de uma Caderneta de Poupança.
+
+    Este procedimento computacional modela a evolução de um capital inicial
+    aplicado na poupança, calculando o rendimento mês a mês com base nas 
+    regras de negócio oficiais do sistema financeiro brasileiro. A função
+    serve como um motor de cálculo puro, abstraindo a lógica financeira da
+    interação com o usuário.
+
+    A principal característica desta simulação é a sua conexão com a realidade
+    econômica. A função invoca `fetch_bcb_economic_indicator` para obter em 
+    tempo real as taxas Selic e TR, que são os insumos para a determinação da
+    taxa de rendimento mensal. Esta abordagem garante que a projeção reflita o
+    cenário econômico no momento da sua execução.
+
+    O retorno é uma estrutura de dados rica: uma lista de dicionários, em que 
+    cada dicionário representa o extrato de um único mês, permitindo uma
+    análise detalhada da progressão do investimento. A função falhará
+    graciosamente, retornando `None`, se os dados econômicos não puderem ser
+    obtidos, mantendo a integridade do contrato de sua assinatura.
+
+    Args:
+        initial_deposit (float): O capital inicial a ser investido.
+        num_months (int): O horizonte da simulação em meses.
+
+    Returns:
+        Optional[List[Dict[str, Any]]]: Uma lista de dicionários, em que cada
+                                        dicionário representa um mês e contém 
+                                        as chaves 'month', 'monthly_yield' e 
+                                        'current_account_balance'. Retorna
+                                        `None`se a obtenção dos dados econômicos
+                                        do BCB falhar.
+    """
+    selic_rate = fetch_bcb_economic_indicator(432) # (432 -> código oficial do BCB para taxa SELIC)
+    if selic_rate is None:
+        return 
+    
+    tr_rate = fetch_bcb_economic_indicator(226) # (226 -> código oficial do BCB para a Taxa Referencial)
+    # print(f'DEBUG: Dados recebidos do BCB: {tr_rate}') #  Ex: 0.147(%)
+    if tr_rate is None:
+        return
+    
+    if selic_rate <= SELIC_THRESHOLD_FOR_SAVINGS_YIELD_RULE:
+        monthly_interest_rate = ((selic_rate / 100) / 12) * 0.7 + tr_rate / 100
+    else:
+        monthly_interest_rate = BASE_SAVINGS_YIELD_RATE + tr_rate / 100
+
+    projection_history = []
+
+    current_account_balance = initial_deposit
+
+    for month_num in range(1, num_months + 1):
+        monthly_yield = current_account_balance * monthly_interest_rate
+        current_account_balance += monthly_yield
+
+        monthly_record = {
+            'month': month_num,
+            'monthly_yield': monthly_yield,
+            'current_account_balance': current_account_balance
+            }
+        projection_history.append(monthly_record)
+
+    return projection_history
+       
+def prompt_simple_savings_simulation() -> None:
+    """
+    Orquestra a interação com o usuário para a simulação de poupança.
+
+    Esta função serve como a camada de interface (UI) para o simulador
+    financeiro. Sua única responsabilidade é gerir o diálogo com o 
+    usuário, coletar os parâmetros da simulação, invocar o motor de cálculo
+    e apresentar os resultados de forma clara e profissional.
+
+    A implementação segue um padrão de design robusto, reutilizando as
+    funções auxiliares `get_valid_float_from_user` e `get_valid_integer_from_user`
+    para garantir uma coleta de dados segura. A função também realiza a validação
+    de domínio, garantindo que os valores de entrada sejam logicamente válidos para
+    uma simulação financeira.
+
+    Após invocar `calculate_simple_savings_projection`, a função verifica se a
+    simulação foi bem-sucedida. Em caso de falha na comunicação com a API, uma 
+    mensagem informativa é exibida. Em caso de sucesso, um relatório tabular é 
+    gerado, mostrando a evolução do investimento mês a mês, com uma formatação
+    profissional digna de um extrato bancário.
+
+    Side Effects:
+        - Realiza chamadas de I/0 para obter os dados do usuário (`input`).
+        - Imprime o relatório da simulação e mensagens de status na saída
+          padrão (`print`).
+    """
+    print('\n--- SIMULADOR DE RENDIMENTOS DE CONTA POUPANÇA ---\n')
+
+    initial_deposit = get_valid_float_from_user(
+    'Informe o valor do depósito inicial ("S" -> SAIR) R$: '
+    )
+    if initial_deposit is None:
+        return 
+    
+    if initial_deposit <= 0.0:
+        print('É preciso informar um valor positivo. Encerrando.')
+        return
+    
+    num_months = get_valid_integer_from_user(
+    'Informe o número de meses para cálculo da simulação ("S" -> SAIR): '
+    )
+    if num_months is None:
+        return 
+    
+    if num_months <= 0:
+        print('Número mínimo de meses para cálculo de rendimentos: (1). Encerrando. ')
+        return
+    print('\nProcessando...Obtendo dados econômicos para cálculo de projeção...')
+    projection_data = calculate_simple_savings_projection(initial_deposit, num_months)
+
+    if projection_data is None:
+        print('Falha ao se comunicar com o servidor do Banco Central, tente novamente dentro de alguns instantes.')
+        return 
+    
+    title_month = 'MÊS Nº'
+    title_yield  = 'RENDIMENTO MENSAL'
+    title_balance = 'SALDO FINAL'
+
+    col_month_width = 10
+    col_yield_width = 25
+    col_balance_width = 25
+    
+    header_line = f'│ {title_month:^{col_month_width}} │ {title_yield:^{col_yield_width}} │ {title_balance:^{col_balance_width}} │'
+    separator = '─' * len(header_line)
+
+    print(separator)
+    print(header_line)
+    print(separator)
+
+    for record in projection_data:
+        month_num = record['month']
+        monthly_yield = record['monthly_yield']
+        current_account_balance = record['current_account_balance']
+        data_row = (
+            f'│{month_num:^{col_month_width}}  │ ' 
+            f' {locale.currency(monthly_yield, grouping=True):^{col_yield_width}}│'
+            f' {locale.currency(current_account_balance, grouping=True):^{col_balance_width}} │'
+            )
+            
+        print(data_row)
+    
+    print(separator)
+
 def calculate_trip_price(distance_in_km: float) -> Tuple[float, float]:
     """
     Calcula o preço total de uma viagem e a tarifa por km aplicada.
@@ -1002,6 +1209,7 @@ def main() -> None:
     prompt_salary_increase()
     prompt_loan_viability_analyzer()
     prompt_income_tax_calculator()
+    prompt_simple_savings_simulation()
     prompt_trip_price_calculator()
     run_phone_bill_simultation()
     run_electricity_bill_simulation()

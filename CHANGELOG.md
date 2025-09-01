@@ -9,6 +9,16 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.9.0] - 2025-09-01
+Added
+Simulador Financeiro Dinâmico (calculate_simple_savings_projection): Adicionada uma calculadora de projeção de rendimentos para a Caderneta de Poupança. Esta funcionalidade representa um avanço arquitetural significativo, movendo o módulo de calculadoras estáticas para simulações dinâmicas baseadas em dados económicos reais.
+
+Integração com API do Banco Central (fetch_bcb_economic_indicator): Implementada uma nova função auxiliar robusta para consumir a API de Séries Temporais (SGS) do Banco Central do Brasil. Esta função serve como uma ponte segura e resiliente para a obtenção de indicadores económicos em tempo real, exemplificando padrões profissionais de requisições web (requests), tratamento de exceções de rede e análise de dados JSON.
+
+Modelagem de Regras de Negócio Oficiais: O cálculo do rendimento da poupança agora implementa a regra de negócio oficial do Brasil, que é dependente do valor da taxa Selic. As constantes que definem esta regra (SELIC_THRESHOLD_FOR_SAVINGS_YIELD_RULE, etc.) foram externalizadas, promovendo a manutenibilidade e a clareza do código.
+
+Interface de Simulação (prompt_simple_savings_simulation): Criada a função de interface com o usuário para a nova simulação, que orquestra a coleta de dados, a chamada ao motor de cálculo e a apresentação de um extrato mensal detalhado e profissionalmente formatado.
+
 [1.8.0] - 2025-08-31
 Added
 Demonstração de Sessão de Quiz (demonstrate_quiz_session): Adicionada uma nova função ao módulo iterative_process_examples.py. Esta função refatora um snippet de quiz em um motor de quiz genérico, ensinando o princípio da Separação de Responsabilidades ao modelar as perguntas e respostas como uma estrutura de dados externa (QUIZ_DATA). A implementação também demonstra o gerenciamento de estado em laços, o uso de enumerate para numeração, e técnicas de formatação para uma interface de usuário robusta e gramaticalmente correta.
