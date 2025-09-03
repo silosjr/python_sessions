@@ -31,6 +31,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |   |-- binary_search.py
 |   |   |-- practical_recursion_examples.py
 |   |   |-- comparison_algotrithms.py
+|   |   |-- statitical_analysis_engine.py
 |   |   
 |   |-- 📂 foundations/
 |   |    |-- syntax_and_operators.py

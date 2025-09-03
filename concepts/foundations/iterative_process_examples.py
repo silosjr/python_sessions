@@ -197,26 +197,26 @@ def demonstrate_custom_multiplication_table() -> None:
     table_number = get_valid_integer_from_user('Informe o número da tabuada a ser gerada: ')
 
     if table_number is None:
-         return 
+        return 
     
     if table_number <= 0:
-         print('ATENÇÃO: O número para a tabuada deve ser não-negativo e diferente de zero. Encerrando.')
-         return 
+        print('ATENÇÃO: O número para a tabuada deve ser não-negativo e diferente de zero. Encerrando.')
+        return 
     
     start_range = get_valid_integer_from_user('Digite o número inicial do intervalo: ')
 
     if start_range is None:
-         return
+        return
     
     end_range = get_valid_integer_from_user('Digite o número final do intervalo: ')
     print()
 
     if end_range is None:
-         return 
+        return 
     
     if start_range > end_range:
-         print('ATENÇÃO: O valor para o número inicial não pode ser maior que o valor número final do intervalo. Encerrando.')
-         return 
+        print('ATENÇÃO: O valor para o número inicial não pode ser maior que o valor número final do intervalo. Encerrando.')
+        return 
     
     max_table_number_width = len(str(table_number))
     max_result_width = len(str(table_number * end_range))
@@ -225,7 +225,7 @@ def demonstrate_custom_multiplication_table() -> None:
     max_result_multiplier = max(max_width_start_range, max_width_end_range)
 
     for n in range(start_range, end_range + 1):
-         print(f'{table_number:>{max_table_number_width}} x {n:>{max_result_multiplier}} = {n * table_number:>{max_result_width}}\n')
+        print(f'{table_number:>{max_table_number_width}} x {n:>{max_result_multiplier}} = {n * table_number:>{max_result_width}}\n')
 
 def multiply_by_addition(number_to_add: int, times_to_add: int) -> int:
     """
@@ -252,7 +252,7 @@ def multiply_by_addition(number_to_add: int, times_to_add: int) -> int:
     accumulator = 0
          
     for _ in range(times_to_add):
-         accumulator += number_to_add
+        accumulator += number_to_add
          
     return accumulator
 
@@ -279,11 +279,11 @@ def demonstrate_multiplication_with_addition() -> None:
 
     first_number = get_valid_integer_from_user('Digite o multiplicando ("S" SAIR):')
     if first_number is None:
-         return 
+        return 
     
     second_number = get_valid_integer_from_user('Digite o multiplicador ("S" SAIR):')
     if second_number is None:
-         return 
+        return 
 
     result = multiply_by_addition(first_number, second_number)
     print(f'\n{first_number} x {second_number} = {result}')
@@ -315,8 +315,8 @@ def divide_by_subtraction(dividend: int, divisor: int) -> Tuple[int, int]:
     current_dividend = dividend
 
     while current_dividend >= divisor:
-          current_dividend -= divisor 
-          quotient_counter += 1
+        current_dividend -= divisor 
+        quotient_counter += 1
 
     return quotient_counter, current_dividend
 
@@ -402,7 +402,7 @@ def demonstrate_quiz_session() -> None:
             print('✅ Resposta Correta!')
             points += 1
         else:
-             print(f'❌ Resposta Incorreta. A resposta correta era: {question_data['correct_answer']}')
+            print(f'❌ Resposta Incorreta. A resposta correta era: {question_data['correct_answer']}')
     
     print('\n' + '-' * 30)
     print(f'Pontuação Final: {points} {'ponto' if points == 1 else 'pontos'}')

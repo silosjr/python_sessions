@@ -9,6 +9,23 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.11.0] - 2025-09-02
+Added
+Novo Módulo: statistical_analysis_engine.py: Foi criado um novo módulo de algoritmos, concepts/algorithms/statistical_analysis_engine.py, para abrigar uma nova ferramenta de análise estatística descritiva de alto padrão. Esta adição representa um avanço significativo na arquitetura do projeto, introduzindo um sistema de componentes desacoplados.
+
+Arquitetura de Três Camadas: A nova funcionalidade foi projetada seguindo o princípio da Separação de Responsabilidades, com três componentes distintos:
+
+Coleta de Dados Pura (collect_numeric_data_with_sentinel): Uma função de interface robusta e reutilizável, responsável exclusivamente pela aquisição de uma amostra de dados numéricos do usuário, utilizando um valor de sentinela para a conclusão e tratando cancelamentos de forma inequívoca.
+
+Motor de Cálculo (generate_statistical_report): Uma função de cálculo pura e de ordem superior, que recebe a amostra de dados e um dicionário de operações, aplicando cada cálculo de forma agnóstica.
+
+Orquestração e Apresentação (demonstrate_statistical_analysis_with_sentinel): A função de interface final que orquestra o fluxo, integrando a coleta e o processamento, e exibe os resultados num relatório tabular profissional.
+
+Ferramentas Estatísticas Extensíveis: Foi introduzida a constante STATISTICAL_OPERATIONS, um dicionário que mapeia os nomes das métricas (Soma, Média, etc.) às suas respectivas funções de cálculo (sum, lambda, etc.). Esta abordagem declarativa torna o motor de análise infinitamente extensível a novas métricas sem a necessidade de alterar a lógica de processamento principal.
+
+Changed
+Refatoração e Migração de Lógica: A funcionalidade de cálculo de estatísticas agregadas, que existia de forma monolítica no módulo iterative_process_examples.py, foi removida e substituída por esta nova arquitetura superior, eliminando redundância e elevando o padrão de design do projeto.
+
 [1.11.0] - 2025-09-01
 Added
 Simulador de Amortização de Empréstimo Pessoal: Foi adicionada uma nova e robusta calculadora financeira ao módulo. Esta funcionalidade modela o processo de amortização de uma dívida, proporcionando um exemplo didático de um sistema financeiro que decai com o tempo.
