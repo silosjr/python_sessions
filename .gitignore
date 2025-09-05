@@ -30,3 +30,7 @@ CHANGELOG_archive.md
 
 # Script para Refatoração
 from_MENEZES.py
+
+# Caracteres ASCII para tabulação
+ascii_characteres_to_table.txt 
+

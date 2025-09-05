@@ -9,6 +9,20 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.9.0] - 2025-09-05
+Added
+iterative_process_examples.py:
+
+Adicionada uma simulação completa de um sistema de Ponto de Venda (PDV) interativo, a demonstrate_interactive_pos_session.
+
+O sistema foi arquitetado em três camadas (Dados, Lógica, Interface) para demonstrar o princípio da Separação de Responsabilidades.
+
+Implementado o motor de lógica pura update_shopping_cart, que gerencia o estado do carrinho de forma imutável, seguindo o padrão de design 'state reducer'.
+
+Adicionadas as funções de apresentação display_product_catalog e display_cart_status para renderizar os dados em tabelas formatadas de padrão profissional.
+
+Adicionada a função de cálculo pura calculate_cart_total para encapsular a lógica de negócio de totalização da compra.
+
 [1.11.0] - 2025-09-02
 Added
 Novo Módulo: statistical_analysis_engine.py: Foi criado um novo módulo de algoritmos, concepts/algorithms/statistical_analysis_engine.py, para abrigar uma nova ferramenta de análise estatística descritiva de alto padrão. Esta adição representa um avanço significativo na arquitetura do projeto, introduzindo um sistema de componentes desacoplados.

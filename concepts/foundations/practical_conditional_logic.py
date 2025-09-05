@@ -70,7 +70,7 @@ def get_valid_integer_from_user(prompt_message: str) -> Optional[int]:
         try:
             user_input = input(prompt_message)
 
-            if user_input.lower() == 's':
+            if user_input.lower() == 'q':
                 print('\nO usuário cancelou a operação.')
                 return None 
             
