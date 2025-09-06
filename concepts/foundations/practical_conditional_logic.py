@@ -111,18 +111,18 @@ def get_valid_float_from_user(prompt_message: str) -> Optional[float]:
         try:
             user_input = input(prompt_message)
 
-            if user_input.lower() == 's':
-                print('\nO usuário cancelou a operação.')
-                return None 
+            if user_input.lower() == 'q':
+                print('\n Operação cancelada pelo usuário.\n')
+                return 
             
             converted_number = float(user_input)
             return converted_number
         
         except ValueError:
-            print('ERRO: Entrada inválida. Por favor digite apenas valores numéricos válidos. Exemplo: 8.75')
+            print('\n ERRO: Entrada inválida. Por favor digite apenas valores numéricos válidos. Exemplo: 8.75\n')
             continue 
         except Exception as e:
-            print(f'Ocorreu um erro interno ao tentar processar a operação: {e}')
+            print(f' Ocorreu um erro interno ao tentar processar a operação: {e}')
             break
 
 def get_valid_answer_from_user(prompt_message: str) -> Optional[bool]:

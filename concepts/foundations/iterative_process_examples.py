@@ -19,9 +19,10 @@ from typing import List, Callable, Tuple, Dict, Union
 import locale
 from practical_conditional_logic import get_valid_integer_from_user
 from practical_conditional_logic import get_valid_answer_from_user
+from practical_conditional_logic import get_valid_float_from_user
 
 __author__ = 'Enock Silos'
-__version__ = '1.9.0'
+__version__ = '1.10.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -73,6 +74,12 @@ PRODUCT_CATALOG: Dict[str, Dict[str, Union[str, float]]] = {
         'price': 59.90
     }
 }
+
+BRAZILIAN_CURRENCY_DENOMINATIONS: List[int] = [
+    20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 25, 10, 5, 1
+]
+CENTS_PER_REAL: int = 100
+BANKNOTE_THRESHOLD_IN_CENTS: int = 100
 
 def demonstrate_simple_counting() -> None:
     """
@@ -391,7 +398,7 @@ def demonstrate_division_with_subtraction() -> None:
     onde a lógica de negócio (o cálculo em si) é isolada da lógica de
     apresentação (I/O). A mensagem de saída é construída para não apenas mostrar
     o resultado, mas para explicar o processo algorítmico subjacente, reforçando
-    o valor pedagógicoda demonstração.
+    o valor pedagógico da demonstração.
 
     Side Effects:
         - Realiza chamadas de I/O para obter os dados do usuário (`input`).
@@ -808,6 +815,128 @@ def demonstrate_interactive_pos_session() -> None:
             print('\nERRO: Escolha uma opção válida do MENU.')
             continue
 
+def calculate_change_breakdown(total_amount_in_cents: int) -> Dict[int, int]:
+    """
+    Decompõe um valor monetário no número mínimo de cédulas e moedas.
+
+    Esta função implementa um Algoritmo Guloso (Greedy Algorithm) para a
+    resolução do Problema do Troco (Change-Making Problem), um problema
+    clássico de otimização combinatória. A implementação é especificamente
+    projetada para o sistema monetário brasileiro, cujas denominações 
+    formam um sistema canônico, garantindo que a abordagem gulosa sempre
+    convirja para a solução ótima (o menor número total de cédulas/moedas).
+
+    O algoritmo opera exclusivamente com os valores inteiros representando
+    centavos para garantir a precisão matemátia absoluta, evitando as 
+    inconsistências inerentes à aritmética de ponto flutuante em contextos
+    financeiros. O processo iterativo percorre as denominações monetárias,
+    previamente ordenadas de forma descendente, e, para cada uma, calcula
+    quantas vezes ela pode ser subtraída do montante restante.
+
+    Args:
+        total_amount_in_cents (int): _description_
+
+    Returns:
+        Dict[int, int]: Um dicionário que mapeia cada denominação utilizada
+                        (em centavos) à sua respectiva quantidade no troco.
+
+    Raises:
+        ValueError: Se o `total_amount_in_cents` fornecido for negativo. 
+    """
+    if total_amount_in_cents < 0:
+        raise ValueError('O valor a ser decomposto não pode ser negativo.')
+
+    change_breakdown_report = {}
+    remaining_amount_to_decompose = total_amount_in_cents
+
+    for denomination_value in BRAZILIAN_CURRENCY_DENOMINATIONS:
+        count_for_denomination = remaining_amount_to_decompose // denomination_value
+        if count_for_denomination > 0:
+            change_breakdown_report[denomination_value] = count_for_denomination
+            remaining_amount_to_decompose -= count_for_denomination * denomination_value
+
+    return change_breakdown_report
+
+def demonstrate_change_making_algorithm() -> None:
+    """
+    Orquestra a demonstração do Algoritmo Guloso para o Problema do Troco.
+
+    Esta função serve como a camada de interface (UI) e orquestração para a
+    demonstração do algoritmo de decomposição de troco. A sua arquitetura
+    segue o princípio da Separação de Responsabilidades: a sua única
+    responsabilidade é gerir o diálogo com o usuário, coletar e validar a
+    entrada, invocar o motor de cálculo puro (`calculate_change_breakdown`) e
+    apresentar os resultados de forma clara e profissional.
+
+    A função inicia por solicitar um valor monetário, que é então validado
+    para garantir que se encontra no domínio do problema (não-negativo). Em
+    seguida, o valor é convertido para uma representação de centavos para
+    assegurar a precisão matemática, antes de ser passado para o motor de 
+    cálculo. O resultado, um dicionário de dados puros, é então formatado
+    em uma tabela de extrato, traduzindo os dados numéricos em uma apresentação
+    legível e profissional, que distingue entre cédulas e moedas e respeita
+    as convenções gramaticais.
+
+    Side Effects:
+        - Realiza chamadas de I/O para obter os dados do usuário (`input`).
+        - Imprime o relatório de troco e mensagens de status na saída
+          padrão ( `print`).
+    """
+    print("\n\t❰❰❰ DEMONSTRAÇÃO DO GREEDY ALGORITHM (ALGORITMO GULOSO) ❱❱❱\n")
+
+    prompt = ' Digite um valor monetário para ser decomposto ("Q" -> SAIR): R$'
+    total_amount_in_reais = get_valid_float_from_user(prompt)
+
+    if total_amount_in_reais is None:
+        return
+    
+    if total_amount_in_reais < 0.0:
+        print('\n ERRO: Informe um valor positivo.\n')
+        return
+    
+    amount_in_cents = int(total_amount_in_reais * CENTS_PER_REAL)
+
+    change_breakdown = calculate_change_breakdown(amount_in_cents)
+    
+    print(f'\n\t\t❰❰❰ DECOMPOSIÇÃO DE {locale.currency(total_amount_in_reais, grouping=True)} ❱❱❱\n')
+
+    if not change_breakdown:
+        print(' Nenhuma cédula ou moeda necessária.')
+
+    title_quantity = 'QUANTIDADE'
+    title_unit = 'UNIDADE'
+    title_value = 'VALOR (R$)'
+
+    width_quantity = 15
+    width_unit = 25
+    width_value = 25
+
+    top_border = f'╔{'═' * (width_quantity + 2)}╦{'═' * (width_unit + 2)}╦{'═' * (width_value + 2)}╗'
+    header = f'║ {title_quantity:^{width_quantity}} ║ {title_unit:^{width_unit}} ║ {title_value:^{width_value}} ║'
+    middle_border = f'╠{'═' * (width_quantity + 2)}╬{'═' * (width_unit + 2)}╬{'═' * (width_value + 2)}╣'
+    bottom_border = f'╚{'═' * (width_quantity + 2)}╩{'═' * (width_unit + 2)}╩{'═' * (width_value + 2)}╝'
+
+    print(top_border)
+    print(header)
+    print(middle_border)
+
+    for denomination_in_cents, count in change_breakdown.items():
+        if denomination_in_cents >= BANKNOTE_THRESHOLD_IN_CENTS:
+            base_unit_name = 'cédula'
+            value_in_reais = denomination_in_cents // CENTS_PER_REAL
+            formatted_value = f"R$ {value_in_reais},00"
+        else:
+            base_unit_name = 'moeda'
+            value_in_reais = denomination_in_cents / CENTS_PER_REAL
+            formatted_value = locale.currency(value_in_reais, grouping=True)
+
+        unit_label = f'{base_unit_name}{'s' if count != 1 else ''} de'
+
+        data_row = f'║ {count:<{width_quantity}} ║ {unit_label:<{width_unit}} ║ {formatted_value:>{width_value}} ║'
+        print(data_row)
+
+    print(f'{bottom_border}\n')
+
 def main() -> None:
     """
     Ponto de entrada principal para a execução do script.
@@ -837,6 +966,7 @@ def main() -> None:
     # demonstrate_division_with_subtraction()
     # demonstrate_quiz_session()
     # demonstrate_interactive_pos_session()
+    # demonstrate_change_making_algorithm()
 
 if __name__ == '__main__':
     main()

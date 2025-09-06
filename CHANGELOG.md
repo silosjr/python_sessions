@@ -9,6 +9,18 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.10.0] - 2025-09-06
+Added
+iterative_process_examples.py:
+
+Adicionada a função calculate_change_breakdown, uma implementação de padrão acadêmico do Algoritmo Guloso (Greedy Algorithm) para a resolução do Problema do Troco (Change-Making Problem).
+
+O algoritmo foi projetado para operar com inteiros (centavos) para garantir a precisão matemática absoluta, uma prática de excelência em software financeiro.
+
+Adicionada a função de interface demonstrate_change_making_algorithm, que orquestra a interação com o usuário e apresenta a decomposição do valor numa tabela de extrato formatada com caracteres de desenho de caixa de linha dupla, para uma apresentação de dados de nível profissional.
+
+Adicionadas constantes de regras de negócio (BRAZILIAN_CURRENCY_DENOMINATIONS) para desacoplar os dados da lógica do algoritmo.
+
 [1.9.0] - 2025-09-05
 Added
 iterative_process_examples.py:
