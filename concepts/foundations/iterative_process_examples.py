@@ -834,7 +834,7 @@ def calculate_change_breakdown(total_amount_in_cents: int) -> Dict[int, int]:
     quantas vezes ela pode ser subtraída do montante restante.
 
     Args:
-        total_amount_in_cents (int): _description_
+        total_amount_in_cents (int): Valor total em centavos a ser processado.
 
     Returns:
         Dict[int, int]: Um dicionário que mapeia cada denominação utilizada
