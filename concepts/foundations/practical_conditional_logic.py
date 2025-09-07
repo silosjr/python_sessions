@@ -67,21 +67,16 @@ def get_valid_integer_from_user(prompt_message: str) -> Optional[int]:
         - Imprime mensagens de erro e status na saída padrão (`print`).
     """
     while True:
+        raw_input = input(prompt_message)
+        if raw_input.lower() == 'q':
+            return None 
         try:
-            user_input = input(prompt_message)
-
-            if user_input.lower() == 'q':
-                print('\nO usuário cancelou a operação.')
-                return None 
-            
-            converted_number = int(user_input)
-            return converted_number
-
+            return int(raw_input)
         except ValueError:
-            print('ERRO: Entrada inválida. Por favor, digite apenas números inteiros.')
+            print(' ERRO: Entrada inválida. Por favor, digite apenas números inteiros.')
             continue
         except Exception as e:
-            print(f'Ocorreu um erro ao tentar processar a operação: {e}')
+            print(f' Ocorreu um erro ao tentar processar a operação: {e}')
             break 
 
 def get_valid_float_from_user(prompt_message: str) -> Optional[float]:

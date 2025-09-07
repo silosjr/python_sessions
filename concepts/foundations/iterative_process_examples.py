@@ -12,11 +12,23 @@ O módulo evolui de simples contagens para simulações complexas, como um
 motor de ponto de venda (PDV), ensinando não apenas a sintaxe de Python,
 mas também os padrões de design de software que sustentam aplicações 
 profissionais e escaláveis.
+
+Este módulo foi expandido para incluir uma suíte de funções que implementam
+um explorador interativo de grelhas matemáticas. Esta nova funcionalidade é
+arquitetada em torno de uma função de ordem superior que gera uma matriz de
+resultados ao aplicar uma operação binária arbitrária sobre o produto de dois
+intervalos numéricos definidos pelo utilizador. O sistema é complementado por
+uma interface de linha de comando para a parametrização da operação e dos
+operandos, e por um procedimento de visualização que renderiza a matriz resultante
+numa tabela de texto com larguras de coluna ajustadas dinamicamente para uma
+apresentação otimizada dos dados.
 """
 
 from __future__ import annotations
-from typing import List, Callable, Tuple, Dict, Union
+from typing import List, Callable, Tuple, Dict, Union, Iterable, Optional
 import locale
+from wcwidth import wcswidth
+import operator 
 from practical_conditional_logic import get_valid_integer_from_user
 from practical_conditional_logic import get_valid_answer_from_user
 from practical_conditional_logic import get_valid_float_from_user
@@ -80,6 +92,17 @@ BRAZILIAN_CURRENCY_DENOMINATIONS: List[int] = [
 ]
 CENTS_PER_REAL: int = 100
 BANKNOTE_THRESHOLD_IN_CENTS: int = 100
+PADDING_WIDTH = 4
+OPERATIONS_MAP: Dict[str, Callable] = {
+    '1': operator.add,
+    '2': operator.sub,
+    '3': operator.mul,
+    '4': operator.truediv
+}
+INTERVAL_BOUND_VIOLATION_ERROR_MESSAGE = (
+' ERRO: O limite inferior especificado para o intervalo deve ser menor ou igual ao limite superior. '
+' Por favor, verifique os valores informados para garantir conformidade com as restrições do intervalo.'
+)
 
 def demonstrate_simple_counting() -> None:
     """
@@ -937,6 +960,264 @@ def demonstrate_change_making_algorithm() -> None:
 
     print(f'{bottom_border}\n')
 
+def generate_mathematical_grid(
+    operation: Callable[[float, float], float],
+    row_operands: Iterable[float],
+    column_operands: Iterable[float]
+) -> List[List[float]]:
+    """
+    Constrói uma matriz aplicando uma operação a pares de elementos de dois iteráveis.
+
+    Esta é uma função de ordem superior que opera sobre os princípios do
+    produto cartesiano. Para cada elemento no iterável `row_operands`, a função
+    aplica a `operation` binária a este elemento em conjunto com cada elemento
+    de `column_operands`, sequencialmente. O resultado é uma matriz (lista de
+    listas) onde cada célula (i, j) corresponde ao resultado de
+    operation(row_operands[i], column_operands[j]).
+
+    Args:
+        operation (Callable[[float, float], float]): Uma função binária que
+            aceita dois operandos numéricos (float) e retorna um único
+            resultado numérico (float).
+        row_operands (Iterable[float]): Um iterável de valores numéricos que
+            servirão como o primeiro operando em cada aplicação da `operation`.
+        column_operands (Iterable[float]): Um iterável de valores numéricos que
+            servirão como o segundo operando em cada aplicação da `operation`.
+
+    Returns:
+        List[List[float]]: Uma matriz bidimensional contendo os resultados 
+                           computados da operação.
+    """
+    result_grid = []
+    for row_val in row_operands:
+        computed_row = [operation(row_val, col_val) for col_val in column_operands]
+        result_grid.append(computed_row)
+    return result_grid
+
+def display_grid_as_table(
+    grid_data: List[List[float]],
+    row_labels: List[str],
+    column_labels: List[str]
+) -> None:
+    """
+    Renderiza uma matriz de dados bidimensional como uma tabela formatada em texto.
+
+    Este procedimento de visualização emprega uma arquitetura de largura de
+    coluna dinâmica. Previamente à renderização, a função inspeciona a 
+    totalidade dos dados de entrada - incluindo rótulos de linha, rótulos de
+    coluna e os dados da própria matriz - para determinar a largura ótima para
+    cada coluna. Este cálculo garante uma apresentação perfeitamente alinhada e
+    sem truncamento, independentemente da magnitude dos valores. Os valores
+    numéricos são formatados para exibição com duas casas decimais.
+
+    Args:
+        grid_data (List[List[float]]): A matriz de dados numéricos a ser
+                                       exibida, representada como uma lista
+                                       de listas.
+        row_labels (List[str]): Uma lista de strings que serve como
+                                identificadores para cada linha da matriz.
+        column_labels (List[str]): Uma lista de strings que serve como o
+                                   cabeçalho para cada coluna da matriz.
+    """
+    if not grid_data or not grid_data[0]:
+        print(' Aviso: Não há dados para exibir na grelha.')
+        return
+
+    grid_data_str = [[f'{cell:.2f}'for cell in row] for row in grid_data]
+    num_data_columns = len(grid_data_str[0])
+
+    first_column_width = len(max(row_labels, key=len))
+
+    column_widths = []
+    for col_index in range(num_data_columns):
+        items_in_this_column = [column_labels[col_index]]
+        for row in grid_data_str:
+            items_in_this_column.append(row[col_index])
+
+        longest_item = max(items_in_this_column, key=len)
+        width = len(longest_item)
+        column_widths.append(width)
+
+    all_widths = [first_column_width] + column_widths
+
+    all_header_labels = [''] + column_labels
+    header_parts = [f' {label:^{width}} ' for label, width in zip(all_header_labels, all_widths)]
+    header_line = f'║{'║'.join(header_parts)}║'
+
+    border_parts = ['═' * (width + 2) for width in all_widths]
+    top_border = f'╔{'╦'.join(border_parts)}╗'
+    middle_border = f'╠{'╬'.join(border_parts)}╣'
+    bottom_border = f'╚{'╩'.join(border_parts)}╝'
+
+    print(top_border)
+    print(header_line)
+    print(middle_border)
+
+    for row_label, row_data in zip(row_labels, grid_data_str):
+        first_cell = f' {row_label:<{first_column_width}} '
+        data_cell_parts = [f' {cell:>{width}} ' for cell, width in zip(row_data, column_widths)]
+        data_line = f'║{first_cell}║{'║'.join(data_cell_parts)}║'
+        print(data_line)
+
+    print(bottom_border)
+
+def demonstrate_math_grid_explorer() -> None:
+    """
+    Encapsula e executa o ciclo de vida da aplicação interativa
+    'Explorador de Grelhas Matemáticas'.
+
+    Esta função serve como o ponto de entrada principal, orquestrando a
+    interação com o utilizador. Define as funções auxiliares aninhadas para
+    lógica específica de interface e gere o ciclo de enventos principais (main loop),
+    que consiste em:
+    1.  Apresentar um menu de operações matemáticas.
+    2.  Capturar a seleção do utilizador.
+    3.  Coletar e validar os parâmetros de intervalo para a grelha.
+    4.  Invocar as funções de núcleo para computar os dados e os rótulos.
+    5.  Exibir a grelha resultante como uma tabela formatada.
+    O ciclo termina quando o utilizador solicita a saída ou ocorre um erro
+    não tratado.
+    """
+    def get_grid_intervals_from_user() -> Optional[Dict[str, int]]:
+        """
+        Conduz a interface para a coleta dos limites dos intervalos da grelha.
+
+        A função solicita sequencialmente ao utilizador os limites inferior e
+        superior para os intervalos de linhas e colunas. Cada entrada é
+        validada para ser um número inteiro através da função externa
+        `get_valid_integer_from_user`. Adicionalmente, valida se o limite
+        inferior de cada intervalo não é superior ao seu respectivo limite
+        superior.
+
+        Returns:
+            Optional[Dict[str, int]]: Um dicionário contendo os quatro limites
+                (`row_start`, `row_end`, `col_start`, `col_end`) em caso de sucesso,
+                ou None se o utilizador anular a operação em qualquer etapa da
+                inserção de dados.
+        """
+        prompt_message_row_start = (
+            ' Por favor, insira o valor correspondente ao limite inferior do intervalo de linhas ("Q" para encerrar): '
+            )
+        row_start = get_valid_integer_from_user(prompt_message_row_start)
+        if row_start is None:
+            return
+        prompt_message_row_end = (
+            ' Por favor, insira o valor correspondente ao limite superior do intervalo de linhas ("Q" para encerrar): '
+            )
+        row_end = get_valid_integer_from_user(prompt_message_row_end)
+        if row_end is None:
+            return
+        prompt_message_col_start = (
+            ' Por favor, insira o valor correspondente ao limite inferior do intervalo de colunas ("Q" para encerrar): '
+            )
+        col_start = get_valid_integer_from_user(prompt_message_col_start)
+        if col_start is None:
+            return
+        prompt_message_col_end = (
+            ' Por favor insira o valor correspondente ao limite superior para o intervalo de colunas ("Q" para encerrar): '
+            )
+        col_end = get_valid_integer_from_user(prompt_message_col_end)
+        if col_end is None:
+            return
+
+        if not row_start <= row_end or not col_start <= col_end:
+            print(INTERVAL_BOUND_VIOLATION_ERROR_MESSAGE)
+            return
+
+        return {
+            'row_start': row_start, 'row_end': row_end,
+            'col_start': col_start, 'col_end': col_end
+               }
+
+    def generate_labels(start: int, end: int) -> List[str]:
+            """
+            Gera uma sequência de rótulos textuais a partir de um intervalo numérico.
+
+            Args:
+                start (int): O limite inferior, inclusivo, do intervalo.
+                end (int): O limite superior, inclusivo, do intervalo.
+
+            Returns:
+                List[str]: Uma lista de strings, onde cada elemento corresponde a um
+                           número no intervalo especificado.
+            """
+            return list(map(str, range(start, end + 1)))
+
+    while True:
+        try:
+            menu_lines = [
+                'OPERAÇÕES MATEMÁTICAS',
+                ' Por favor, selecione uma operação matemática para executar: ',
+                ' [1] Adição ➕',
+                ' [2] Subtração ➖',
+                ' [3] Multiplicação ✖️',
+                ' [4] Divisão ➗',
+                ' [Q] Sair 🚪🏃',
+                ' Insira o valor que corresponda à sua escolha'
+                         ]
+
+            content_width = max(wcswidth(line) for line in menu_lines)
+            frame_width = content_width + PADDING_WIDTH
+
+            top_border = f'╔{'═' * (frame_width)}╗'
+            title = menu_lines[0]
+            title_width = wcswidth(title)
+            padding_total = frame_width - title_width
+            padding_left = padding_total // 2
+            padding_right = padding_total - padding_left
+            header_line = f'║{' ' * padding_left}{title}{' ' * padding_right}║'
+
+            middle_border = f'╠{'═' * (frame_width)}╣'
+            bottom_border = f'╚{'═' * (frame_width)}╝'
+
+            print(top_border)
+            print(header_line)
+            print(middle_border)
+
+            for line in menu_lines[1:]:
+                visual_width = wcswidth(line)
+                padding_needed = frame_width - visual_width
+                padding = ' ' * max(0, padding_needed)
+                print(f'║{line}{padding}║')
+            
+            print(bottom_border)
+            selected_option = input('❭❭❭')
+            
+            if selected_option.lower() == 'q':
+                print(' Sessão Encerrada.')
+                break
+
+            elif selected_option in OPERATIONS_MAP:
+                intervals = get_grid_intervals_from_user()
+                if intervals is None:
+                    continue
+                
+                row_start = intervals['row_start']
+                row_end = intervals['row_end']
+                col_start = intervals['col_start']
+                col_end = intervals['col_end']
+
+                operation_function = OPERATIONS_MAP[selected_option]
+                if selected_option == '4' and col_start <= 0 <= col_end:
+                    print(' ERRO: Impossível dividir por zero.')
+                    continue
+
+                grid_data = generate_mathematical_grid(
+                            operation_function,
+                            range(row_start, row_end + 1),
+                            range(col_start, col_end + 1)
+                                                      )
+                row_labels = generate_labels(row_start, row_end)
+                column_labels = generate_labels(col_start, col_end)
+                display_grid_as_table(grid_data, row_labels, column_labels)
+                break
+        except Exception as e:
+            print(
+                f' Ocorreu um erro inesperado ao tentar realizar a operação'
+                f' Detalhes: {e}'
+                ' Encerrando a operação.')
+            break
+
 def main() -> None:
     """
     Ponto de entrada principal para a execução do script.
@@ -966,7 +1247,8 @@ def main() -> None:
     # demonstrate_division_with_subtraction()
     # demonstrate_quiz_session()
     # demonstrate_interactive_pos_session()
-    # demonstrate_change_making_algorithm()
+    # demonstrate_change_making_algorithm
+    demonstrate_math_grid_explorer()
 
 if __name__ == '__main__':
     main()

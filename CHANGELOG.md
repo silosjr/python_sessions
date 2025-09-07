@@ -9,6 +9,17 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[1.11.0] - 2025-09-07
+Adicionado
+Implementação do "Explorador de Grelhas Matemáticas" no módulo iterative_process_examples.py, uma ferramenta interativa de linha de comando para gerar e visualizar matrizes de resultados de operações matemáticas.
+
+A nova funcionalidade inclui uma função de ordem superior para o cálculo da grelha e um procedimento de renderização de tabelas com ajuste dinâmico de colunas para otimizar a visualização dos dados.
+
+Alterado
+Refatorada a estrutura condicional if/elif para seleção de operações, substituindo-a por um dicionário de mapeamento (OPERATIONS_MAP) para maior clareza e escalabilidade do código.
+
+Extraída a lógica de coleta de dados do utilizador para uma função dedicada (get_grid_intervals_from_user), centralizando a validação de entradas e melhorando a modularidade.
+
 [1.10.0] - 2025-09-06
 Added
 iterative_process_examples.py:
