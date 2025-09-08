@@ -19,7 +19,7 @@ from __future__ import annotations
 from typing import Optional, Callable, TypeVar
 
 __author__ = 'Enock Silos'
-__version__ = '0.2.0' 
+__version__ = '0.3.0' 
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
@@ -83,6 +83,16 @@ def get_validated_input(
             break
 
     return None
+
+def cli_pause() -> None:
+    """
+    Pausa a execução até que o usuário pressione Enter.
+
+    Esta função de utilidade de UI serve para controlar o ritmo de uma
+    interface de linha de comando, dando ao utilizador tempo para ler
+    os resultados de uma operação antes de prosseguir.
+    """
+    input('\n Pressione Enter para retornar ao menu principal.')
 
 def get_valid_integer_from_user(prompt_message: str) -> Optional[int]:
     """

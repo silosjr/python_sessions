@@ -9,6 +9,20 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[0.3.0] - 2025-09-08
+Adicionado (Added)
+Funcionalidade de Pausa Modular para CLI: Introduzida a função cli_pause() no módulo input_handlers para fornecer um mecanismo consistente de pausa em interfaces de linha de comando, melhorando a experiência do utilizador.
+
+Alterado (Changed)
+Revisão Arquitetónica Completa: Migração de todo o projeto para uma estrutura src-layout padrão e definição como um pacote instalável via pyproject.toml. Esta mudança resolve ambiguidades de importação e alinha o projeto com os padrões modernos de empacotamento Python.
+
+Refatorado prime_number_utilities: O script foi decomposto numa Interface de Linha de Comando (CLI) modular e orientada por menus. O ciclo principal agora segue um padrão REPL (Read-Eval-Print Loop) limpo, delegando tarefas a funções auxiliares dedicadas.
+
+Refatorado input_handlers: A lógica de validação de entrada foi abstraída para uma função de ordem superior genérica (get_validated_input). Isto elimina uma duplicação de código significativa (princípio DRY) e torna o módulo mais robusto e extensível.
+
+Corrigido (Fixed)
+Lógica de Importação de Módulos: Corrigidas todas as importações de módulos internos para usar caminhos absolutos a partir da raiz do pacote (python_sessions), garantindo consistência e resolvendo os erros ModuleNotFoundError na nova arquitetura.
+
 [1.11.0] - 2025-09-07
 Adicionado
 Implementação do "Explorador de Grelhas Matemáticas" no módulo iterative_process_examples.py, uma ferramenta interativa de linha de comando para gerar e visualizar matrizes de resultados de operações matemáticas.

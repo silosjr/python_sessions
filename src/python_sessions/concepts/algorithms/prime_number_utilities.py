@@ -1,16 +1,40 @@
 """
+Módulo de Ferramentas de Aritmética de Primos com interface de Linha de Comando.
 
+Este módulo fornece um conjunto coeso de funcionalidades para a análise e
+geração de números primos, encapsulado em uma interface de usuário interativa
+(CLI). A arquitetura do módulo adere estritamente ao Princípio de 
+Responsabilidade Única (SRP), decompondo a aplicação em componentes lógicos,
+de apresentação e controle.
+
+Funcionalidades Principais:
+-   `is_prime`: Uma função pura e otimizada para a verificação de primalidade.
+-   `generate_primes`: Um gerador de avaliação preguiçosa para a produção
+     eficiente de uma sequência infinita de primos.
+-   `main`: Orquestra uma interface de menu (REPL) que permite ao usuário
+     interagir com as funcionalidades acima.
+
+O design do módulo serve como um caso de estudo para a construção de 
+ferramentas de linha de comando modulares e robustas em Python, priorizando
+a clareza arquitetônica e a experiência do usuário.
 """
 
 from __future__ import annotations
 from math import sqrt
 from typing import Iterator, Optional
-from python_sessions.utils.input_handlers import get_valid_integer_from_user
+from itertools import islice
+from python_sessions.utils.input_handlers import (
+    get_valid_integer_from_user,
+    cli_pause
+)
 
 __author__ = 'Enock Silos'
-__version__ = '1.0.0' 
+__version__ = '1.1.0' 
 __email__ = 'init.caucasian722@passfwd.com'
-__status__ = 'Development'
+__status__ = 'Production'
+
+PADDING_WIDTH = 4
+COLUMNS_PER_LINE = 15
 
 def is_prime(number: int) -> bool:
     """
@@ -72,48 +96,6 @@ def is_prime(number: int) -> bool:
         divisor += 2
     return True
 
-def get_valid_integer_from_user(prompt_message: str) -> Optional[int]:
-    """
-    Obtém uma entrada numérica inteira e validada pelo usuário.
-
-    Esta função auxiliar (`helper function`) encapsula o processo completo de
-    solicitação, validação e conversão de uma entrada do usuário para o tipo
-    inteiro. Ela opera dentro de um laço de repetição (`while`) para garantir
-    a robustez, persistindo na solicitação até que uma entrada válida seja
-    fornecida ou que o usuário opte por cancelar a operação.
-
-    A função implementa um contrato de retorno dual: devolve um objeto do tipo
-    `int` em caso de sucesso na conversão, ou o valor `None` para sinalizar
-    explicitamente que a operação foi interrompida pelo usuário. Este padrão
-    permite que a função que a chama trate a desistência de forma graciosa, sem
-    a necessidade de levantar exceções para um comportamento esperado.
-
-    Args:
-        prompt_message (str): A mensagem a ser exibida ao usuário para
-                              solicitar a entrada de dados.
-
-    Returns:
-        Optional[int]: O número inteiro fornecido pelo usuário, ou `None` se
-                       a operação for cancelada.
-
-    Side Effects:
-        - Lê dados a entrada padrão (`input`).
-        - Imprime mensagens de erro e status na saída padrão (`print`).
-    """
-    while True:
-        raw_input = input(prompt_message)
-        if raw_input.lower() == 'q':
-            return None 
-        try:
-            return int(raw_input)
-        except ValueError:
-            print(' ERRO: Entrada inválida. Por favor, digite apenas números inteiros.')
-            continue
-        except Exception as e:
-            print(f' Ocorreu um erro ao tentar processar a operação: {e}')
-            break 
-
-
 def generate_primes() -> Iterator[int]:
     """
     Gera uma sequência infinita de números primos utilizando avaliação preguiçosa.
@@ -152,22 +134,126 @@ def generate_primes() -> Iterator[int]:
             yield candidate_number
         candidate_number += 1
 
-def run_prime_checker_ui() -> None:
+def _display_menu() -> None:
     """
+    Renderiza o menu principal da aplicação na saída padrão.
+
+    Esta função é responsável exclusivamente pela apresentação da interface
+    do menu, garantindo uma formatação visual consistente e alinhada.
+    """
+    menu_prime_number_utils = [
+    ' ANALISADOR DE PRIMOS: Verificação e Geração',
+    ' Escolha uma das opções abaixo:',
+    ' [1] - Verificar a primalidade de um número',
+    ' [2] - Gerar os "N" primeiros primos',
+    ' [Q] - Encerra a sessão'
+    ]
+
+    content_width = max(len(line) for line in menu_prime_number_utils)
+    internal_width = content_width + PADDING_WIDTH
+
+    top_border = f'╔{'═' * (internal_width)}╗'
+    middle_border = f'╠{'═' * (internal_width)}╣'
+    bottom_border = f'╚{'═' * (internal_width)}╝'
+
+    title = menu_prime_number_utils[0]
+    header_line = f'║{title:^{internal_width}}║'
+
+    print(top_border)
+    print(header_line)
+    print(middle_border)
+
+    for line in menu_prime_number_utils[1:]:
+        padded_line = f'  {line}'
+        print(f'║{padded_line:<{internal_width}}║')
+        
+    print(bottom_border)
+
+def _handle_user_choice(selected_option: str) -> None:
+    """
+    Atua como um 'dispatcher', executando a função apropriada.
+
+    Com base na escolha do utilizador, esta função delega a execução para
+    a função de manipulação de negócio correspondente.
+
+    Args:
+        selected_option (str): A opção inserida pelo usuário no menu.
+    """
+    if selected_option == '1':
+        _handle_prime_check()
+    elif selected_option == '2':
+        _handle_prime_generation()
+    else:
+        print('\n ERRO: Por favor, informe uma das opções válidas do menu.')
+
+def _handle_prime_check() -> None:
+    """
+    Orquestra o fluxo de trabalho para verificar a primalidade de um número.
+
+    Esta função encapsula a lógica para a opção [1] do menu:
+    solicita um número ao utilizador, invoca as função `is_prime` e
+    apresenta o resultado formatado.
+    """
+    prompt = ' Por favor, informe um número inteiro para verificar sua primalidade:\n ❭❭❭ '
+    number_to_check = get_valid_integer_from_user(prompt)
+    if number_to_check is None:
+        return None
+    if is_prime(number_to_check):
+        print(f'\n {number_to_check} é um número primo.')
+    else:
+        print(f'\n {number_to_check} não é um número primo.')
+
+def _handle_prime_generation() -> None:
+    """
+    Orquestra o fluxo para gerar os N primeiros números primos.
+
+    Encapsula a lógica de negócio para a ação [2] do menu: solicita ao
+    usuário a quantidade de primos, valida a entrada, consome o gerador
+    `generate_primes` de forma segura e exibe o resultado numa grelha formatada.
+    """
+    prompt = ' Por favor, informe a quantidade de números primos a ser gerada: \n ❭❭❭ '
+    n = get_valid_integer_from_user(prompt)
+    if n is None:
+        return None
+    if n <= 0:
+        print('\n ERRO: Por favor, informe apenas números inteiros positivos.')
+        return None
+    print(' Entrada aceita. Cálculo iniciado.')
+
+    first_primes = list(islice(generate_primes(), n))
+
+    column_counter = 0
     
+    for prime in first_primes:
+        print(prime, end=' ')
+        column_counter += 1
+        if column_counter == COLUMNS_PER_LINE:
+            print()
+            column_counter = 0
+    print()
+    return
+
+def main() -> None:
     """
-    prompt_message = (
-        ' Digite um número inteiro para verificar sua primalidade ("Q" para encerrar): '
-                     )
+    Função principal que orquestra a interface de linha de comando (REPL).
+
+    Esta função é o ponto de entrada da aplicação. Ela implementa o ciclo
+    de Leitura-Avaliação-Impressão-Repetição (Read-Eval-Print-Loop), orquestrando as
+    chamadas às funções de exibição, entrada e manipulação da escolha do 
+    usuário, até que a sessão seja encerrada.
+    """
     while True:
-        candidate_prime_input = get_valid_integer_from_user(prompt_message)
-        if candidate_prime_input is None:
-            return
-        if is_prime(candidate_prime_input):
-            print(f'\n {candidate_prime_input} é um número primo.')
-        else:
-            print(f' {candidate_prime_input} não é um número primo.')
-        print('-' * 20)
+        _display_menu()
+        selected_option = input(' ❭❭❭ ')
+
+        if selected_option.lower() == 'q':
+            print('\n Sessão Encerrada.')
+            break
+
+        _handle_user_choice(selected_option)
+        
+        if selected_option in ('1', '2'):
+            cli_pause()
 
 if __name__ == '__main__':
-    run_prime_checker_ui()
+    main()
