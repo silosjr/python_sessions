@@ -77,6 +77,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |-- 📂 utils/
 |   |-- debug_tools.py
 |   |-- project_setup.py
+|   |-- input_handlers.py
 |
 |-- 📄 .gitignore
 |-- 📄 CHANGELOG.md

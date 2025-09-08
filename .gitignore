@@ -35,4 +35,16 @@ from_MENEZES.py
 ascii_characteres_to_table.txt 
 
 # Espaço de Rascunho 
-draft.py 
+draft.py]
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE / Editor specific files
+.vscode/
+.idea/
+
+# Virtual environment
+.venv/
