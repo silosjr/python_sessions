@@ -24,7 +24,7 @@ from practical_conditional_logic import get_valid_integer_from_user
 from practical_conditional_logic import get_valid_answer_from_user
 
 __author__ = 'Enock Silos'
-__version__ = '1.10.0' 
+__version__ = '0.3.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 

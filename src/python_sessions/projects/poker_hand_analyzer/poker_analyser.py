@@ -34,7 +34,7 @@ from concepts.object_oriented_programming.card_game_inheritance import Hand, Dec
 
 
 __author__ = 'Enock Silos'
-__version__ = '3.0.0' 
+__version__ = '0.3.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 

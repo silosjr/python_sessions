@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 __author__ = 'Enock Silos'
-__version__ = '1.0.0'
+__version__ = '0.3.0'
 __status__ = 'Production'
 
 def setup_project_path() -> None:
