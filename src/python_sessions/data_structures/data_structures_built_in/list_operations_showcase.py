@@ -1,5 +1,5 @@
 """
-Módulo de operações com listase sua interface de usuário.
+Módulo de operações com listas e sua interface de usuário.
 
 Este módulo fornece um conjunto de componentes de software para a manipulação
 da estrutura de dados `list` do Python. A arquitetura adere estritamente ao
