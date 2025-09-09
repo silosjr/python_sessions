@@ -9,6 +9,25 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[0.3.0] - 2025-09-09
+Added
+Módulo de Estruturas de Dados: Introduzido um novo diretório de pacotes (src/python_sessions/data_structures/) para abrigar componentes focados em estruturas de dados, iniciando com o submódulo built_in.
+
+Componente list_operations_showcase: Adicionado o primeiro módulo (list_operations_showcase.py) à nova seção de estruturas de dados, contendo uma interface de linha de comando (CLI) interativa para operações com listas.
+
+Função de Lógica Pura calculate_average: Implementado um componente de lógica de negócio determinístico e formalmente verificado para o cálculo de média aritmética, aderindo ao Princípio da Responsabilidade Única.
+
+Infraestrutura de Verificação e Validação (V&V): Estabelecida uma arquitetura de testes formal com um diretório tests/ dedicado, espelhando a estrutura do código-fonte.
+
+Suíte de Testes Formais: Adicionada a primeira suíte de testes unitários (test_list_operations_showcase.py), provando a correção do componente calculate_average sob o caminho nominal, casos de borda e com dados heterogêneos.
+
+Integração com Ambiente de Desenvolvimento (IDE): Implementada a configuração completa (.vscode/settings.json, .env) para a descoberta, execução e depuração automáticas de testes unittest no Visual Studio Code.
+
+Changed
+Refatoração Arquitetural: O snippet de código inicial, de natureza procedural, foi completamente re-engenheirado para uma arquitetura de software robusta, separando a lógica de negócio da camada de interface de usuário.
+
+Padrão de Qualidade do Projeto: O projeto foi elevado a um novo padrão de qualidade, tornando a Verificação e Validação (V&V) através de testes unitários formais um requisito não-negociável para a certificação de novos componentes.
+
 [0.3.0] - 2025-09-08
 Adicionado (Added)
 Funcionalidade de Pausa Modular para CLI: Introduzida a função cli_pause() no módulo input_handlers para fornecer um mecanismo consistente de pausa em interfaces de linha de comando, melhorando a experiência do utilizador.

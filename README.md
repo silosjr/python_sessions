@@ -59,6 +59,14 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |       |-- kangaroo_puzzle.py
 |       |-- time_encapsulation.py
 |
+|
+|-- 📂 data_structures/
+|   |-- 📂 data_structures_built_in/
+|       |-- list_operations_show_case.py
+|
+|
+|
+|
 |-- 📂 diagrams/
 |    |-- class_relations_diagram.puml
 |    |-- recursive_stack_diagram.puml
@@ -78,6 +86,16 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |-- debug_tools.py
 |   |-- project_setup.py
 |   |-- input_handlers.py
+|   |-- constants.py
+|
+|-- 🧪 tests/
+|   |
+|   |--🧪 data_structures/
+|      |
+|      |-- 🧪 data_structures_built_in/
+|          |
+|          |-- test_list_operations_showcase.py
+|
 |
 |-- 📄 .gitignore
 |-- 📄 CHANGELOG.md

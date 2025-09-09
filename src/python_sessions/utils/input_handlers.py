@@ -67,7 +67,6 @@ def get_validated_input(
         try:
             raw_input = input(prompt_message)
             if raw_input.lower() == 'q':
-                print('\n Operação cancelada pelo usuário.')
                 return None
 
             return type_converter(raw_input)

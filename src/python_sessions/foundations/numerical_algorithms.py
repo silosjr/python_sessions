@@ -17,7 +17,8 @@ from __future__ import annotations
 from typing import Optional
 from python_sessions.utils.constants import (
     PADDING_WIDTH,
-    CALCULATION_IN_PROGRESS_MESSAGE
+    CALCULATION_IN_PROGRESS_MESSAGE,
+    ZERO_DIVISION_ERROR_MESSAGE
 )
 from python_sessions.utils.input_handlers import (
     cli_pause,
@@ -94,13 +95,11 @@ def remainder_by_subtraction(
         int: O resto da divisão inteira.
     """
     if divisor == 0:
-        raise ZeroDivisionError(
-            ' ERRO CRÍTICO: Divisor igual a zero detectado. Execução terminada.'
-    )
+        raise ZeroDivisionError(ZERO_DIVISION_ERROR_MESSAGE)
     if dividend < 0 or divisor < 0:
         raise ValueError(
             ' ERRO: Apenas valores não negativos são permitidos.'
-    )
+)
 
     remainder_candidate = dividend
 
