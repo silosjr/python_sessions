@@ -9,6 +9,33 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[0.3.0] - 2025-09-10
+Added
+Infraestrutura completa de Verificação e Validação (V&V) com o framework unittest.
+
+Configuração de ambiente de desenvolvimento integrado (VS Code) para descoberta e execução de testes automatizados.
+
+Componente de lógica pura partition_by_predicate, um motor genérico para particionamento de dados.
+
+Suíte de V&V para o componente partition_by_predicate, garantindo sua robustez e correção.
+
+Camada de interface de CLI (_handle_partition_operation) para a nova funcionalidade de particionamento.
+
+Changed
+CONFORMIDADE COM AUDITORIA: Módulo list_operations_showcase refatorado para aderir estritamente ao Princípio da Responsabilidade Única (SRP). Lógica de UI migrada para o novo módulo list_operations_cli.py.
+
+CONFORMIDADE COM AUDITORIA: Contrato da função calculate_average fortalecido, substituindo List por Sequence para garantir semântica de somente leitura.
+
+CONFORMIDADE COM AUDITORIA: Componente calculate_average "endurecido" com programação defensiva, tratando TypeError em tempo de execução e levantando ValueError de forma controlada.
+
+Suíte de V&V para calculate_average expandida para incluir uma prova formal de seu comportamento defensivo (test_raises_value_error_on_non_numeric_data).
+
+Arquitetura do projeto solidificada com a adição de arquivos __init__.py para garantir a correta descoberta de pacotes.
+
+[0.3.0] - 2025-09-10
+Added
+Implementado e verificado um motor de particionamento de dados genérico `partition_by_time` e sua respectiva interface na CLI.
+
 [0.3.0] - 2025-09-09
 Added
 Módulo de Estruturas de Dados: Introduzido um novo diretório de pacotes (src/python_sessions/data_structures/) para abrigar componentes focados em estruturas de dados, iniciando com o submódulo built_in.
