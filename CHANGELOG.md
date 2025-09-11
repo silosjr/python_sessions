@@ -9,6 +9,31 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+[0.3.0] - 2025-09-11
+Added
+Implementado e verificado um motor de particionamento de dados genérico (partition_by_predicate) e sua respectiva interface de demonstração na CLI.
+
+Implementado e verificado um motor de extração de elementos únicos (extract_unique_preserving_order) com preservação de ordem, otimizado para complexidade de tempo linear (O(n)).
+
+Nova funcionalidade de interface (_handle_unique_extraction) para demonstrar a operação de extração de elementos únicos.
+
+Suíte de Verificação e Validação (V&V) completa para o componente extract_unique_preserving_order, cobrindo casos nominais, de borda e de tipo genérico.
+
+Changed
+Conformidade com Auditoria (Operação Apolo):
+
+Refatorada a arquitetura do sistema para aderir ao Princípio da Responsabilidade Única (SRP), separando a lógica de negócio (list_operations_showcase.py) da lógica de interface (list_operations_cli.py).
+
+Fortalecidos os contratos de tipo, substituindo List por Sequence em interfaces de somente leitura para reduzir o acoplamento.
+
+Endurecido o componente calculate_average com tratamento defensivo de exceções (TypeError), aumentando a robustez do sistema.
+
+A suíte de V&V foi expandida para incluir uma prova formal do novo comportamento defensivo do calculate_average.
+
+O menu da CLI foi atualizado para incluir as novas funcionalidades de particionamento e extração de elementos únicos.
+
+O título do menu da CLI foi semanticamente refinado de "Cálculos Estatísticos" para "Operações com Sequências" para refletir o escopo expanOPdido do módulo.
+
 [0.3.0] - 2025-09-10
 Added
 Infraestrutura completa de Verificação e Validação (V&V) com o framework unittest.

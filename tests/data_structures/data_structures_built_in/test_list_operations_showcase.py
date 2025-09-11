@@ -13,15 +13,22 @@ módulo-alvo para o status de `Production`.
 
 from __future__ import annotations
 import unittest
+from typing import (
+    Sequence,
+    TypeVar
+)
 from python_sessions.data_structures.data_structures_built_in.list_operations_showcase import (
     calculate_average,
-    partition_by_predicate
+    partition_by_predicate,
+    extract_unique_preserving_order
 )
 
 __author__ = 'Enock Silos'
 __version__ = '0.3.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Verification'
+
+T = TypeVar('T')
 
 class TestCalculateAverage(unittest.TestCase):
     """
@@ -159,6 +166,77 @@ class TestPartitionByPredicate(unittest.TestCase):
         sample_data = [3, 7, 9]
         expected_result = ([], [3, 7, 9])
         actual_result = partition_by_predicate(sample_data, lambda x: x < 0)
+        self.assertEqual(actual_result, expected_result)
+
+class TestExtractUniquePreservingOrder(unittest.TestCase):
+    """
+    Suíte de V&V para o componente `extract_unique_preserving_order`.
+
+    Esta classe de teste implementa um conjunto de provas formais para
+    verificar a corre~]ap, robustez e generalidade do motor de extração
+    de elementos únicos, garantindo sua conformidade com o contrato
+    funcional sob diversas condições operacionais, conforme o PESSMC 4.3.
+    """
+    
+    def test_nominal_case_width_duplicates(self):
+        """
+        Verifica a correção do algoritmo no caminho nominal com dados duplicados.
+
+        Esta prova formal valida a capacidade fundamental do componente de
+        processar uma sequência heterogênea, remover todos os elementos
+        duplicados e preservar a ordem de aparição do primeiro elemento
+        da cada conjunto de duplicatas. Este é o principal caso de uso
+        operacional da função.
+        """
+        sample_data: Sequence[int] = [1, 5, 2, 1, 9, 5, 8]
+        expected_result: Sequence[int] = [1, 5, 2, 9, 8]
+        actual_result = extract_unique_preserving_order(sample_data)
+        self.assertEqual(actual_result, expected_result)
+
+    def test_edge_case_empty_iterable(self):
+        """
+        Verifica a robustez do componente sob a condição de contorno de entrada nula.
+
+        Conforme o PESSMC 4.3.3, um componente de missão crítica deve se
+        comportar de forma previsível na ausência de dados. Esta prova
+        garante que o componente retorna corretamente uma sequência vazia
+        quando a entrada está vazia, prevenindo falhas de `NoneType` ou
+        `IndeErro` em pipelines de dados.
+        """
+        sample_data: Sequence[T] = []
+        expected_result: Sequence[T] = []
+        actual_result = extract_unique_preserving_order(sample_data)
+        self.assertEqual(actual_result, expected_result)
+
+    def test_case_no_duplicates(self):
+        """
+        Verifica o comportamento idempotente do componente com dados já únicos.
+
+        Esta prova valida que, quando a sequência de entrada já é única,
+        a função atua como uma operação de identidade (idempotente),
+        retornando a sequência original inalterada. Isso garante que o
+        componente não introduz artefatos ou modificações inesperadas
+        em conjunto de dados que já cumprem a condição de unicidade.
+        """
+        sample_data: Sequence[int] = [1, 2, 3, 4, 5]
+        expected_result: Sequence[int] = [1, 2, 3, 4, 5]
+        actual_result = extract_unique_preserving_order(sample_data)
+        self.assertEqual(actual_result, expected_result)
+
+    def test_generic_type_with_strings(self):
+        """
+        Verifica a conformidade do componente com seu contrato com seu contrato de tipo genérico.
+
+        Esta prova formal valida que a lógica de deduplicação e preservação
+        de ordem é universalmente aplicável a qualquer tipo de dado 'hashable',
+        utilizando `str` como o caso de teste representativo para tipos não-
+        numéricos. O sucesso deste teste certifica a robustez e a generalidade
+        do algoritmo para além do domínio numérico, em conformidade com o
+        PESSMC 3.2.2.
+        """
+        sample_data: Sequence[str] = ['a', 'b', 'a', 'c', 'b']
+        expected_result: Sequence[str] = ['a', 'b', 'c']
+        actual_result = extract_unique_preserving_order(sample_data)
         self.assertEqual(actual_result, expected_result)
 
 if __name__ == '__main__':

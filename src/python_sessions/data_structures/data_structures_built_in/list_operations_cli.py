@@ -28,7 +28,8 @@ from python_sessions.utils.constants import (
 )
 from python_sessions.data_structures.data_structures_built_in.list_operations_showcase import (
     calculate_average,
-    partition_by_predicate
+    partition_by_predicate,
+    extract_unique_preserving_order
 )
 __author__ = 'Enock Silos'
 __version__ = '0.3.0'
@@ -100,6 +101,29 @@ def _handle_partition_operation() -> None:
     print(f' Partição 1 (Predicado: n > 0) → {positives}')
     print(f' Partição 2 (Predicado: n <= 0) → {non_positives}')
 
+def _handle_unique_extraction() -> None:
+    """
+    Orquestra a interface com o operador para a extração de elementos únicos.
+
+    Esta função gerencia o ciclo de aquisição de dados (strings) do
+    operador, utilizando uma entrada vazia como sinal de terminação da
+    coleta. Subsequentemente, invoca o componente de lógica de negócio
+    `extract_unique_preserving_order` e apresenta o resultado - a sequência
+    de elementos únicos com a ordem de sua primeira aparição preservada -
+    formatado na saída padrão.
+    """
+    collected_strings = []
+    prompt = ' Digite uma string para o conjunto de dados ou pressione [Enter] para finalizar: '
+    while True:
+        entered_string = input(prompt)
+        if not entered_string:
+            break
+        
+        collected_strings.append(entered_string)
+
+    unique_strings = extract_unique_preserving_order(collected_strings)
+    print(f' Lista final de strings únicas (ordem preservada): {unique_strings}')
+
 def _display_menu() -> None:
     """
     Renderiza o menu principal da aplicação na saída padrão.
@@ -109,10 +133,11 @@ def _display_menu() -> None:
     é padronizada para garantir uma interface de usuário consistente.
     """
     operations_menu = [
-        ' MENU DE CÁLCULOS ESTATÍSTICOS',
+        ' OPERAÇÕES COM SEQUÊNCIAS',
         ' Por favor, selecione a operação a ser executada:',
         ' [1] - Cálculo da Média',
-        ' [2] - Particionamento de Dados',
+        ' [2] - Particionamento de Dados (preservando ordem)',
+        ' [3] - Extração de Elementos Únicos (preservando ordem)',
         ' [Q] - Encerrar sessão'
     ]
     content_width = max(len(line) for line in operations_menu)
@@ -152,6 +177,8 @@ def _handle_user_choice(selected_option: str) -> None:
         _handle_average_calculation()
     elif selected_option == '2':
         _handle_partition_operation()
+    elif selected_option == '3':
+        _handle_unique_extraction()
     else:
         print(ERROR_INVALID_MENU_OPTION)
 
@@ -175,7 +202,7 @@ def main() -> None:
 
         _handle_user_choice(selected_option)
 
-        if selected_option in ('1', '2'):
+        if selected_option in ('1', '2', '3'):
             cli_pause()
 
 if __name__ == '__main__':

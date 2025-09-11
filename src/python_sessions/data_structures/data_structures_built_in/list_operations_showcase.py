@@ -16,7 +16,8 @@ from typing import (
     Iterable,
     Tuple,
     TypeVar,
-    Sequence
+    Sequence,
+    Set
     )
 
 __author__ = 'Enock Silos'
@@ -101,3 +102,24 @@ def partition_by_predicate(
             failed_items.append(i)
 
     return passed_items, failed_items
+
+def extract_unique_preserving_order(
+    data: Iterable[T]
+) -> Sequence[T]:
+    """_summary_
+
+    Args:
+        data (Iterable[T]): _description_
+
+    Returns:
+        Sequence[T]: _description_
+    """
+    unique_items: List[T] = []
+    seen: Set[T] = set()
+
+    for item in data:
+        if item not in seen:
+            unique_items.append(item)
+            seen.add(item)
+
+    return unique_items
