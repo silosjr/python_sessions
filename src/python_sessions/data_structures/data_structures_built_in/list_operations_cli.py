@@ -29,7 +29,8 @@ from python_sessions.utils.constants import (
 from python_sessions.data_structures.data_structures_built_in.list_operations_showcase import (
     calculate_average,
     partition_by_predicate,
-    extract_unique_preserving_order
+    extract_unique_preserving_order,
+    try_pop_last_item
 )
 __author__ = 'Enock Silos'
 __version__ = '0.3.0'
@@ -124,6 +125,33 @@ def _handle_unique_extraction() -> None:
     unique_strings = extract_unique_preserving_order(collected_strings)
     print(f' Lista final de strings únicas (ordem preservada): {unique_strings}')
 
+def _handle_safe_pop_operation() -> None:
+    """
+    Gerencia uma sessão interativa para demonstrar a operação `pop` segura.
+
+    Esta função serve como a camadda de interface para a demonstração do
+    princípio de Degradação Graciosa. Ela inicializa e mantém uma lista
+    de estado (`stateful_list`) que é modificada interativamente pelo
+    operador. A cada ciclo, ela invoca o componente seguro
+    `try_pop_last_item` e apresenta um feedback explícito sobre o
+    resultado da operação - seja o sucesso (com o item removido) ou a
+    falha controlada (quando a lista já está vazia). O ciclo persiste
+    até que seja explicitamente terminado pelo operador.
+    """
+    stateful_list: List[str] = ['Bóson', 'Neutrino', 'Méson']
+    prompt = ' Pressione [Enter] para executar a ação `pop()` sobre a Lista ou "Q" para sair: '
+    while True:
+        print(f'\n Estado Atual: {stateful_list}')
+        user_action = input(prompt)
+        if user_action.lower() == 'q':
+            break
+        else:
+            popped_item = try_pop_last_item(stateful_list)
+            if popped_item is not None:
+                print(f' SUCESSO: Item [ {popped_item} ] removido.')
+            else:
+                print(f' OPERAÇÃO IGNORADA: a lista já está vazia.')
+
 def _display_menu() -> None:
     """
     Renderiza o menu principal da aplicação na saída padrão.
@@ -138,6 +166,7 @@ def _display_menu() -> None:
         ' [1] - Cálculo da Média',
         ' [2] - Particionamento de Dados (preservando ordem)',
         ' [3] - Extração de Elementos Únicos (preservando ordem)',
+        ' [4] - Remoção de último item (seguro)',
         ' [Q] - Encerrar sessão'
     ]
     content_width = max(len(line) for line in operations_menu)
@@ -179,6 +208,8 @@ def _handle_user_choice(selected_option: str) -> None:
         _handle_partition_operation()
     elif selected_option == '3':
         _handle_unique_extraction()
+    elif selected_option == '4':
+        _handle_safe_pop_operation()
     else:
         print(ERROR_INVALID_MENU_OPTION)
 
@@ -202,7 +233,7 @@ def main() -> None:
 
         _handle_user_choice(selected_option)
 
-        if selected_option in ('1', '2', '3'):
+        if selected_option in ('1', '2', '3', '4'):
             cli_pause()
 
 if __name__ == '__main__':

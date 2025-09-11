@@ -15,12 +15,15 @@ from __future__ import annotations
 import unittest
 from typing import (
     Sequence,
-    TypeVar
+    TypeVar,
+    List,
+    Optional
 )
 from python_sessions.data_structures.data_structures_built_in.list_operations_showcase import (
     calculate_average,
     partition_by_predicate,
-    extract_unique_preserving_order
+    extract_unique_preserving_order,
+    try_pop_last_item
 )
 
 __author__ = 'Enock Silos'
@@ -238,6 +241,60 @@ class TestExtractUniquePreservingOrder(unittest.TestCase):
         expected_result: Sequence[str] = ['a', 'b', 'c']
         actual_result = extract_unique_preserving_order(sample_data)
         self.assertEqual(actual_result, expected_result)
+
+class TestTryPopLastItem(unittest.TestCase):
+    """
+    Suíte de V&V para o componente de operação segura `try_pop_last_item`.
+
+    Esta classe de teste implementa um conjunto de provas formais para
+    verificar o comportamento dual do componente `try_pop_last_item`.
+    As provas validam não apenas o valor de retorno, mas também o efeito
+    colateral esperado (modificação da lista) no caminho de sucesso, e a
+    execução da degradação graciosa (retorno de `None`) no caminho de
+    falha, garantindo conformidade com o PESSMC 2.1 e 4.3.
+    """
+
+    def test_nominal_case_on_non_empty_list(self):
+        """
+        Verifica a correção do valor de retorno e do efeito colateral no caminho nominal.
+
+        Esta prova valida a operação bem-sucedida do componente
+        em uma lista não vazia. A verificação é dupla:
+        1. Prova que o valor de retorno é o último elemento da lista original.
+        2. Prova que o efeito colateral da operação - a remoção do último
+           elemento - modifica a lista de entrada para o estado esperado.
+        O sucesso deste teste certifica o comportamento completo da função
+        em seu principal caso de uso operacional.
+        """
+        sample_data: List[int] = [1, 2, 3]
+        expected_return_value: int = 3
+        expected_list_after_pop: List[int] = [1, 2]
+
+        actual_return_value = try_pop_last_item(sample_data)
+
+        self.assertEqual(actual_return_value, expected_return_value)
+        self.assertEqual(sample_data, expected_list_after_pop)
+
+    def test_failure_case_on_empty_list(self):
+        """
+        Verifica a execução da degradação graciosa em uma lista vazia.
+
+        Esta prova formal valida o comportamento de resiliência do
+        componente sob a garantia de contorno de uma entrada nula.
+        A verificação garante que a invocação da função em uma lista
+        vazia não levanta uma exceção `IndexError`, mas sim retorna `None`,
+        cumprindo o contrato `Optional[T]` e demonstrando uma falha
+        controlada, conforme exigido pelo PESSMC 2.1. Também se verifica
+        que a lista de entrada permanece inalterada.
+        """
+        sample_data: List[T] = []
+        expected_return_value: Optional[T] = None
+        expected_list_after_pop: List[T] = []
+
+        actual_return_value = try_pop_last_item(sample_data)
+
+        self.assertEqual(actual_return_value, expected_return_value)
+        self.assertEqual(sample_data, expected_list_after_pop)
 
 if __name__ == '__main__':
     unittest.main()

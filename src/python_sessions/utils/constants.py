@@ -19,7 +19,7 @@ Constantes disponíveis::
         ' ERRO: Por favor insira uma das opções válidas do menu.'
     USER_CANCELLED_OPERATION_MESSAGE: str =
         ' Operação cancelada pelo usuário. Nenhuma alteração foi realizada.'
-    SESSION_TERMINATED_MESSAGE: str = '\\n Sessão Encerrada.\\n'
+    SESSION_TERMINATED_MESSAGE: str = '\\n [SESSÃO ENCERRADA]\\n'
 """
 from __future__ import annotations
 
@@ -35,4 +35,4 @@ ZERO_DIVISION_ERROR_MESSAGE: str = ' ERRO CRÍTICO: Divisor igual a zero detecta
 SELECTED_OPTION_INPUT: str = ' ~ Sua opção → '
 ERROR_INVALID_MENU_OPTION: str = ' ERRO: Por favor insira uma das opções válidas do menu.'
 USER_CANCELLED_OPERATION_MESSAGE: str = ' Operação cancelada pelo usuário. Nenhuma alteração foi realizada.'
-SESSION_TERMINATED_MESSAGE: str = '\n Sessão Encerrada.\n'
+SESSION_TERMINATED_MESSAGE: str = '\n [SESSÃO ENCERRADA]\n'

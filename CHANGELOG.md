@@ -11,6 +11,12 @@ Adicionado
 
 [0.3.0] - 2025-09-11
 Added
+Implementado e verificado um componente de operação segura (`try_pop_last_item`) que demonstra o princípio de Degradação Graciosa ao manipular exceções de `IndexError`.
+Nova funcionalidade de interface (`_handle_safe_pop_operation`) para uma demonstração interativa da operação de `pop` segura e do tratamento de falha controlada.
+Suíte de Verificação e Validação (V&V) completa para o componente `try_pop_last_item`, provando seu comportamento tanto no caminho de sucesso (incluindo efeito colateral) quanto no caminho de falha.
+
+[0.3.0] - 2025-09-11
+Added
 Implementado e verificado um motor de particionamento de dados genérico (partition_by_predicate) e sua respectiva interface de demonstração na CLI.
 
 Implementado e verificado um motor de extração de elementos únicos (extract_unique_preserving_order) com preservação de ordem, otimizado para complexidade de tempo linear (O(n)).
@@ -32,7 +38,7 @@ A suíte de V&V foi expandida para incluir uma prova formal do novo comportament
 
 O menu da CLI foi atualizado para incluir as novas funcionalidades de particionamento e extração de elementos únicos.
 
-O título do menu da CLI foi semanticamente refinado de "Cálculos Estatísticos" para "Operações com Sequências" para refletir o escopo expanOPdido do módulo.
+O título do menu da CLI foi semanticamente refinado de "Cálculos Estatísticos" para "Operações com Sequências" para refletir o escopo expandido do módulo.
 
 [0.3.0] - 2025-09-10
 Added

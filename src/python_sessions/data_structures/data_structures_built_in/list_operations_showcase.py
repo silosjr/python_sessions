@@ -17,7 +17,8 @@ from typing import (
     Tuple,
     TypeVar,
     Sequence,
-    Set
+    Set,
+    Optional
     )
 
 __author__ = 'Enock Silos'
@@ -123,3 +124,18 @@ def extract_unique_preserving_order(
             seen.add(item)
 
     return unique_items
+
+def try_pop_last_item(items: List[T]) -> Optional[T]:
+    """
+    
+
+    Args:
+        items (List[T]): _description_
+
+    Returns:
+        Optional[T]: _description_
+    """
+    try:
+        return items.pop()
+    except IndexError:
+        return None
