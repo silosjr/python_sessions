@@ -11,6 +11,33 @@ Adicionado
 
 [0.3.0] - 2025-09-11
 Added
+Componente de Particionamento: Implementado e verificado um motor de particionamento de dados genérico (partition_by_predicate).
+
+Componente de Extração de Únicos: Implementado e verificado um motor de extração de elementos únicos (extract_unique_preserving_order) com preservação de ordem, otimizado para complexidade de tempo linear (O(n)).
+
+Componente de Operação Segura: Implementado e verificado um componente (try_pop_last_item) que demonstra o princípio de Degradação Graciosa ao manipular exceções de IndexError.
+
+Interface de Operador: Implementadas as respectivas funcionalidades de interface (_handle_*) para todos os novos componentes de lógica de negócio no módulo CLI.
+
+Verificação e Validação (V&V): Implementadas suítes de V&V completas para todos os novos componentes, provando a correção sob casos nominais, de borda, de tipo genérico e de falha controlada.
+
+Changed
+Conformidade com Auditoria (Operação Certificação):
+
+Arquitetura (SRP): O sistema foi refatorado para aderir ao Princípio da Responsabilidade Única, separando a lógica de negócio (list_operations_showcase.py) da lógica de interface (list_operations_cli.py).
+
+Endurecimento de Componentes: O componente calculate_average foi refatorado para o padrão de verificação proativa de contrato (LBYL). Os componentes extract_unique_preserving_order e main foram endurecidos com tratamento explícito de exceções (ValueError, KeyboardInterrupt, EOFError).
+
+Contratos de Tipo: Fortalecidos os contratos de tipo em interfaces de somente leitura, substituindo List por Sequence para reduzir o acoplamento.
+
+Expansão de V&V: As suítes de teste foram expandidas para incluir provas formais para o novo comportamento defensivo dos componentes e para a robustez com tipos de dados heterogêneos.
+
+Metadados: O status dos módulos foi formalmente promovido de Development para Production / Verification.
+
+Interface (CLI): O menu da CLI foi atualizado para incluir todas as novas funcionalidades. O título do menu foi semanticamente refinado para "Operações com Sequências".
+
+[0.3.0] - 2025-09-11
+Added
 Implementado e verificado um componente de operação segura (`try_pop_last_item`) que demonstra o princípio de Degradação Graciosa ao manipular exceções de `IndexError`.
 Nova funcionalidade de interface (`_handle_safe_pop_operation`) para uma demonstração interativa da operação de `pop` segura e do tratamento de falha controlada.
 Suíte de Verificação e Validação (V&V) completa para o componente `try_pop_last_item`, provando seu comportamento tanto no caminho de sucesso (incluindo efeito colateral) quanto no caminho de falha.

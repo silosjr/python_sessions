@@ -17,7 +17,9 @@ from typing import (
     Sequence,
     TypeVar,
     List,
-    Optional
+    Tuple,
+    Optional,
+    Union
 )
 from python_sessions.data_structures.data_structures_built_in.list_operations_showcase import (
     calculate_average,
@@ -100,19 +102,19 @@ class TestCalculateAverage(unittest.TestCase):
         actual_result = calculate_average(sample_data)
         self.assertAlmostEqual(actual_result, expected_result)
 
-    def test_raises_value_error_on_non_numeric_data(self):
+    def test_raises_value_error_on_proactive_check(self):
         """
-        Verifica a robustez defensiva do componente contra dados malformados.
+        Verifica que a guarda de entrada levanta `ValueError` para dados não numéricos.
 
-        Esta prova valida o caminho de falha controlada da função. Ela
-        garante que, quando o contrato de tipo é violado em tempo de
-        execução com uma sequência contendo dados não-numéricos, a função
-        levanta a exceção `ValueError` esperada, em conformidade com sua
-        especificação de programação defensiva.
+        Esta prova formal valida a robustez do componente contra violações
+        de contrato, em conformidade com a diretiva da auditoria para
+        verificação proativa (LBYL). Ela garante que a função falha de
+        forma rápida e controlada antes de tentar qualquer cálculo, ao
+        encontrar um tipo de dado inválido na sequência de entrada.
         """
-        malforned_data = [10.0, 'p', 20.0]
+        malformed_data: Sequence[any] = [10.0, 'a', 20.0]
         with self.assertRaises(ValueError):
-            calculate_average(malforned_data)
+            calculate_average(malformed_data)
 
 class TestPartitionByPredicate(unittest.TestCase):
     """
@@ -171,12 +173,32 @@ class TestPartitionByPredicate(unittest.TestCase):
         actual_result = partition_by_predicate(sample_data, lambda x: x < 0)
         self.assertEqual(actual_result, expected_result)
 
+    def test_generic_types_with_mixed_numerics(self):
+        """
+        Verifica a robustez do predicado com tipos numéricos heterogêneos.
+
+        Esta prova formal valida que o motor de particionamento opera
+        corretamente sobre uma sequência contendo uma mistura de `int` e
+        `float`, em conformidade com a diretiva da auditoria para
+        reforçar a robustez do contrato genérico. Garante que o predicado
+        é aplicado consistentemente através de subtipos numéricos.
+        """
+        sample_data: Sequence[Union[int, float]] = [10, -5.5, 0, 20.2, -3]
+        predicate = lambda x: x > 0
+        expected_result: Tuple[List[Union[int, float]], List[Union[int, float]]] = (
+            [10, 20.2],
+            [-5.5, 0, -3]
+        )
+
+        actual_result = partition_by_predicate(sample_data, predicate)
+        self.assertEqual(actual_result, expected_result)
+
 class TestExtractUniquePreservingOrder(unittest.TestCase):
     """
     Suíte de V&V para o componente `extract_unique_preserving_order`.
 
     Esta classe de teste implementa um conjunto de provas formais para
-    verificar a corre~]ap, robustez e generalidade do motor de extração
+    verificar a correção, robustez e generalidade do motor de extração
     de elementos únicos, garantindo sua conformidade com o contrato
     funcional sob diversas condições operacionais, conforme o PESSMC 4.3.
     """
@@ -204,7 +226,7 @@ class TestExtractUniquePreservingOrder(unittest.TestCase):
         comportar de forma previsível na ausência de dados. Esta prova
         garante que o componente retorna corretamente uma sequência vazia
         quando a entrada está vazia, prevenindo falhas de `NoneType` ou
-        `IndeErro` em pipelines de dados.
+        `IndexError` em pipelines de dados.
         """
         sample_data: Sequence[T] = []
         expected_result: Sequence[T] = []
@@ -228,7 +250,7 @@ class TestExtractUniquePreservingOrder(unittest.TestCase):
 
     def test_generic_type_with_strings(self):
         """
-        Verifica a conformidade do componente com seu contrato com seu contrato de tipo genérico.
+        Verifica a conformidade do componente com seu contrato de tipo genérico.
 
         Esta prova formal valida que a lógica de deduplicação e preservação
         de ordem é universalmente aplicável a qualquer tipo de dado 'hashable',
@@ -239,6 +261,27 @@ class TestExtractUniquePreservingOrder(unittest.TestCase):
         """
         sample_data: Sequence[str] = ['a', 'b', 'a', 'c', 'b']
         expected_result: Sequence[str] = ['a', 'b', 'c']
+        actual_result = extract_unique_preserving_order(sample_data)
+        self.assertEqual(actual_result, expected_result)
+
+    def test_generic_types_with_mixed_hashables(self):
+        """
+        Verifica a robustez do componente com tipos de dados heterogêneos.
+
+        Esta prova formal, em conformidade com a diretiva da auditoria,
+        valida que o motor de extração de elementos únicos opera
+        corretamente sobre uma sequência contendo uma mistura de tipos
+        `hashable` distintos (`int`, `str`, `tuple`). Garante que a
+        lógica de unicidade é consistentemente aplicada através de
+        diferentes tipos de dados na mesma coleção.
+        """
+        sample_data: Sequence[Union[int, str, tuple]] = [
+            1, 'a', (1, 2), 2.0, 'b', (1, 2), 'a'
+        ]
+        expected_result: List[Union[int, str, tuple]] = [
+            1, 'a', (1, 2), 2.0, 'b'
+        ]
+
         actual_result = extract_unique_preserving_order(sample_data)
         self.assertEqual(actual_result, expected_result)
 

@@ -1,8 +1,8 @@
 """
-Módulo de interface de Linha de Comando (CLI) para Operações com Listas.
+Módulo de interface de Linha de Comando (CLI) para Operações com Sequências.
 
 Este módulo implementa a camada de interação com o operador para as
-funcionalidades de operações com listas. Sua única responsabilidade é
+funcionalidades de operações com sequências. Sua única responsabilidade é
 gerenciar o ciclo de vida da aplicação (REPL), a apresentação da UI, a
 aquisição e validação da entrada do operador, e a orquestração das
 chamadas aos componentes de lógica de negócio puros, que são importados
@@ -35,7 +35,7 @@ from python_sessions.data_structures.data_structures_built_in.list_operations_sh
 __author__ = 'Enock Silos'
 __version__ = '0.3.0'
 __email__ = 'init.caucasian722@passfwd.com'
-__status__ = 'Development'
+__status__ = 'Production'
 
 def _handle_average_calculation() -> None:
     """
@@ -129,7 +129,7 @@ def _handle_safe_pop_operation() -> None:
     """
     Gerencia uma sessão interativa para demonstrar a operação `pop` segura.
 
-    Esta função serve como a camadda de interface para a demonstração do
+    Esta função serve como a camada de interface para a demonstração do
     princípio de Degradação Graciosa. Ela inicializa e mantém uma lista
     de estado (`stateful_list`) que é modificada interativamente pelo
     operador. A cada ciclo, ela invoca o componente seguro
@@ -223,18 +223,21 @@ def main() -> None:
     usuário e despachar a ação correspondente, tratando também da condição
     de terminação do programa.
     """
-    while True:
-        _display_menu()
-        selected_option = input(SELECTED_OPTION_INPUT)
+    try:
+        while True:
+            _display_menu()
+            selected_option = input(SELECTED_OPTION_INPUT)
 
-        if selected_option.lower() == 'q':
-            print(SESSION_TERMINATED_MESSAGE)
-            break
+            if selected_option.lower() == 'q':
+                print(SESSION_TERMINATED_MESSAGE)
+                break
 
-        _handle_user_choice(selected_option)
+            _handle_user_choice(selected_option)
 
-        if selected_option in ('1', '2', '3', '4'):
-            cli_pause()
+            if selected_option in ('1', '2', '3', '4'):
+                cli_pause()
+    except (KeyboardInterrupt, EOFError):
+        print(' \n\n[SINAL DE INTERRUPÇÃO RECEBIDO] - Encerrando a sessão de forma controlada.\n')
 
 if __name__ == '__main__':
     main()
