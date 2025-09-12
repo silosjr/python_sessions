@@ -9,6 +9,25 @@ e este projeto adere ao Versionamento Semântico.
 Adicionado
 (Adicione aqui as novas funcionalidades em desenvolvimento)
 
+
+
+[1.0.0] - 2025-09-12
+Added
+Componente `ServiceQueue`: Implementação de uma nova estrutura de dados de fila genérica, thread-safe e de alta integridade no módulo `data_structures.custom_data_structures`.
+Padrão de Projeto Strategy: Adicionado sistema de Políticas (`QueuePolicy`, `FifoPolicy`, `LifoPolicy`) para permitir comportamento de enfileiramento extensível.
+Capacidades de Auditoria: Introduzidos os métodos `snapshot()` e `integrity_hash()` para verificação de estado.
+Segurança de Concorrência: Implementado `threading.RLock` em todas as operações de acesso ao estado para garantir thread-safety em ambientes concorrentes.
+Suíte de Testes Formal (`unittest`): Criado o módulo `test_service_queue.py` com cobertura para contrato básico, condições de borda, extensibilidade e concorrência.
+Script de Demonstração: Adicionado `queue_cli_showcase.py` como exemplo de uso prático e validação funcional.
+Estrutura de Projeto Profissional: Estabelecido `pyproject.toml` e layout de diretório `src` para definir o projeto como um pacote Python instalável.
+
+Changed
+Arquitetura: O código-fonte original foi completamente refatorado de um script procedural monolítico para uma arquitetura de software desacoplada, orientada a objetos e baseada em princípios de engenharia de sistemas críticos.
+
+Fixed
+Corrigido potencial `Deadlock` em chamadas de método reentrantes pela substituição estratégica de `Lock` por `RLock`.
+Resolvidos múltiplos `ImportError` e `ModuleNotFoundError` através da configuração correta do projeto como um pacote instalável, eliminando a necessidade de manipulação do `sys.path`.
+
 [0.3.0] - 2025-09-11
 Added
 Componente de Particionamento: Implementado e verificado um motor de particionamento de dados genérico (partition_by_predicate).

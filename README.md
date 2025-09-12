@@ -47,6 +47,7 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |    |-- function_return_values_and_design.py
 |   |    |-- practical_conditional_logic.py
 |   |    |-- iterative_process_examples.py
+|   |    |-- queue_cli_showcase.py
 |   |   
 |   |-- 📂 natural_language_processing/
 |   |   |-- markov_analyzer.py
@@ -62,10 +63,12 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |
 |-- 📂 data_structures/
 |   |-- 📂 data_structures_built_in/
-|       |-- list_operations_show_case.py
-|
-|
-|
+|   |   |-- list_operations_show_case.py
+|   |
+|   |-- 📂 custom_data_structures/
+|       |
+|       |-- service_queue.py  
+|   
 |
 |-- 📂 diagrams/
 |    |-- class_relations_diagram.puml
@@ -93,8 +96,12 @@ Este repositório é organizado como uma biblioteca curada de conceitos e projet
 |   |--🧪 data_structures/
 |      |
 |      |-- 🧪 data_structures_built_in/
+|      |   |
+|      |   |-- test_list_operations_showcase.py
+|      |
+|      |-- 🧪 custom_data_structures/
 |          |
-|          |-- test_list_operations_showcase.py
+|          |-- test_service_queue.py
 |
 |
 |-- 📄 .gitignore

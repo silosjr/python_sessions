@@ -33,7 +33,6 @@ from python_sessions.data_structures.data_structures_built_in.list_operations_sh
     try_pop_last_item
 )
 __author__ = 'Enock Silos'
-__version__ = '0.3.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Production'
 

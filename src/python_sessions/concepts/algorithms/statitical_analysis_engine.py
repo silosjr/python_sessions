@@ -19,7 +19,6 @@ from __future__ import annotations
 from typing import Optional, List, Dict, Any, Callable
 
 __author__ = 'Enock Silos'
-__version__ = '0.3.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 

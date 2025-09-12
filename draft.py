@@ -1,5 +1,7 @@
-for i in range(4, 10):
-    print(i, end='')
+caso_str = str('Task A')
 
-string = [str(i) for i in range(4, 10 + 1)]
-print(string)
+caso_repr = repr('Task A')
+
+print(caso_str)
+
+print(caso_repr)

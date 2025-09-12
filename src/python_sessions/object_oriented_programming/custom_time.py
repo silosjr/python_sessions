@@ -7,7 +7,6 @@ como sobrecarga de operadores e despacho por tipo..
 from __future__ import annotations
 
 __author__ = 'Enock Silos'
-__version__ = '0.3.0'
 __email__ = 'init.caucasian722@passfwd.com'
 __status__ = 'Development'
 
